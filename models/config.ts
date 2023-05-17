@@ -1,9 +1,9 @@
-import config from '../config/config';
 const { Sequelize } = require('sequelize');
+const sequelize = new Sequelize(process.env.DB_NAME_NEW, process.env.DB_USER_NEW, process.env.DB_PASS_NEW, {
 
-const sequelize = new Sequelize(config.development.database, config.development.username, config.development.password, {
-  host: config.development.host,
+  host: process.env.DB_HOST_NEW,
   dialect: 'mysql',
+  dialectModule: require('mysql2'),
   port: '3306',
   logging: false
 
