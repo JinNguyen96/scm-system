@@ -7,10 +7,12 @@ function Header() {
   const [user, setUser] = React.useState({ userName: "" });
   const route   =  useRouter()
   console.log(route)
+  
   useEffect(() => {
     if (localStorage.getItem("userName")) {
       let userName = JSON.parse(`${localStorage.getItem("userName")}`);
       setUser(userName);
+      console.log(user.userName)
     }
   }, []);
   return (
@@ -57,14 +59,14 @@ function Header() {
                     console.log("click");
                   }}
                 >
-                  <span className="sr-only">Open user menu</span>
                   <img
                     className="w-8 h-8 rounded-full"
                     src="77972443.jfif"
                     alt="user photo"
-                  />
+                  /> 
                 </button>
               </div>
+                 
               <div
                 className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                 id="dropdown-user"
@@ -131,6 +133,7 @@ function Header() {
               </div>
             </div>
           </div>
+         
         </div>
       </div>
       

@@ -4,6 +4,7 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 import swal from "sweetalert";
+import Pagination from "../../panigation";
 
 function Type() {
   const [typeDetail, setTypeDetail] = React.useState({
@@ -18,17 +19,7 @@ function Type() {
     typeLevel: Number(""),
     id: 0,
   });
-  const [typeCreate, setTypeCreate] = React.useState({
-    typeName: "",
-    typeDescription: "",
-    typeLevel: "",
-  });
-  let userInfo = {
-    userDayOfBirth: "",
-    userFirstName: "",
-    userLastName: "",
-    confirmPassword: "",
-  };
+
   const [search, setSearch] = useState('')
   const delType = async (id: object) => {
     await axios
@@ -140,6 +131,15 @@ function Type() {
       setSort("ASC");
     }
   };
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const typePerPage = 5;
+  const lastIndex = currentPage * typePerPage;
+  const firstIndex = lastIndex - typePerPage;
+  const typePagi = type.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(type.length / typePerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
   React.useEffect(() => {
     getType();
 
@@ -349,7 +349,7 @@ function Type() {
               </tr>
             </thead>
             <tbody>
-              {type?.filter((item:any) => { 
+              {typePagi?.filter((item:any) => { 
                     return search.toLowerCase() === '' ? item: item.typeName.toLowerCase().includes(search)
                }).map((type: any, index) => {
                 return (
@@ -471,6 +471,13 @@ function Type() {
               })}
             </tbody>
           </table>
+          <Pagination
+              currentPage={currentPage}
+              changePage={changePage}
+              prePage={prePage}
+              numbers={numbers}
+              nextPage={nextPage}
+            />
           <div>
             <div
               className="modal fade edit-user w-full"
@@ -659,6 +666,19 @@ function Type() {
       </div>
     </>
   );
+  function prePage() {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
+  function changePage(n: number) {
+    setCurrentPage(n);
+  }
+  function nextPage() {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
 }
 
 export default Type;

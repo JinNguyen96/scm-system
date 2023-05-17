@@ -1,11 +1,26 @@
+import { AppProps } from "next/app";
+import Sidebar from "./main-template/Sidebar";
+import Header from "./main-template/Header";
 
 
-const Layout = ({children}:any)=>{
+const Layout = ({ Component, pageProps }: AppProps)=>{
     return (
         <div className="content">
-            {/* <Header/>
-            {children}
-            <Footer/> */}
+             <div className="">
+      <div className= "">
+        <Sidebar />
+      </div>
+      <div className= "">
+        <Header />
+      </div>
+      <div className= "">
+        <div
+         className= ""
+        >
+          <Component {...pageProps} />{" "}
+        </div>
+      </div>
+    </div>
         </div>
     )
 }

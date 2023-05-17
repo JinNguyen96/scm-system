@@ -1,27 +1,23 @@
-# Next.js + Tailwind CSS Example
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
 
-## Deploy your own
+## Deploying NextJS apps to GCP Cloud Run with Github Actions
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+### Notes
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+1. You should have a GCP account
+2. You need to enable some GCP API's for this to work (we'll touch on that)
+3. You need Docker, NodeJS and npm installed. Prefer the latest versions
+4. Some basic knowledge of Docker, JavaScript/NodeJS and React is preferred
 
-## How to use
+### What we'll do?
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+1. Create a basic NextJS app
+2. Set up your cloud project to be ready for Cloud Run deployments using Github Actions
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-```
+- Create a project \*
+- Create a service account
+- Enable the correct API's (Cloud Run + GCR)
 
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+3. Build a docker image of the NextJS app
+4. Add your code to Git
+5. Create a github workflow (Action) and deploy the app.

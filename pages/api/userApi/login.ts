@@ -45,6 +45,6 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       return failCode(res, "", "Wrong method");
     }
   } catch (error: any) {
-    return errorCode(error, "lỗi 500");
+    return failCode(res,error, "lỗi 500");
   }
 }

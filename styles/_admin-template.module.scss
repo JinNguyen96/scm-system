@@ -245,3 +245,17 @@ label {
  .css-1nmdiq5-menu{
     font-size: 13px;
   }
+
+  //PAGINATION
+
+  .pagination{
+    span{
+      color: black;
+      font-size: 12px;
+    }
+    .active{
+      span{
+        background-color: $main-color;
+      }
+    }
+  }

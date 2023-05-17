@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react";
 import axios from "axios";
-import { object, string, array, number, date } from "yup";
+import { object, string, date } from "yup";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { useEffect } from "react";
-import { Label } from "flowbite-react";
 import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
+import Pagination from "../../panigation";
+import { RoleScopes } from '../../../models/roles';
 const animatedComponents = makeAnimated();
 const RolePermOption = [
   { value: "perUser_view", label: "USER_VIEW" },
@@ -46,10 +46,10 @@ function AdminTemplate() {
   const [relaType, setRelaType] = React.useState({ relaType: [] });
   const [relaUser, setRelaUser] = React.useState({ relaUser: [] });
   const [formSignup, setFormSignUp] = React.useState({
-    userType: 0,
+    userType: [""],
     userEmail: "",
     userPassword: "",
-    userRole: 0,
+    userRole: [""],
     userPhoneNumber: "",
     userFirstName: "",
     userLastName: "",
@@ -83,7 +83,7 @@ function AdminTemplate() {
           ...formSignup,
           relatedUser: [...formSignup.relatedUser, e.target.value],
         });
-        console.log(formSignup, "relatye");
+        console.log(formSignup, "relatype");
       } else {
         setFormSignUp({
           ...formSignup,
@@ -97,9 +97,10 @@ function AdminTemplate() {
   };
   const getAllUser = async () => {
     const { data: res } = await axios.get("/api/userApi/get-all-user");
-    setUsers(res.content);
-    console.log(res.content);
+    console.log(res.content.usersPerPage);
+    setUsers(res.content.usersPerPage);
   };
+
   const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
   const [isPasswordViewed2, setIsPasswordViewed2] = React.useState(false);
 
@@ -120,7 +121,6 @@ function AdminTemplate() {
   const handleOnchange = (e: any) => {
     let { name } = e.target;
     setformUpdate({ ...formUpdate, [name]: e.target.value });
-    console.log(formUpdate, "update111111111111");
   };
   const handleOnChangeSignup = (e: any) => {
     let { name } = e.target;
@@ -133,7 +133,7 @@ function AdminTemplate() {
   console.log(search);
   const [roles, setRoles] = React.useState([]);
   const [roleDetail, setRoleDetail] = React.useState([]);
-  const [rol, setRol]: any[] = React.useState([""]);
+  const [rol, setRol] = React.useState([""]);
   let userInfo = {
     userDayOfBirth: "",
     userFirstName: "",
@@ -144,11 +144,7 @@ function AdminTemplate() {
   const [confirmPass, setConfirmPass] = React.useState({
     confirmPassword: "",
   });
-  const [typeDetail, setTypeDetail] = React.useState({
-    typeName: "",
-    typeDescription: "",
-    typeLevel: "",
-  });
+  const [typeDetail, setTypeDetail] = React.useState([]);
   const schema = object({
     userRole: string().required(),
     userEmail: string().required().email(),
@@ -162,22 +158,24 @@ function AdminTemplate() {
     userFirstName: string().required().min(2).max(12),
     userLasName: string().required().min(2).max(50),
   });
-  let pointArr = [{ point: "point" }];
+
   const getUserDetail = async (id: object) => {
     let result = await axios.post("/api/userApi/get-all-user", id);
-    console.log(result.data);
+    console.log(result.data.content.data, "");
     setUserDetail(result.data.content.dataUsers);
-    setRoles(result.data.content.roleData[0].rolePermission.split(","));
-    setRoleDetail(result.data.content.roleData[0].roleDescription);
-    console.log(result.data.content.roleData[0].roleDescription, "dataNeew");
+    setRoles(result.data.content.roleData);
+    setRoleDetail(result.data.content.data);
+    console.log(roleDetail, "roleDetail");
   };
   const getTypeDetail = async (id: any) => {
     await axios
       .put("/api/typeApi/type-detail", id)
       .then((result) => {
         console.log(result, "getTypeDetail");
-        setTypeDetail(result.data.content[0]);
-        console.log(result.data.content[0], "id");
+        setTypeDetail(result.data.content);
+        console.log(result.data.content,'result.data.content')
+        console.log(result.data.content, "id");
+        console.log(typeDetail, "typeName");
       })
       .catch((err) => {
         console.log(err, "ees");
@@ -187,8 +185,9 @@ function AdminTemplate() {
     await axios
       .put("/api/roleApi/role-detail", id)
       .then((result) => {
-        console.log(result, "getTypeDetail");
-        setRol(result.data.content[0].roleScopes.split(","));
+        console.log(result.data.content[0], "role");
+        setRol(result.data.content[0].roleScopes);
+
       })
       .catch((err) => {
         console.log(err, "ees");
@@ -233,6 +232,19 @@ function AdminTemplate() {
             icon: "success",
           });
           getAllUser();
+          setFormSignUp({
+            userType: [""],
+            userEmail: "",
+            userPassword: "",
+            userRole: [""],
+            userPhoneNumber: "",
+            userFirstName: "",
+            userLastName: "",
+            userDob: "",
+            userAdress: "",
+            relatedUser: [""],
+            relatedType: [""],
+          });
         })
         .catch((err) => {
           alert(`${err.response.data.message}`);
@@ -253,26 +265,35 @@ function AdminTemplate() {
         console.log(err);
       });
   };
+  const [typeFilter, setTypeFilter] = React.useState([]);
   const [type, setType] = React.useState([]);
-  const getType = async () => {
+  const getType = async (id: any) => {
+    let typeFilter: any = [];
+    await axios
+      .put("/api/typeApi/get-all-type", { id })
+      .then((result) => {
+        typeFilter.push(result.data.content[0]);
+        console.log(result, "typeFilter");
+
+        setTypeFilter(typeFilter);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     await axios
       .get("/api/typeApi/get-all-type")
       .then((result) => {
-        setType(result.data.content);
-        console.log(result, "type result");
+        console.log(result,'')
+        setType(
+          result.data.content.filter((lv: any) => {
+            return lv.typeLevel >= typeFilter[0].typeLevel;
+          })
+        );
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  const typeOptionEdit = [
-    type?.map((type: any, index: number) => {
-      return { value: `${type.id}`, label: `${type.typeName}` };
-    }),
-  ];
-
-  // const rolesOption:any = [{value: roles.map((item) => item),label:roles.map((item) =>  item )}]
 
   const [sort, setSort] = useState("ASC");
   const sorting = (col: any) => {
@@ -313,18 +334,7 @@ function AdminTemplate() {
     }),
   ];
 
-  //  const roleOptionEdit = [
-  //     role?.map((rol: any, index: number) => {
-  //      rol.roleScopes?.filter((roleScopes:any) =>  roleScopes.includes(userRoleDetail)).map((scope:any) => {
-  //        return { value: `${rol.id}`, label: `${rol.roleName}` };
-  //      })
-  //      0;
-  //     }),
-  //   ];
   const roleOptionEdit = [
-    // role?.filter((obj:any) => {
-    //   console.log(userRoleDetail)
-    //  obj.roleScopes.includes(userRoleDetail).map((rol:any)=> { return { value: `${rol.id}`, label: `${rol.roleName}` };})}).
     role
       ?.filter((rol: any) => rol.roleScopes.includes(userRoleDetail))
       .map((obj: any) => {
@@ -332,24 +342,32 @@ function AdminTemplate() {
       }),
   ];
 
-  console.log(roleOptionEdit);
-  // const roleOptionEdit = [
-  //   role?.map((rol: any, index: number) => {
-  //     if(rol.roleScopes.includes(userRoleDetail)){
-  //       return { value: `${rol.id}`, label: `${rol.roleName}` };
-  //     }
-  //     return { value: `0`, label: `0` };
-  //   }),
-  // ];
-  console.log(roleOptionEdit, "finish");
+  const typeOptionEdit = [
+    type?.map((type: any, index: number) => {
+      return { value: `${type.id}`, label: `${type.typeName}` };
+    }),
+  ];
+  console.log(type, 'typeeeeee')
+
+  const [id, setId] = React.useState({});
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const usersPerPage = 5;
+  const lastIndex = currentPage * usersPerPage;
+  const firstIndex = lastIndex - usersPerPage;
+  const usersPagi = users.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(users.length / usersPerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
   React.useEffect(() => {
     getAllUser();
     getRole();
-    getType();
     if (localStorage.getItem("userToken")) {
       let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
       let info: any = decode(dataInfo);
       getUserRoleDetail({ id: info.data.id });
+      setId(info.data.id);
+      console.log(info.data.id, " info.data.id");
+      getType(info.data.id);
     }
   }, []);
 
@@ -487,7 +505,7 @@ function AdminTemplate() {
                                 autoComplete="email"
                                 required
                                 className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
-                                placeholder="User's email address"
+                                placeholder="User's email"
                                 style={{ borderRadius: 4 }}
                               />
                             </div>
@@ -503,10 +521,10 @@ function AdminTemplate() {
                                 name="userAdress"
                                 onChange={handleOnChangeSignup}
                                 type="text"
-                                autoComplete="current-password"
+                                autoComplete="email"
                                 required
                                 className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
-                                placeholder="User's last name"
+                                placeholder="User's Adress"
                                 style={{ borderRadius: 4 }}
                               />
                             </div>
@@ -522,7 +540,7 @@ function AdminTemplate() {
                                 name="userPhoneNumber"
                                 onChange={handleOnChangeSignup}
                                 type="number"
-                                autoComplete="current-password"
+                                autoComplete="phoneNumber"
                                 required
                                 className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
                                 placeholder="User's Phone Number"
@@ -540,7 +558,7 @@ function AdminTemplate() {
                                 name="userPassword"
                                 onChange={handleOnChangeSignup}
                                 type={isPasswordViewed2 ? "text" : "password"}
-                                autoComplete="current-password"
+                                autoComplete="password"
                                 required
                                 className="block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm "
                                 placeholder="Your password"
@@ -571,10 +589,10 @@ function AdminTemplate() {
                                 id="confirm-password"
                                 name="confirmPassword"
                                 type={isPasswordViewed ? "text" : "password"}
-                                autoComplete="current-password"
+                                autoComplete="confirmPassword"
                                 required
                                 className="relative block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm mb-1 "
-                                placeholder="Password"
+                                placeholder="Confirm password"
                                 style={{ borderRadius: 4 }}
                                 onChange={(e) => {
                                   setConfirmPass({
@@ -625,26 +643,46 @@ function AdminTemplate() {
                               </label>
 
                               <Select
+                                isMulti={true}
                                 options={roleOptionEdit[0]}
                                 className="w-100 rounded-md shadow-sm mb-1  "
                                 components={animatedComponents}
                                 onChange={async (e: any) => {
                                   setFormSignUp({
                                     ...formSignup,
-                                    userRole: e.value,
+                                    userRole: e.map((item: any) => {
+                                      return item.value;
+                                    }),
                                   });
-                                  getRoleDetail({ id: e.value });
+                                  console.log(rol, "user");
+                                  console.log(
+                                    e.map((item: any) => {
+                                      return item.value;
+                                    }),
+                                    "e"
+                                  );
+                                  getRoleDetail({
+                                    id: e.map((item: any) => {
+                                      return item.value;
+                                    }),
+                                  });
 
-                                  let result = await axios
+                                  await axios
                                     .post("/api/roleApi/role-detail", {
-                                      userRole: e.value,
+                                      userRole: e.map((item: any) => {
+                                        return item.value;
+                                      }),
                                     })
                                     .then((result) => {
                                       setRelaUser({
-                                        ...relaType,
-                                        relaUser: result.data.content,
+                                        ...relaUser,
+                                        relaUser: result.data.content.map(
+                                          (item: any) => {
+                                            return item;
+                                          }
+                                        ),
                                       });
-                                      console.log(result.data.content);
+                                      console.log(relaUser, "user");
                                     })
                                     .catch((err) => {
                                       console.log(err);
@@ -665,23 +703,33 @@ function AdminTemplate() {
                                 className="w-100 rounded-md shadow-sm mb-1 "
                                 options={typeOptionEdit[0]}
                                 components={animatedComponents}
+                                isMulti={true}
                                 onChange={async (e: any) => {
                                   setFormSignUp({
                                     ...formSignup,
-                                    userType: Number(e.value),
+                                    userType: e.map((item: any) => {
+                                      return item.value;
+                                    }),
                                   });
+                                  console.log(rol, "esđsds");
 
-                                  console.log(formSignup, "select role");
                                   await axios
                                     .put("/api/userApi/signup", {
-                                      userType: e.value,
+                                      id: id,
+                                      userType: e.map((item: any) => {
+                                        return item.value;
+                                      }),
                                     })
                                     .then((result) => {
-                                      console.log(result.data, "type nef");
                                       setRelaType({
                                         ...relaType,
-                                        relaType: result.data.content,
+                                        relaType: result.data.content.map(
+                                          (item: any) => {
+                                            return item;
+                                          }
+                                        ),
                                       });
+                                      console.log(relaType, "type");
                                     })
                                     .catch((err) => {
                                       console.log(err);
@@ -694,14 +742,7 @@ function AdminTemplate() {
                         </form>
                         <div className="px-3">
                           {rol.includes("type") || rol.includes("all") ? (
-                            <div
-                              style={{
-                                maxHeight: 200,
-                                overflow: "hidden",
-                                overflowY: "scroll",
-                                width: "100%",
-                              }}
-                            >
+                            <div>
                               <label
                                 htmlFor="relatedType"
                                 className="info-required"
@@ -709,9 +750,23 @@ function AdminTemplate() {
                                 Related Type
                               </label>
 
-                              <div className="pb-3">
-                                <table>
-                                  <thead>
+                              <div
+                                className="pb-3"
+                                style={{
+                                  maxHeight: 200,
+                                  overflow: "hidden",
+                                  overflowY: "scroll",
+                                  width: "100%",
+                                }}
+                              >
+                                <table style={{ position: "relative" }}>
+                                  <thead
+                                    style={{
+                                      position: "sticky",
+                                      top: 0,
+                                      width: "100%",
+                                    }}
+                                  >
                                     <tr>
                                       <th style={{ fontSize: 12 }}>Select</th>
                                       <th style={{ fontSize: 12 }}>Stt</th>
@@ -729,64 +784,76 @@ function AdminTemplate() {
                                   </thead>
                                   <tbody>
                                     {relaType.relaType
-                                      ? relaType.relaType?.map(
-                                          (item: any, index: number) => {
-                                            return (
-                                              <tr key={item.id}>
-                                                <td>
-                                                  <input
-                                                    name="relaType"
-                                                    type="checkbox"
-                                                    value={item.id}
-                                                    onChange={
-                                                      handleChangeChecked
-                                                    }
-                                                  />
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {index++}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userFirstName}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userLastName}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userEmail}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userPhoneNumber}
-                                                </td>
-                                              </tr>
-                                            );
-                                          }
-                                        )
+                                      ? relaType.relaType.map((item: any) => {
+                                          let a = 1;
+                                          return item.map(
+                                            (user: any, index: number) => {
+                                              return (
+                                                <tr key={user.id}>
+                                                  <td>
+                                                    <input
+                                                      name="relaType"
+                                                      type="checkbox"
+                                                      value={user.id}
+                                                      onChange={
+                                                        handleChangeChecked
+                                                      }
+                                                    />
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {a++}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userFirstName}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userLastName}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userEmail}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userPhoneNumber}
+                                                  </td>
+                                                </tr>
+                                              );
+                                            }
+                                          );
+                                        })
                                       : null}
                                   </tbody>
                                 </table>
                               </div>
                             </div>
-                          ) : null}
+                          ) : (
+                            ""
+                          )}
 
                           {rol.includes("point") || rol.includes("all") ? (
-                            <div
-                              style={{
-                                maxHeight: 200,
-                                overflow: "hidden",
-                                overflowY: "scroll",
-                                width: "100%",
-                              }}
-                            >
+                            <div>
                               <label
                                 htmlFor="relatedUser"
                                 className="info-required"
                               >
                                 Related User
                               </label>
-                              <div className="pb-3">
+                              <div
+                                className="pb-3"
+                                style={{
+                                  maxHeight: 200,
+                                  overflow: "hidden",
+                                  overflowY: "scroll",
+                                  width: "100%",
+                                }}
+                              >
                                 <table>
-                                  <thead>
+                                  <thead
+                                    style={{
+                                      position: "sticky",
+                                      top: 0,
+                                      width: "100%",
+                                    }}
+                                  >
                                     <tr>
                                       <th style={{ fontSize: 12 }}>Select</th>
                                       <th style={{ fontSize: 12 }}>Stt</th>
@@ -804,45 +871,49 @@ function AdminTemplate() {
                                   </thead>
                                   <tbody>
                                     {relaUser.relaUser
-                                      ? relaUser.relaUser.map(
-                                          (item: any, index: number) => {
-                                            return (
-                                              <tr key={item.id}>
-                                                <td>
-                                                  <input
-                                                    name="relaUser"
-                                                    type="checkbox"
-                                                    value={item.id}
-                                                    onChange={
-                                                      handleChangeChecked
-                                                    }
-                                                  />
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {index++}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userFirstName}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userLastName}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userEmail}
-                                                </td>
-                                                <td style={{ fontSize: 12 }}>
-                                                  {item.userPhoneNumber}
-                                                </td>
-                                              </tr>
-                                            );
-                                          }
-                                        )
+                                      ? relaUser.relaUser.map((item: any) => {
+                                          return item.map(
+                                            (user: any, index: number) => {
+                                              return (
+                                                <tr key={user.id}>
+                                                  <td>
+                                                    <input
+                                                      name="relaUser"
+                                                      type="checkbox"
+                                                      value={user.id}
+                                                      onChange={
+                                                        handleChangeChecked
+                                                      }
+                                                    />
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {index++}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userFirstName}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userLastName}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userEmail}
+                                                  </td>
+                                                  <td style={{ fontSize: 12 }}>
+                                                    {user.userPhoneNumber}
+                                                  </td>
+                                                </tr>
+                                              );
+                                            }
+                                          );
+                                        })
                                       : null}
                                   </tbody>
                                 </table>
                               </div>
                             </div>
-                          ) : null}
+                          ) : (
+                            ""
+                          )}
                         </div>
 
                         <div className="modal-footer">
@@ -900,7 +971,7 @@ function AdminTemplate() {
               </div>
             </div>
           </div>
-          <table className="table-auto ">
+          <table className="table-auto " style={{minHeight:"273px"}}>
             <thead>
               <tr>
                 <th>STT</th>
@@ -946,8 +1017,8 @@ function AdminTemplate() {
                 <th>More</th>
               </tr>
             </thead>
-            <tbody>
-              {users
+            <tbody >
+              {usersPagi
                 ?.filter((item: any) => {
                   return search.toLowerCase() === ""
                     ? item
@@ -956,8 +1027,8 @@ function AdminTemplate() {
                 .map((user: any, index) => {
                   return (
                     <tr key={user.id}>
-                      <td className="text-start">{index++}</td>
-                      <td>{user.userFirstName}</td>
+                      <td className="text-start">{index}</td>
+                      <td >{user.userFirstName}</td>
                       <td style={{ textAlign: "start" }}>{user.userEmail}</td>
                       <td>{user.userDob.replace("T00:00:00.000Z", "")}</td>
                       <td>{user.userPhoneNumber}</td>
@@ -1071,6 +1142,15 @@ function AdminTemplate() {
                 })}
             </tbody>
           </table>
+        
+            <Pagination
+              currentPage={currentPage}
+              changePage={changePage}
+              prePage={prePage}
+              numbers={numbers}
+              nextPage={nextPage}
+            />
+    
           <div>
             <div
               className="modal fade edit-user"
@@ -1199,7 +1279,17 @@ function AdminTemplate() {
                           <input
                             id="user-email"
                             name="userRole"
-                            defaultValue={roles}
+                            defaultValue={
+                              roleDetail.length > 1
+                                ? roleDetail.map((item: any) => {
+                                    return item.map(
+                                      (value: any) => value.roleName
+                                    );
+                                  })
+                                : roleDetail.map((item: any) => {
+                                    return item.roleName;
+                                  })
+                            }
                             readOnly
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
@@ -1217,11 +1307,21 @@ function AdminTemplate() {
                           <input
                             id="roleDescription"
                             name="roleDescription"
-                            defaultValue={roleDetail}
+                            defaultValue={
+                              roleDetail.length > 1
+                                ? roleDetail.map((item: any) => {
+                                    return item.map(
+                                      (value: any) => value.roleDescription
+                                    );
+                                  })
+                                : roleDetail.map((item: any) => {
+                                    return item.roleDescription;
+                                  })
+                            }
                             readOnly
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
-                            placeholder="Your email address"
+                            placeholder="Your type"
                             style={{ borderRadius: 4 }}
                           />
                         </div>
@@ -1236,7 +1336,11 @@ function AdminTemplate() {
                           <input
                             id="user-email"
                             name="userRole"
-                            defaultValue={typeDetail.typeName}
+                            defaultValue={typeDetail.length > 1 ? typeDetail.map((item: any) => {
+                              return item.map((value: any) => value.typeName);
+                            }) : typeDetail.map((item: any) => {
+                              return item.typeName;
+                            })}
                             readOnly
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
@@ -1370,7 +1474,7 @@ function AdminTemplate() {
                             disabled
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
-                            placeholder="Your email address"
+                            placeholder="Roles"
                             style={{ borderRadius: 4 }}
                           />
                           <Select
@@ -1398,10 +1502,20 @@ function AdminTemplate() {
                           <input
                             id="roleDescription"
                             name="roleDescription"
-                            defaultValue={roleDetail}
+                            defaultValue={
+                              roleDetail.length > 1
+                                ? roleDetail.map((item: any) => {
+                                    return item.map(
+                                      (value: any) => value.roleDescription
+                                    );
+                                  })
+                                : roleDetail.map((item: any) => {
+                                    return item.roleDescription;
+                                  })
+                            }
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
-                            placeholder="Your email address"
+                            placeholder="Roles description"
                             style={{ borderRadius: 4 }}
                           />
                         </div>
@@ -1462,6 +1576,20 @@ function AdminTemplate() {
       </div>
     </>
   );
+
+  function prePage() {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
+  function changePage(n: number) {
+    setCurrentPage(n);
+  }
+  function nextPage() {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
 }
 
 export default AdminTemplate;

@@ -18,9 +18,20 @@ export default async function getAllRole(
     if (req.method == "GET") {
          let data = await model.Type.findAll()
         successCode(res,data," Get list of type success")
-    } else {
+    } else if(req.method == "PUT") {
+      let data = await model.Type.findAll()
+       let {id} = req.body;
+      console.log(id,' getType({id:  info.data.id}); ')
+       let userInf = await model.Users.findByPk(id)
+       let userLevel = await model.Type.findAll({where:{
+        id: userInf?.dataValues.userType
+       }})
+      
+       successCode(res,userLevel," User Level Success")
+    }else {
       failCode(res, req, "Error method");
     }
+    
   } catch (error: any) {
     return errorCode(error, "Dang ky khong thanh cong");
   }

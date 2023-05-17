@@ -17,11 +17,8 @@ export const checkToken = (token: string) => {
   const verifyToken = jwt.verify(token, "SCMSystem");
 
   if (verifyToken) {
-    // console.log(verifyToken)
-
     return true;
   } else {
-    // console.log(verifyToken)
     return false;
   }
 };

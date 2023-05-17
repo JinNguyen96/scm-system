@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pragmatic-byway-384301",
+  "private_key_id": "2559cf45ed3dce635012a2c9a439f90af8e1d941",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCt2xjUJUmDmS76\neV9xsUHng1mH+TrXQdmhG+cKxMeEUwKONM1h13r9xrXDXmc6l7cDzRbRKRvzIMM3\ntuW8VAWFvlBO7/jk9Ht0ZYayXEzE0Gg4ngUHIN0tRMT0wPtpbLFlYNNlkg+yioU8\nV9pQmvq3V7JHikIWQM+EMR7sn1nLUUu+z4l9Z5+6nB96G4SmJm1+S4WoNXkBkLo1\nUVVlzIJaF9ceLzGmRxt7s5Z+TABBlJggu9GaNCud6cf9h2eW29sTYQXtiBzHgHbX\nFp5yVjueDz2H+aT9U1grFUwpFuTw8NazrJKUAeKst3hp5MWp8L2JqattBLErlzYE\n4nmz+nDZAgMBAAECggEABOSgN8RO493JVTJaTdRb0vy+5dVNYyaOzfp/j62HIgHG\nFiOFTkYmx4Kytetvw1XmyDwa8ssR5s9avzQuFhVVTHTVRMt7OVJqMRX0awuu+3EU\nJdfIs3Eo2G/RjUPrL4XoHj7R5E9ukqtUYaTlV5RtDwDwWxQYlRDA5msNgEJh4Bd/\nRqk0olLe+sH4h8ovWYuWuGteP0Ivt/N5QclTd7ELFjOSZ4k8M8xvJdTVLc2KbKCu\nPEmGJlhsqjOl2G28bgk4WeweKdBMXsJp8BsOsJk7a3A7TRW8UbZWtx4Gcczz90JU\nuXoqj1tPrVw/Fet4eotOf9IBuUYtfRA4Crq+dq9zIwKBgQDT0oTEDHa/xbwKCtZU\nzwy9UvlcXuzdEMOx4XxZdzr+tnilDOqaYU6T7ba3GFyp7l2qkdi0gCkIkw/s8Hic\nT7v+vFBGoyWuRXX3VtxEfob58QPc4cttCkRsuMR7xveSGanTzjEmgidjV5Qt0S3Y\nBNEG7lR115r2NGiAby8GU4YuqwKBgQDSHX78MK4TA4ZQu0w+776I9ap6h+M5uhcv\n/FAOdUN5nLrM37M+Xn1KYV6CvIKQG68ATKXYoGIExLfYZ0K4tiLuBCRfz9ZdtMyR\n41NK8PmnmCKpQyXnhvzRSmFAjPQfY7FT1pPGWaBW2ebswDFbJijv1yajiVoUc8m5\naJ+la7VOiwKBgQCS8pOqUh87cRi/Or9v/GeRG/Pj8fKOdifcylny0vU5aSsPDYPf\nb6wMkbfVE3CNbtDKGP3mUpak3SkKLdTuU55O3SMvrdThLkzlNvv+BGztDheo73ep\ngJrxdcjRObncQDOBvaR5W4epskMY+em817KPBV3Qlq9pJ/hrSTatQ9ptmwKBgQC8\nS3igMlPdcDwvHxpeEGWUwWtscVidQ/pBo4Bu5IF6e40fyp0MGIt5W7bhvGPZFyYG\nQ6ogbuJIWa5TvX4aoAa/fHDIeC4oPb1SRAFB2KAyo/Dz9NwEF4F7YYez3F1tv96L\nPnGhwHIjQxViN35Dq/flr87NoWpbh8RQZsUi7lpFrwKBgFx2VxsdpW+OewcEhriM\nuNlc/lFcFDGTDNmxWCWNNeE2ynFEbsbKDC0PKiutMW4lfPTe9gZq0yhl1kZObtu3\nBjTWkkE+9UUdWh9y5ysHPclLVmHkn/BN3oXDhHJA6fQwtA81bD21lToD6gfjUK7q\n6UOFuEGJ6WMZJ5oq9bSaltY5\n-----END PRIVATE KEY-----\n",
+  "client_email": "nextjs-cloudrun-scm@pragmatic-byway-384301.iam.gserviceaccount.com",
+  "client_id": "104491574873885063515",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nextjs-cloudrun-scm%40pragmatic-byway-384301.iam.gserviceaccount.com"
+}

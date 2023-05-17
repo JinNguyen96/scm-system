@@ -17,13 +17,22 @@ export default async function getTypeDetail(
   try {
     if (req.method == "PUT") {
       let {id}= req.body;
-      console.log(id,'body')
-      let data = await model.Type.findAll({
-        where: {
-          id
-        },
-        
-      });
+      let arrId = id.split(',')
+      let data: any= []
+     console.log(arrId.length)
+     if(  arrId.length > 1){
+      for(let i = 0; i < arrId.length ; i++){
+        data.push( await model.Type.findAll({where:{
+          id:arrId[i]
+        }}))
+    }
+    }
+    else{
+      data = await model.Type.findAll({where:{
+        id
+      }})
+     }
+      console.log(data,'data')
       successCode(res, data, "Type detail");
     } else {
       failCode(res, req, "Error method");

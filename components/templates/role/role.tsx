@@ -6,6 +6,7 @@ import makeAnimated from "react-select/animated";
 import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
 import { Label } from "flowbite-react";
+import Pagination from "../../panigation";
 
 const animatedComponents = makeAnimated();
 const RolePermOption = [
@@ -129,8 +130,9 @@ function Role() {
       .put("/api/roleApi/role-detail", data)
       .then((result) => {
         console.log(result);
-        console.log(data, "data");
-        setRoleDetail(result.data.content[0]);
+        console.log(roleDetail, "data");
+        setRoleDetail(result.data.content);
+        
         setId(result.data.content[0]);
         setUserScope(result.data.content);
       })
@@ -138,22 +140,28 @@ function Role() {
         console.log(err);
       });
   };
-  const seal = [
-    role.map((rol: any, index: number) => {
-      index = rol.id;
-      return { value: `${rol.rolePermission}`, label: `${rol.rolePermission}` };
-    }),
-  ];
 
+console.log(useScope,'useScope')
   const scope = useScope?.map((scope: any) => {
-    let scopeArray = scope.roleScopes.split(",");
-    return scopeArray.map((scopeArray: any) => {
-      return { value: scopeArray, label: scopeArray.toUpperCase() };
-    });
+    if(scope[0].roleScopes.split(',').includes('all')){
+        return roleScopesOption
+    }else{
+      return { value: scope[0].roleScopes, label: scope[0].roleScopes.toUpperCase()};
+    }
+    
+   
   });
-  let scopeByUser = scope[0];
+  let scopeByUser = scope;
 
-  const sealValue = seal[0];
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const rolePerPage = 5;
+  const lastIndex = currentPage * rolePerPage;
+  const firstIndex = lastIndex - rolePerPage;
+  const rolePagi = role.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(role.length / rolePerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
   useEffect(() => {
     getRole();
   }, []);
@@ -199,7 +207,7 @@ function Role() {
             <div className="middle-menu">
               <div>
                 <div className="btn-create relative">
-                <span>All ({role.length})</span>
+                  <span>All ({role.length})</span>
                   <button
                     data-bs-toggle="modal"
                     data-bs-target="#createRoleModal"
@@ -316,7 +324,7 @@ function Role() {
                                   closeMenuOnSelect={false}
                                   components={animatedComponents}
                                   isMulti
-                                  options={scopeByUser}
+                                  options={roleScopesOption}
                                 />
                               </div>
                             </div>
@@ -444,7 +452,7 @@ function Role() {
               </tr>
             </thead>
             <tbody>
-              {role
+              {rolePagi
                 ?.filter((item: any) => {
                   return search.toLowerCase() === ""
                     ? item
@@ -572,6 +580,13 @@ function Role() {
                 })}
             </tbody>
           </table>
+            <Pagination
+              currentPage={currentPage}
+              changePage={changePage}
+              prePage={prePage}
+              numbers={numbers}
+              nextPage={nextPage}
+            />
           <div>
             <div
               className="modal fade edit-user w-full"
@@ -836,6 +851,19 @@ function Role() {
       </div>
     </>
   );
+  function prePage() {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }
+  function changePage(n: number) {
+    setCurrentPage(n);
+  }
+  function nextPage() {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
 }
 
 export default Role;

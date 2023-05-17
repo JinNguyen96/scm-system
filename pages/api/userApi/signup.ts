@@ -25,8 +25,6 @@ export default async function signup(
         console.log(error);
         return failCode(res, error, "email da ton tai");
       } else {
-        console.log("1111111111111111");
-
         let {
           userFirstName,
           userEmail,
@@ -48,13 +46,13 @@ export default async function signup(
         });
         let result1 = [];
         result1 = getIdByRole.map((perm) => perm.rolePermission);
-        console.log(getIdByRole);
+
         let data = {
           id: 0,
-          userType,
+          userType : userType.toString(),
           userEmail,
           userPassword: bcrypt.hashSync(userPassword, 10),
-          userRole,
+          userRole : userRole.toString(),
           userPhoneNumber,
           userFirstName,
           userLastName,
@@ -83,20 +81,59 @@ export default async function signup(
         }
       }
     } else if (req.method === "PUT") {
-      let { userType } = req.body;
-      let findUserByType = await model.Users.findAll({
-        where: {
-          userType,
-        },
-      });
-     
-      if (findUserByType.length >0) {
-      
-        successCode(res, findUserByType, "tim thanh cong");
-      }
-      else{
-        successCode(res,'','No data record')
-      }
+      let { userType,id } = req.body;
+      let dataType:any = []
+      for (let i = 0; i < userType.length; i++) {
+        console.log(userType[i],'userType[i]')
+         await model.Users.findAll({
+          where: {
+            userType: userType[i],
+          },
+        })
+          .then((result) => {
+          console.log(dataType,'on for')
+
+          return  dataType.push(result.map(e => e.dataValues))
+          })
+          .catch((err: any) => {
+            console.log(err);
+          });
+          
+        }
+        console.log(dataType,'on for')
+       let UserInf = await model.Users.findByPk(id)
+       
+       let typeOfUser= await model.Type.findByPk(
+        Number(UserInf?.dataValues.userType),{
+          include:[{
+            model:model.Users,
+           as:'user_type'
+          }]
+        }
+        )
+        let record:any = [{}]
+       console.log(typeOfUser?.dataValues,'typeOfUser')
+
+
+
+       let newRecord = dataType.map((obj:any) => {
+        console.log(obj,'obj')
+        return obj.map(async (item:any) => { 
+           await model.Type.findByPk(Number(item.userType)).then((result) => { 
+            console.log(result?.dataValues,'result?.dataValues')
+            return record.push(result?.dataValues)
+            
+            
+            }).catch((err:any)=> console.log(err))
+            
+          })
+          
+          
+        })
+        console.log(record,'rec')
+       console.log(newRecord,'newRecord')
+      successCode(res, dataType, "tim thanh cong");
+   
       
     } else {
       return failCode(res, "", "sai method");
