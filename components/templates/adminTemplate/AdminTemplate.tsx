@@ -6,30 +6,16 @@ import makeAnimated from "react-select/animated";
 import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
 import Pagination from "../../panigation";
-import { RoleScopes } from '../../../models/roles';
+import {useForm} from "react-hook-form"
+
+
 const animatedComponents = makeAnimated();
-const RolePermOption = [
-  { value: "perUser_view", label: "USER_VIEW" },
-  { value: "perUser_add", label: "USER_ADD" },
-  { value: "perUser_edit", label: "USER_EDIT" },
-  { value: "perUser_delete", label: "USER_DELETE" },
-  { value: "perScopes_view", label: "SCOPES_VIEW" },
-  { value: "perScopes_add", label: "SCOPES_ADD" },
-  { value: "perScopes_edit", label: "SCOPES_EDIT" },
-  { value: "perScopes_delete", label: "SCOPES_DELETE" },
-  { value: "perMaterial_view", label: "MATERIAL_VIEW" },
-  { value: "perMaterial_add", label: "MATERIAL_ADD" },
-  { value: "perMaterial_edit", label: "MATERIAL_EDIT" },
-  { value: "perMaterial_delete", label: "MATERIAL_DELETE" },
-];
-const roleScopesOption = [
-  { value: "own", label: "OWN" },
-  { value: "point", label: "POINT" },
-  { value: "type", label: "TYPE" },
-  { value: "all", label: "ALL" },
-];
 
 function AdminTemplate() {
+
+
+const {register, handleSubmit} = useForm();
+
   const [users, setUsers] = React.useState([]);
   const [userDetail, setUserDetail] = React.useState({
     relatedType: 1,
@@ -171,11 +157,8 @@ function AdminTemplate() {
     await axios
       .put("/api/typeApi/type-detail", id)
       .then((result) => {
-        console.log(result, "getTypeDetail");
         setTypeDetail(result.data.content);
-        console.log(result.data.content,'result.data.content')
-        console.log(result.data.content, "id");
-        console.log(typeDetail, "typeName");
+       
       })
       .catch((err) => {
         console.log(err, "ees");
@@ -185,9 +168,21 @@ function AdminTemplate() {
     await axios
       .put("/api/roleApi/role-detail", id)
       .then((result) => {
-        console.log(result.data.content[0], "role");
-        setRol(result.data.content[0].roleScopes);
+   
+        if(result.data.content.length > 1){
+          for(let i =0;i < result.data.content.length; i++ ){
+            setRol([...rol,result.data.content[i]])
 
+          }
+        }else{
+          console.log(result.data.content.map((item:any) => { 
+            return item.roleScopes
+           }), "role");
+           setRol(result.data.content.map((item:any) => { 
+            return item.roleScopes
+           }));
+        }
+        console.log(rol, "rol");
       })
       .catch((err) => {
         console.log(err, "ees");
@@ -283,7 +278,7 @@ function AdminTemplate() {
     await axios
       .get("/api/typeApi/get-all-type")
       .then((result) => {
-        console.log(result,'')
+        console.log(result, "");
         setType(
           result.data.content.filter((lv: any) => {
             return lv.typeLevel >= typeFilter[0].typeLevel;
@@ -347,7 +342,7 @@ function AdminTemplate() {
       return { value: `${type.id}`, label: `${type.typeName}` };
     }),
   ];
-  console.log(type, 'typeeeeee')
+  console.log(type, "typeeeeee");
 
   const [id, setId] = React.useState({});
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -609,7 +604,7 @@ function AdminTemplate() {
                                   } else {
                                     setIsError(false);
                                   }
-                                  console.log(isError);
+                                 
                                 }}
                               />
                               <span>
@@ -626,14 +621,7 @@ function AdminTemplate() {
                                 />
                               </span>
                             </div>
-                            {/* {isError ? (
-                              <p className="validation-info m-0">
-                                Password does not match
-                              </p>
-                            ) : (
-                              ""
-                            )} */}
-
+                              
                             <div className="pb-3 flex flex-column flex-start">
                               <label
                                 htmlFor="user-role"
@@ -654,19 +642,13 @@ function AdminTemplate() {
                                       return item.value;
                                     }),
                                   });
-                                  console.log(rol, "user");
-                                  console.log(
-                                    e.map((item: any) => {
-                                      return item.value;
-                                    }),
-                                    "e"
-                                  );
+                                
                                   getRoleDetail({
                                     id: e.map((item: any) => {
                                       return item.value;
                                     }),
                                   });
-
+                                
                                   await axios
                                     .post("/api/roleApi/role-detail", {
                                       userRole: e.map((item: any) => {
@@ -682,7 +664,6 @@ function AdminTemplate() {
                                           }
                                         ),
                                       });
-                                      console.log(relaUser, "user");
                                     })
                                     .catch((err) => {
                                       console.log(err);
@@ -711,8 +692,6 @@ function AdminTemplate() {
                                       return item.value;
                                     }),
                                   });
-                                  console.log(rol, "esđsds");
-
                                   await axios
                                     .put("/api/userApi/signup", {
                                       id: id,
@@ -971,7 +950,7 @@ function AdminTemplate() {
               </div>
             </div>
           </div>
-          <table className="table-auto " style={{minHeight:"273px"}}>
+          <table className="table-auto " style={{ minHeight: "273px" }}>
             <thead>
               <tr>
                 <th>STT</th>
@@ -1017,7 +996,7 @@ function AdminTemplate() {
                 <th>More</th>
               </tr>
             </thead>
-            <tbody >
+            <tbody>
               {usersPagi
                 ?.filter((item: any) => {
                   return search.toLowerCase() === ""
@@ -1028,7 +1007,7 @@ function AdminTemplate() {
                   return (
                     <tr key={user.id}>
                       <td className="text-start">{index}</td>
-                      <td >{user.userFirstName}</td>
+                      <td>{user.userFirstName}</td>
                       <td style={{ textAlign: "start" }}>{user.userEmail}</td>
                       <td>{user.userDob.replace("T00:00:00.000Z", "")}</td>
                       <td>{user.userPhoneNumber}</td>
@@ -1142,15 +1121,15 @@ function AdminTemplate() {
                 })}
             </tbody>
           </table>
-        
-            <Pagination
-              currentPage={currentPage}
-              changePage={changePage}
-              prePage={prePage}
-              numbers={numbers}
-              nextPage={nextPage}
-            />
-    
+
+          <Pagination
+            currentPage={currentPage}
+            changePage={changePage}
+            prePage={prePage}
+            numbers={numbers}
+            nextPage={nextPage}
+          />
+
           <div>
             <div
               className="modal fade edit-user"
@@ -1336,11 +1315,17 @@ function AdminTemplate() {
                           <input
                             id="user-email"
                             name="userRole"
-                            defaultValue={typeDetail.length > 1 ? typeDetail.map((item: any) => {
-                              return item.map((value: any) => value.typeName);
-                            }) : typeDetail.map((item: any) => {
-                              return item.typeName;
-                            })}
+                            defaultValue={
+                              typeDetail.length > 1
+                                ? typeDetail.map((item: any) => {
+                                    return item.map(
+                                      (value: any) => value.typeName
+                                    );
+                                  })
+                                : typeDetail.map((item: any) => {
+                                    return item.typeName;
+                                  })
+                            }
                             readOnly
                             type="text"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"

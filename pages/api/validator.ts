@@ -25,5 +25,13 @@ const signinShema: any = Joi.object({
   userEmail: Joi.string().email().required(),
   userPassword: Joi.string().required(),
 });
+
+const createRole: any = Joi.object({
+  roleName: Joi.required(),
+  roleDescription: Joi.required(),
+  roleScopes: Joi.required(),
+  rolePermission: Joi.required()
+})
 export const validateSignup = validator(signupSchema);
 export const validateSignin = validator(signinShema);
+export const validateCreateRole = validator(createRole);

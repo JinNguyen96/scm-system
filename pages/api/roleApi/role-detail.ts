@@ -15,59 +15,56 @@ export default async function getAllRole(
   res: NextApiResponse
 ) {
   try {
-    if (req.method == "PUT") {
-      // let { id } = req.body;
-      // console.log(id,'body')
-      // let data = await model.Roles.findAll({
-      //   where: {
-      //     id,
-      //   },
-      // });
-      let {id}= req.body;
-      let arrId = id.split(',')
-      let data: any= []
-     console.log(arrId.length)
-     if(  arrId.length > 1){
-      for(let i = 0; i < arrId.length ; i++){
-        data.push( await model.Roles.findAll({where:{
-          id:arrId[i]
-        }}))
-    }
-    }
-    else{
-      data = await model.Roles.findAll({where:{
-        id
-      }})
-     }
-      successCode(res, data, "Role detail");
-    } else if (req.method === "POST") {
-      let { userRole } = req.body;
-   
-   let data:any= []
-      for (let i = 0; i <= userRole.length; i++) {
-        console.log(userRole[i],'userRole[i]')
-         await model.Users.findAll({
-          where: {
-            userRole: userRole[i],
-          },
-        })
-          .then((result) => {
-          console.log(data,'on for')
+    if (req.method === "PUT") {
+      let { id } = req.body;
 
-          return  data.push(result.map(e => e.dataValues))
-          })
-          .catch((err: any) => {
-            console.log(err);
-          });
-          
+
+      let data: any = []
+      console.log(id.length)
+      if (id.length > 1) {
+        for (let i = 0; i < id.length; i++) {
+          data.push(await model.Roles.findAll({
+            where: {
+              id: id[i]
+            }
+          }))
         }
-        console.log(data,'on for')
-       
-      successCode(res, data, "tim thanh cong");
-   
-    } else {
-      failCode(res, req, "Error method");
+      }
+      else {
+        data = await model.Roles.findAll({
+          where: {
+            id
+          }
+        })
+      }
+      successCode(res, data, "Role detail");
     }
+
+    // if (req.method === "POST") {
+    //   let { userRole } = req.body;
+    //   let data: any = []
+    //   for (let i = 0; i <= userRole.length; i++) {
+    //     await model.Users.findAll({
+    //       where: {
+    //         userRole: userRole[i],
+    //       },
+    //     })
+    //       .then((result) => {
+   
+
+    //         return data.push(result.map(e => e.dataValues))
+    //       })
+    //       .catch((err: any) => {
+    //         console.log(err);
+    //       });
+
+    //   }
+
+    //   successCode(res, data, "tim thanh cong");
+
+    // } else {
+    //   failCode(res, req, "Error method");
+    // }
   } catch (error: any) {
     return errorCode(error, "Delete unsuccess");
   }

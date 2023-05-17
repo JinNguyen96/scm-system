@@ -132,7 +132,6 @@ function Role() {
         console.log(result);
         console.log(roleDetail, "data");
         setRoleDetail(result.data.content);
-        
         setId(result.data.content[0]);
         setUserScope(result.data.content);
       })
