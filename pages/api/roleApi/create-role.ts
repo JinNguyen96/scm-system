@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { failCode, successCode, errorCode } from "../../../utils/response";
-import * as bcrypt from "bcrypt-ts";
 import initModels from "../../../models/init-models";
 import sequelize from "../../../models/config";
 
