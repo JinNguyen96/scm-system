@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
     }));
   if (req.nextUrl.pathname.startsWith("/login") && !verifiedToken) {
 
-    return 
+    return  NextResponse.next();
   }
 
   if (req.url.includes("/login") && verifiedToken) {
