@@ -3,7 +3,6 @@ import React from "react";
 
 function Dashboard() {
     
-    let [cookie, setCookie] = React.useState('')
   return (
     <div className="relative">
       DashBoard

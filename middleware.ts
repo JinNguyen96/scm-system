@@ -4,13 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("USER_LOGIN")?.value;
 
-  const verifiedToken =
-    token && (await verifyAuth(token.replace('"', "")).catch((err: any) => {}));
+  const verifiedToken = token && (await verifyAuth(token.replace('"', "")).catch((err: any) => { }));
   if (req.nextUrl.pathname.startsWith("/login") && !verifiedToken) {
-    return;
+    return NextResponse.next();
   }
-  console.log(req.url.includes("/login"), 'req.url.includes("/login")');
-  console.log(verifiedToken, "verifiedToken");
+
   if (req.url.includes("/login") && verifiedToken) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }

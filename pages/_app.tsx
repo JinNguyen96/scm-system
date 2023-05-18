@@ -24,12 +24,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [isLogin]);
   return (
+   <>
     <div className="">
       <div className={isLogin ? "" : "d-none"}>
-        <Sidebar />
+       <>
+       <Sidebar />
+       </>
       </div>
       <div className={isLogin ? "main-header" : "d-none"}>
+        <>
         <Header />
+        </>
       </div>
       <div className={isLogin ? "p-4 sm:ml-20" : ""}>
         <div
@@ -39,10 +44,13 @@ function MyApp({ Component, pageProps }: AppProps) {
               : ""
           }
         >
-          <Component {...pageProps} />{" "}
+         <>
+         <Component {...pageProps} />{" "}
+         </>
         </div>
       </div>
     </div>
+   </>
   );
 }
 export default MyApp;
