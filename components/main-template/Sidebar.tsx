@@ -10,7 +10,7 @@ export default function Sidebar() {
     <>
       <aside
         id="logo-sidebar"
-        className="fixed  flex top-0 z-40 h-screen transition-transform  bg-white border-r border-gray-200  dark:bg-gray-800 dark:border-gray-700"
+        className="fixed  flex top-0 z-40 h-screen   bg-white border-r border-gray-200  dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar"
       >
         <div className="side-bar-fixed h-full">

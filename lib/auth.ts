@@ -16,7 +16,9 @@ export const getJwtSecretKey = () =>{
 }
 
 export const verifyAuth = async (token: string)=>{
+ 
     const verified = await jwtVerify(token, new TextEncoder().encode(getJwtSecretKey()))
+    console.log(verified.payload,'verified')
     try {
         return verified.payload as UserJwtPayload
     } catch (error) {
@@ -24,4 +26,3 @@ export const verifyAuth = async (token: string)=>{
     }
 
 } 
-
