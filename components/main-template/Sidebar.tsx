@@ -5,6 +5,11 @@ import Router from "next/router";
 
 export default function Sidebar() {
   const [value, onChange] = useState(new Date());
+  const [isActive, setIsActive] = useState(true);
+  const handleActive = () => {
+    setIsActive(!isActive);
+    console.log(isActive);
+  };
 
   return (
     <>
@@ -82,7 +87,6 @@ export default function Sidebar() {
               <Link
                 href="#"
                 className="block px-4 py-2 text-sm text-gray-700 align-self-end"
-               
                 role="menuitem"
                 onClick={() => {
                   document.cookie = "USER_LOGIN=";
@@ -90,7 +94,7 @@ export default function Sidebar() {
                   Router.reload();
                 }}
               >
-                <img src="logout.svg" alt="logout icon" />
+                <img src="/logout.svg" alt="logout icon" />
               </Link>
             </li>
           </ul>
@@ -99,11 +103,11 @@ export default function Sidebar() {
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 side-bar-hover">
           <ul className="space-y-2 ">
             <li className="flex ml-3 items-center p-2">
-              <img src="scm.svg" alt="scm logo" />
+              <img src="/scm.svg" alt="scm logo" />
             </li>
             <li>
               <Link
-                href="dashboard"
+                href="/dashboard"
                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">Dashboard</span>
@@ -125,81 +129,186 @@ export default function Sidebar() {
                 </svg>
               </Link>
             </li>
+
             <li>
-              <Link
-                href="role"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              <ul
+                data-bs-toggle="collapse"
+                data-bs-target="#userManagerment"
+                aria-expanded="false"
+                className="pl-0"
+                aria-controls="collapseExample"
               >
-                <span className="flex-1 ml-3 whitespace-nowrap">Role</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
+                <li>
+                  <a
+                    onClick={() => {
+                      handleActive();
+                    }}
+                    className={
+                      !isActive
+                        ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
+                        : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                    }
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      User Managerment
+                    </span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+              <ul className="collapse collapsed" id="userManagerment">
+                <li>
+                  <Link
+                    href="/admin-template"
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/role"
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Role</span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/type"
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Type</span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <ul
+                data-bs-toggle="collapse"
+                data-bs-target="#materialManagerment"
+                aria-expanded="false"
+                className="pl-0"
+                aria-controls="collapseExample"
+              >
+                <li>
+                  <a
+                    onClick={() => {
+                      handleActive();
+                    }}
+                    className={
+                      !isActive
+                        ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
+                        : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                    }
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Material Managerment
+                    </span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+              <ul className="collapse collapsed" id="materialManagerment">
+                <li>
+                  <Link
+                    href="/material/material"
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Material</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/material/category"
+                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Category</span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li>
               <Link
-                href="type"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <span className="flex-1 ml-3 whitespace-nowrap">Type</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="admin-template"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="permission"
+                href="/get-info/account-info"
                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">

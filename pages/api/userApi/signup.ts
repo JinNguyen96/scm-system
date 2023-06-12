@@ -22,7 +22,7 @@ export default async function signup(
       let { error } = validateSignup(req.body);
 
       if (error) {
-        console.log(error);
+
         return failCode(res, error, "Something was wrong!!");
       } else {
 
@@ -47,7 +47,7 @@ export default async function signup(
         });
         let result1 = [];
         result1 = getIdByRole.map((perm) => perm.rolePermission);
-        console.log(getIdByRole);
+
         let data = {
           id: 0,
           userType,

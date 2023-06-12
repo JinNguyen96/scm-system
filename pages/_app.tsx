@@ -1,4 +1,3 @@
-
 import "../styles/globals.scss";
 import type { AppProps } from "next/app";
 import "bootstrap/dist/css/bootstrap.css";
@@ -17,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         .split("; ")
         .find((row) => row.startsWith("USER_LOGIN="))
         ?.split("=")[1];
-      console.log(cookieValue, "cokie");
+
       if (cookieValue) {
         setIsLogin(true);
       }

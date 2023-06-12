@@ -10,23 +10,22 @@ export default async function Example(
   res: NextApiResponse
 ) {
   try {
-    if (req.method === "DELETE") {
-      let { id } = req.body;
 
-      let checkUser = await model.Users.findByPk(id);
-      if (checkUser) {
-        await model.Users.destroy({
-          where: {
-            id,
-          },
-        });
-        return successCode(res, checkUser, "Xoa user thanh cong");
-      } else {
-        console.log(id);
-        return failCode(res, "", "user id khong ton tai");
-      }
+    let { id } = req.body;
+
+    let checkUser = await model.Users.findByPk(id);
+    if (checkUser) {
+      await model.Users.destroy({
+        where: {
+          id,
+        },
+      });
+      return successCode(res, checkUser, "Xoa user thanh cong");
+    } else {
+
+      return failCode(res, "", "user id khong ton tai");
     }
-    return failCode(res, "", "sai method");
+
   } catch (error: any) {
     return errorCode(error, "lỗi 500");
   }

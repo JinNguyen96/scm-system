@@ -26,7 +26,7 @@
     "config/config.js",
     "pages/api/index.ts",
      "models/config.ts",
-      "lib/auth.ts", "config/index.js", "models/users.js", "models/type.js", "models/roles.js"  ],
+      "lib/auth.ts", "config/index.js", "models/users.js", "models/type.ts", "models/roles.js"  ],
   "exclude": [
     "node_modules"
   ],

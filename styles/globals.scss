@@ -8,112 +8,87 @@ $bg-main-color: #e2e8e4;
 $secondary-color: #66a5ad;
 $soft-color: #ad82d9;
 $contrast-color: #fdcb17;
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Light.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Light.woff") format("woff");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
+.collapse {
+  visibility: unset;
 }
 
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-ExtraBold.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-ExtraBold.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-ExtraLight.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-ExtraLight.woff") format("woff");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Medium.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Medium.woff") format("woff");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Regular.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Regular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-SemiBold.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-SemiBold.woff") format("woff");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Bold.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Bold.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Thin.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Thin.woff") format("woff");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url("../assets/fonts/Inter/Inter-Black.woff2") format("woff2"),
-    url("../assets/fonts/Inter/Inter-Black.woff") format("woff");
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-
-::-webkit-scrollbar{
-  
+::-webkit-scrollbar {
   width: 3px;
   height: 10px;
 }
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background-color: $main-color;
   border-radius: 6px;
-
 }
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   background-color: $bg-main-color;
 }
 
 body {
-    font-family: "Inter";
-    a {
-      text-decoration: none;
-    }
+  font-family: "Inter";
+  a {
+    text-decoration: none;
+  }
 }
 
+.--button-create {
+  padding: 11px;
+  color: #ffffff;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 22px;
+  background-color: $main-color;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: #053633;
+    transition: all 0.3s ease-in-out;
+  }
+}
+input[type="text"]:focus {
+  --tw-ring-color: unset;
+  --tw-ring-offset-shadow: unset;
+  --tw-ring-shadow: unset;
+  box-shadow: unse;
+  border-color: unset;
+}
+.search-bar {
+  display: flex;
+  width: 50%;
+  position: relative;
+  input {
+    width: 100%;
+    padding: 5px;
+    border:none;
+    border-bottom: 1px solid #808080;
+    
+    &:focus {
+      border-color: $main-color;
+    }
+  }
+  img {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+  }
+}
+
+.--title-page {
+  color: $main-color;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  text-transform: uppercase;
+  margin: 0;
+}
 @import "./admin-template.module.scss";
 @import "./button.modules.scss";
 @import "./login-global.module.scss";
 @import "./style.module.scss";
 @import "./main-layout.module.scss";
+@import "./side-bar.module.scss";
+@import "./material.module.scss";
+@import "./font.module.scss";

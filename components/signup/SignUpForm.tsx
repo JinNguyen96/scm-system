@@ -16,15 +16,9 @@ export default function Example() {
     try {
       let result = await axios
         .post("/api/userApi/signup", data)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+        .then((result) => {})
+        .catch((err) => {});
+    } catch (err) {}
   };
   return (
     <>
@@ -32,7 +26,11 @@ export default function Example() {
         <div className="flex min-h-full items-center justify-center  sm:px-6 lg:px-8">
           <div
             className=" border-none  shadow-2xl"
-            style={{ width: "546px", padding:'32px 57px 61px 57px',borderRadius:4}}
+            style={{
+              width: "546px",
+              padding: "32px 57px 61px 57px",
+              borderRadius: 4,
+            }}
           >
             <div className="w-full max-w-md space-y-6 h-full">
               <div>
@@ -58,7 +56,7 @@ export default function Example() {
                   action="#"
                   method="POST"
                 >
-                  <div className=''>
+                  <div className="">
                     <div className="py-3">
                       <label htmlFor="email-address" className="sr-only">
                         Email
@@ -74,11 +72,10 @@ export default function Example() {
                             ...formSignup,
                             userEmail: e.target.value,
                           });
-                          console.log(formSignup);
                         }}
                         className="relative block w-full placeholder-gray-300 border border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm rounded-md shadow-sm"
                         placeholder="Email"
-                        style={{ borderRadius: 4}}
+                        style={{ borderRadius: 4 }}
                       />
                     </div>
                     <div className="py-3 showPassWord">
@@ -93,7 +90,6 @@ export default function Example() {
                             ...formSignup,
                             userPassword: e.target.value,
                           });
-                          console.log(formSignup);
                         }}
                         type={isPasswordViewed ? "text" : "password"}
                         autoComplete="current-password"
@@ -109,7 +105,7 @@ export default function Example() {
                             setIsPasswordViewed(!isPasswordViewed);
                           }}
                           src={
-                          isPasswordViewed
+                            isPasswordViewed
                               ? "show-pass.svg"
                               : "no-show-pass.svg"
                           }
@@ -125,14 +121,13 @@ export default function Example() {
                         name="confirmPassword"
                         onChange={(e) => {
                           setFormSignUp({ ...formSignup });
-                          console.log(formSignup);
                         }}
                         type={isPasswordViewed2 ? "text" : "password"}
                         autoComplete="confirm-password"
                         required
                         className="relative block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
                         placeholder="Confirm password"
-                        style={{ borderRadius: 4}}
+                        style={{ borderRadius: 4 }}
                       />
                       <span>
                         <img
@@ -150,44 +145,47 @@ export default function Example() {
                     </div>
                   </div>
                   <div className="text-right justify-between">
-                    
-                  <div className="flex items-center justify-between py-3">
-                    <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4"
-                      />
-                      <label
-                        htmlFor="remember-me"
-                        className="ml-2 block text-sm text-gray-900"
-                      >
-                        Save Password?
-                      </label>
-                    </div>
+                    <div className="flex items-center justify-between py-3">
+                      <div className="flex items-center">
+                        <input
+                          id="remember-me"
+                          name="remember-me"
+                          type="checkbox"
+                          className="h-4 w-4"
+                        />
+                        <label
+                          htmlFor="remember-me"
+                          className="ml-2 block text-sm text-gray-900"
+                        >
+                          Save Password?
+                        </label>
+                      </div>
 
-                    <div className="text-sm">
-                      <Link
-                        href="/password-reset"
-                        className="aEffect ml-2 block"
-                        style={{fontWeight: 400,
-                          fontSize: '14px',
-                          lineHeight: '20px'}}
-                      >
-                        Forgot password?
-                      </Link>
+                      <div className="text-sm">
+                        <Link
+                          href="/password-reset"
+                          className="aEffect ml-2 block"
+                          style={{
+                            fontWeight: 400,
+                            fontSize: "14px",
+                            lineHeight: "20px",
+                          }}
+                        >
+                          Forgot password?
+                        </Link>
+                      </div>
                     </div>
-                  </div>
                   </div>
                   <button
                     type="submit"
                     className="btnEffect group  flex w-full justify-center py-2 px-4 text-sm "
-                    style={{fontWeight: 700,
+                    style={{
+                      fontWeight: 700,
                       fontSize: "20px",
                       lineHeight: "22px",
-                    color:"white",
-                  padding: "10px 0"}}
+                      color: "white",
+                      padding: "10px 0",
+                    }}
                     onClick={() => {
                       if (
                         formSignup.userName &&

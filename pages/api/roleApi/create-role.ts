@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { failCode, successCode, errorCode } from "../../../utils/response";
-import * as bcrypt from "bcrypt-ts";
 import initModels from "../../../models/init-models";
 import sequelize from "../../../models/config";
 import { validateCreateRole } from "../validator";
-
+import { uuid } from 'uuidv4';
 const model = initModels(sequelize);
 
 interface T {
@@ -19,7 +18,7 @@ export default async function signup(
     if (req.method == "POST") {
       let { error } = validateCreateRole(req.body);
       if (error) {
-        console.log(error)
+
         return failCode(res, error, 'Something was wrong!!');
       }
       else {
@@ -27,19 +26,15 @@ export default async function signup(
           roleName,
           roleDescription,
           rolePermission,
-          roleScopes,
-          userId,
-          typeId,
-          id,
+          roleScopes
         } = req.body;
+        const uniqueId = uuid()
         let data = {
-          id,
+          id: uniqueId,
           roleName,
           roleDescription,
           rolePermission,
-          roleScopes,
-          userId,
-          typeId,
+          roleScopes
         };
         let newRole = await model.Roles.create(data)
         successCode(res, newRole, 'Create Role success')

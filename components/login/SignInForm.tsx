@@ -54,7 +54,6 @@ export default function LoginForm() {
         });
       }
     } catch (err: any) {
-      console.log(err, "err");
       setErr({ message: err.response.data.message });
     }
   };
@@ -148,7 +147,7 @@ export default function LoginForm() {
                       //     ...formLogin,
                       //     userEmail: e.target.value,
                       //   });
-                      //   console.log(formLogin);
+                      //
                       // }}
                       // required
                       className="relative block placeholder-gray-300 border border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm shadow-sm"
@@ -163,7 +162,7 @@ export default function LoginForm() {
                     >
                       <>
                         {errors.userEmail?.message}
-                        {err.message.includes("email") ? err.message : null}
+                        {err.message?.includes("email") ? err.message : null}
                       </>
                     </small>
                   </div>
@@ -197,7 +196,7 @@ export default function LoginForm() {
                     >
                       <>
                         {errors.userPassword?.message}
-                        {err.message.includes("password") ? err.message : null}
+                        {err.message?.includes("password") ? err.message : null}
                       </>
                     </small>
 
@@ -209,8 +208,8 @@ export default function LoginForm() {
                         }}
                         src={
                           isPasswordViewed
-                            ? "show-pass.svg"
-                            : "no-show-pass.svg"
+                            ? "/show-pass.svg"
+                            : "/no-show-pass.svg"
                         }
                       />
                     </span>

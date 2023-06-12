@@ -34,6 +34,7 @@ const createRole: any = Joi.object({
   roleName: Joi.required(),
   roleDescription: Joi.required(),
   roleScopes: Joi.required(),
+  rolePermission: Joi.string().required()
 });
 
 export const validateSignup = validator(signupSchema);

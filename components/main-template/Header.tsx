@@ -1,18 +1,16 @@
 import React from "react";
 import Router from "next/router";
 import { useEffect } from "react";
-import Link from 'next/link';
-import { useRouter} from 'next/router';
+import Link from "next/link";
+import { useRouter } from "next/router";
 function Header() {
   const [user, setUser] = React.useState({ userName: "" });
-  const route   =  useRouter()
-  console.log(route)
-  
+  const route = useRouter();
+
   useEffect(() => {
     if (localStorage.getItem("userName")) {
       let userName = JSON.parse(`${localStorage.getItem("userName")}`);
       setUser(userName);
-      console.log(user.userName)
     }
   }, []);
   return (
@@ -45,7 +43,6 @@ function Header() {
                 />
               </svg>
             </button>
-           
           </div>
           <div className="flex items-center">
             <div id="block-drop" className="flex items-center ml-3">
@@ -55,18 +52,16 @@ function Header() {
                   className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                   aria-expanded="false"
                   data-dropdown-toggle="dropdown-user"
-                  onClick={() => {
-                    console.log("click");
-                  }}
+                  onClick={() => {}}
                 >
                   <img
                     className="w-8 h-8 rounded-full"
-                    src="77972443.jfif"
+                    src="/77972443.jfif"
                     alt="user photo"
-                  /> 
+                  />
                 </button>
               </div>
-                 
+
               <div
                 className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                 id="dropdown-user"
@@ -107,8 +102,7 @@ function Header() {
                   </li>
                   <li>
                     <Link
-                    href="account-info"
-                      
+                      href="/get-info/account-info"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                       role="menuitem"
                     >
@@ -133,10 +127,8 @@ function Header() {
               </div>
             </div>
           </div>
-         
         </div>
       </div>
-      
     </nav>
   );
 }

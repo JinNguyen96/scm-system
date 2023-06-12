@@ -1,6 +1,7 @@
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { failCode, successCode, errorCode } from "../../../utils/response";
-import * as bcrypt from "bcrypt-ts";
+import { uuid } from 'uuidv4';
 import initModels from "../../../models/init-models";
 import sequelize from "../../../models/config";
 
@@ -16,20 +17,23 @@ export default async function signup(
 ) {
   try {
     if (req.method == "POST") {
+      const uniqueId = uuid()
       let { typeName, typeDescription, typeLevel, id } = req.body;
       let data = {
         typeName,
         typeDescription,
         typeLevel,
-        id,
+        id: uniqueId,
       };
-      let checkNameOfType = await model.Type.count({
+
+      let checkNameOfType = await model.Type.findOne({
         where: {
           typeName,
         },
       });
-      if (checkNameOfType>0) {
-       failCode(res,data.typeName,'Type name is exist')
+
+      if (checkNameOfType) {
+        failCode(res, data.typeName, 'Type name is exist')
       } else {
         let newType = await model.Type.create(data);
         successCode(res, newType, "Create Type success");

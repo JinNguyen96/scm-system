@@ -3,22 +3,18 @@ import React from "react";
 import swal from "sweetalert";
 
 export default function FormSendMailRequest() {
-  const [email, setEmail]  = React.useState({userEmail:''})
+  const [email, setEmail] = React.useState({ userEmail: "" });
   const sendEmailToRequestNewPass = async (email: any) => {
-    console.log(email)
     await axios
       .put("/api/userApi/contact", email)
       .then((result) => {
-        console.log(result);
         swal({
           title: "Send email success!!",
           text: `${email}`,
           icon: "success",
         });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
   return (
     <div className="m-auto h-screen  ">
@@ -35,7 +31,10 @@ export default function FormSendMailRequest() {
             </div>
             <form className="mt-4 space-y-6" action="#" method="PUT">
               <div className="py-2">
-                <label htmlFor="email-addresuserEmail" className="font-light my-3">
+                <label
+                  htmlFor="email-addresuserEmail"
+                  className="font-light my-3"
+                >
                   Enter your user account's verified email address and we will
                   send you a password reset link.
                 </label>
@@ -45,26 +44,25 @@ export default function FormSendMailRequest() {
                   type="email"
                   autoComplete="email"
                   required
-                  onChange={(e) => { 
-                    setEmail({userEmail:e.target.value})
-                    console.log(email)
-                    
-                   }}
+                  onChange={(e) => {
+                    setEmail({ userEmail: e.target.value });
+                  }}
                   className="relative block w-full placeholder-gray-300 border border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm rounded-md shadow-sm mt-2"
                   placeholder="Enter your email address"
                   style={{ borderRadius: 24 }}
                 />
               </div>
 
-              <div>
-              
-              </div>
+              <div></div>
             </form>
-            <button className="btnEffect group  flex w-full justify-center rounded-md border  bg-indigo-600 py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={() => { 
-             sendEmailToRequestNewPass(email)
-             }}>
-                  Send password reset email
-                </button>
+            <button
+              className="btnEffect group  flex w-full justify-center rounded-md border  bg-indigo-600 py-2 px-4 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => {
+                sendEmailToRequestNewPass(email);
+              }}
+            >
+              Send password reset email
+            </button>
           </div>
         </div>
       </div>

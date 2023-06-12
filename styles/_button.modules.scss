@@ -26,6 +26,10 @@ input:focus {
     $main-color 0%,
     rgba(224, 121, 47, 0) 154.04%
   );
+  &:hover{
+    color:white;
+    transition: all 0.3s ease-in-out;
+  }
   border-radius: 4px;
   font-weight: 700;
   font-size: 20px;

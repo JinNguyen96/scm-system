@@ -22,7 +22,7 @@ export enum RoleScopes {
   all = "ALL",
 }
 interface RoleAttributes {
-  id: number;
+  id: string;
   roleName: string;
   roleDescription: string;
   rolePermission: RolePerm[];
@@ -30,7 +30,7 @@ interface RoleAttributes {
 }
 export default (sequelize: any, DataTypes: any) => {
   class Roles extends Model<RoleAttributes> implements RoleAttributes {
-    id!: number;
+    id!: string;
     roleName!: string;
     roleDescription!: string;
     rolePermission!: RolePerm[];
@@ -42,7 +42,7 @@ export default (sequelize: any, DataTypes: any) => {
   Roles.init(
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,

@@ -2,7 +2,7 @@ import { encodeToken } from './../../../middleware/auth';
 import { NextApiRequest, NextApiResponse } from "next";
 import init_models from "../../../models/init-models";
 import sequelize from "../../../models/config";
-import {  failCode, successCode } from "../../../utils/response";
+import { errorCode, failCode, successCode } from "../../../utils/response";
 import * as bcrypt from "bcrypt-ts";
 
 import { validateSignin } from "../validator";
@@ -14,26 +14,28 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "POST") {
       let { error } = validateSignin(req.body);
       if (error) {
-        console.log(error);
+
         return res.send(error);
       } else {
         let { userEmail, userPassword } = req.body;
-        const checkUser = await model.Users.findOne({where:{
-          userEmail
-        }})
+        const checkUser = await model.Users.findOne({
+          where: {
+            userEmail
+          }
+        })
         if (checkUser) {
-          let checkPass =  bcrypt.compareSync(
+          let checkPass = bcrypt.compareSync(
             userPassword,
             checkUser.userPassword
           );
-          console.log(checkPass,'check')
+
           if (checkPass) {
             let userInfor = {
               userFirstName: checkUser.userFirstName,
               userEmail,
               accessToken: encodeToken(checkUser),
             };
-            console.log( res,' accessToken: encodeToken(checkUser),')
+
             return successCode(res, userInfor, "Login accepted!");
           } else {
             return failCode(res, "", "Your password is not correct");
@@ -46,6 +48,6 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
       return failCode(res, "", "Wrong method");
     }
   } catch (error: any) {
-    return failCode(res,error, "lỗi 500");
+    return errorCode(error, "lỗi 500");
   }
 }

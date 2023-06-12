@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import Router from "next/router";
 
- const UpdateUser = (_props: any)=>{
+const UpdateUser = (_props: any) => {
   const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
   const [isPasswordViewed2, setIsPasswordViewed2] = React.useState(false);
   const [formSignup, setFormSignUp] = React.useState({
@@ -11,7 +11,7 @@ import Router from "next/router";
     userEmail: "",
     userPassword: "",
   });
- 
+
   const [isError, setIsError] = React.useState(false);
   const [isError2, setIsError2] = React.useState(false);
 
@@ -22,10 +22,7 @@ import Router from "next/router";
     confirmPassword: "",
   };
 
-  React.useEffect(() => {
-  console.log(_props)
-  });
-
+  React.useEffect(() => {});
 
   return (
     <>
@@ -79,7 +76,7 @@ import Router from "next/router";
                             ...userInfo,
                             userFirstName: e.target.value,
                           };
-                          console.log(formSignup, userInfo);
+
                           setFormSignUp({
                             ...formSignup,
                             userName: e.target.value,
@@ -102,7 +99,6 @@ import Router from "next/router";
                             ...userInfo,
                             userLastName: e.target.value,
                           };
-                          console.log(formSignup);
                         }}
                         type="text"
                         autoComplete="current-password"
@@ -151,7 +147,6 @@ import Router from "next/router";
                             ...formSignup,
                             userEmail: e.target.value,
                           });
-                          console.log(formSignup);
                         }}
                         type="email"
                         autoComplete="email"
@@ -184,7 +179,6 @@ import Router from "next/router";
                           } else {
                             setIsError2(true);
                           }
-                          console.log(formSignup);
                         }}
                         type={isPasswordViewed2 ? "text" : "password"}
                         autoComplete="current-password"
@@ -274,7 +268,6 @@ import Router from "next/router";
                             ...formSignup,
                             userRole: e.target.value,
                           });
-                          console.log(formSignup);
                         }}
                         required
                         className="block w-40 border placeholder-gray-300 border-gray-300 px-5 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm shadow-sm"
@@ -316,5 +309,5 @@ import Router from "next/router";
       </div>
     </>
   );
-}
-export default UpdateUser
+};
+export default UpdateUser;
