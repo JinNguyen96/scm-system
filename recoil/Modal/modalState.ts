@@ -118,5 +118,9 @@ const currentModalState = atom({
 export const setCurrentModalState = selector({
     key: "setCurrentModalState",
     get: ({ get }) => get(currentModalState),
-    set: ({ set }, newValue) => set(currentModalState, newValue)
+    set: ({ set }, newValue) => {
+
+        console.log(newValue)
+        set(currentModalState, newValue)
+    }
 })

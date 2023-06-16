@@ -1,11 +1,13 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
-import { Button, Modal } from "semantic-ui-react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Button, Form, Modal } from "semantic-ui-react";
 import { setCurrentModalState } from "./modalState";
+import { setUserState } from "./userModal";
 
 function ModalViewUser() {
   const onHandleModal = useSetRecoilState(setCurrentModalState);
-
+  const userData = useRecoilValue(setUserState);
+  console.log(userData);
   return (
     <>
       <Modal
@@ -13,18 +15,40 @@ function ModalViewUser() {
         open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
-        <Modal.Header>Delete User</Modal.Header>
-        <Modal.Content>This action will be undone !!!</Modal.Content>
+        <Modal.Header>USER DETAIL</Modal.Header>
+        <Modal.Content>
+          <Form>
+            <Form.Group widths="equal">
+              <Form.Input
+                label="First Name"
+                value={userData.data.userFirstName}
+              />
+              <Form.Input
+                label="Last Name"
+                value={userData.data.userLastName}
+              />
+            </Form.Group>
+            <Form.Group widths="equal">
+              <Form.Input label="Email" value={userData.data.userEmail} />
+              <Form.Input
+                label="Phone Number"
+                value={`0${userData.data.userPhoneNumber}`}
+              />
+            </Form.Group>
+            <Form.Group widths="equal">
+              <Form.Input
+                label="Date Of Birth"
+                value={userData.data.userDob.replace("T00:00:00.000Z", "")}
+              />
+              <Form.Input label="Address" value={userData.data.userAdress} />
+            </Form.Group>
+            <Form.Group widths="equal">
+              <Form.Input label="Type" value={userData.data.userType} />
+              <Form.Input label="Role" value={userData.data.userRole} />
+            </Form.Group>
+          </Form>
+        </Modal.Content>
         <Modal.Actions>
-          <Button
-            negative
-            onClick={() => {
-              //   onHandleModal("MODAL_CLOSE");
-              onHandleModal({ typeModal: "" });
-            }}
-          >
-            Disagree
-          </Button>
           <Button
             positive
             onClick={async () => {
@@ -33,7 +57,7 @@ function ModalViewUser() {
               // handleDelete();
             }}
           >
-            Agree
+            Close
           </Button>
         </Modal.Actions>
       </Modal>

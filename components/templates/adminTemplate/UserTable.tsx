@@ -70,7 +70,8 @@ const UserTable = memo((props: AppProps) => {
   // console.log(usersPagi);
   const [delUserState, setDelUserState] = useRecoilState(setUserState);
   const tableState = useRecoilValue(getDataTableState);
-  const [typeModal, setTypeModal] = useRecoilState(setCurrentModalState);
+  const setTypeModal = useSetRecoilState(setCurrentModalState);
+
   const setDataTableState = useSetRecoilState(getDataTableState);
   const setModalHandle = useSetRecoilState(newActionModal);
   const handleModal = async (action: string) => {
@@ -78,6 +79,7 @@ const UserTable = memo((props: AppProps) => {
   };
 
   const setId = useSetRecoilState(modalSetIdAction);
+
   // const userData = useRecoilValue(getUserDefaultData);
   // console.log(userData); //! loop
   useEffect(() => {
@@ -216,7 +218,9 @@ const UserTable = memo((props: AppProps) => {
                         style={{ fontSize: "2px" }}
                         onClick={() => {
                           setId(user.id);
-                          handleModal("MODAL_OPEN");
+                          console.log(ModalType.DELETE_USER);
+                          setTypeModal({ typeModal: ModalType.DELETE_USER });
+                          // handleModal("MODAL_OPEN");
                         }}
                       >
                         <img
@@ -229,7 +233,7 @@ const UserTable = memo((props: AppProps) => {
                       <Button
                         style={{ fontSize: "2px" }}
                         onClick={() => {
-                          handleModal("MODAL_OPEN");
+                          // handleModal("MODAL_OPEN");
                         }}
                       >
                         <img

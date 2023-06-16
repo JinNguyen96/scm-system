@@ -1,26 +1,45 @@
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Button, Modal } from "semantic-ui-react";
-// import { delUser } from "../services/userService";
 import {
-  modalDeleteUserAction,
+  notifiError,
+  notifiSuccess,
+} from "../../components/toastify-noti/notifi";
+import { userService } from "../services/userService";
+import {
   modalSetIdAction,
   newActionModal,
+  setCurrentModalState,
 } from "./modalState";
 
 function ModalDelete() {
   const modalState = useRecoilValue(newActionModal);
   const onHandleModal = useSetRecoilState(newActionModal);
   const idValue = useRecoilValue(modalSetIdAction);
-  const onHandleDeleteUser = useSetRecoilState(modalDeleteUserAction);
-  const handleDelete = async () => {
-    onHandleDeleteUser(await idValue);
+  // const onHandleDeleteUser = useSetRecoilState(modalDeleteUserAction);
+  const setTypeModal = useSetRecoilState(setCurrentModalState);
+
+  const userId = useRecoilValue(modalSetIdAction);
+  console.log(userId);
+
+  const deleteUser = async (id: any) => {
+    let data = await userService
+      .deleteUser(id)
+      .then((result) => console.log(result));
+
+    // if (data) {
+    //   notifiSuccess({ message: "Delete User Success!!!" });
+    //   setTypeModal({ typeModal: "" });
+    //   return;
+    // }
+    // notifiError({ message: "Delete User Fail!!!" });
+    // setTypeModal({ typeModal: "" });
   };
   return (
     <div>
       <Modal
         dimmer="blurring"
-        open={modalState.open}
+        open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
         <Modal.Header>Delete User</Modal.Header>
@@ -29,7 +48,7 @@ function ModalDelete() {
           <Button
             negative
             onClick={() => {
-              onHandleModal("MODAL_CLOSE");
+              setTypeModal({ typeModal: "" });
             }}
           >
             Disagree
@@ -38,7 +57,7 @@ function ModalDelete() {
             positive
             onClick={async () => {
               // console.log("ok");
-              onHandleModal("MODAL_CLOSE");
+              deleteUser(userId);
               // handleDelete();
             }}
           >
