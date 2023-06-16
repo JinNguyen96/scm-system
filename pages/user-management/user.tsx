@@ -1,10 +1,21 @@
-import React from 'react'
-import AdminTemplate from '../../components/templates/adminTemplate/AdminTemplate'
+import React from "react";
+import { useRecoilValue } from "recoil";
+import AdminTemplate from "../../components/templates/adminTemplate/AdminTemplate";
+import { ModalType } from "../../constain/ModalType";
+import ModalDelete from "../../recoil/Modal/ModalDeleteUser";
+import { setCurrentModalState } from "../../recoil/Modal/modalState";
+import ModalViewUser from "../../recoil/Modal/ModalViewUser";
 
 function adminTemplate() {
+  const currentModal = useRecoilValue(setCurrentModalState);
+
   return (
-    <AdminTemplate/>
-  )
+    <>
+      <AdminTemplate />
+      {currentModal.typeModal === ModalType.DELETE_USER && <ModalDelete />}
+      {currentModal.typeModal === ModalType.VIEW_USER && <ModalViewUser />}
+    </>
+  );
 }
 
-export default adminTemplate
+export default adminTemplate;

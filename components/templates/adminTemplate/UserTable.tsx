@@ -9,14 +9,17 @@ import {
   useSetRecoilState,
 } from "recoil";
 import { Button, Tab, Table } from "semantic-ui-react";
+import { ModalType } from "../../../constain/ModalType";
 import {
-  getDataTableState,
-  // getUserDefaultData,
-  // getUserDefaultData,
   modalSetIdAction,
   newActionModal,
-  setTableDataState,
+  setCurrentModalState,
 } from "../../../recoil/Modal/modalState";
+import {
+  getDataTableState,
+  setTableDataState,
+} from "../../../recoil/Modal/sortUserTable";
+import { setUserState } from "../../../recoil/Modal/userModal";
 import { userService } from "../../../recoil/services/userService";
 // import { getAllUser } from "../../../recoil/services/userService";
 
@@ -64,32 +67,16 @@ const UserTable = memo((props: AppProps) => {
     getTypeDetail,
   } = props;
   const [dataState, setDataState] = useRecoilState(setTableDataState);
-  console.log(usersPagi);
-
+  // console.log(usersPagi);
+  const [delUserState, setDelUserState] = useRecoilState(setUserState);
   const tableState = useRecoilValue(getDataTableState);
-  console.log(tableState);
-  // const getUser = useCallback(() => {
-  //   async () => {
-  //     await axios
-  //       .get("/api/userApi/get-all-user")
-  //       .then((result) => {
-  //         console.log(result);
-  //         on(result.data.content.usersPerPage);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   };
-  // }, []);
+  const [typeModal, setTypeModal] = useRecoilState(setCurrentModalState);
   const setDataTableState = useSetRecoilState(getDataTableState);
   const setModalHandle = useSetRecoilState(newActionModal);
   const handleModal = async (action: string) => {
     setModalHandle(action);
   };
-  // const [state, dispatch] = React.useReducer(exampleReducer, {
-  //   column: null,
-  //   data: tableData,
-  //   direction: null,
-  // });
-  // const { column, data, direction } = state;
+
   const setId = useSetRecoilState(modalSetIdAction);
   // const userData = useRecoilValue(getUserDefaultData);
   // console.log(userData); //! loop
@@ -107,21 +94,6 @@ const UserTable = memo((props: AppProps) => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          setDataState({
-            column: null,
-            data: usersPagi,
-            direction: undefined,
-            valueState: {
-              type: "",
-              column: null,
-            },
-          });
-        }}
-      >
-        dsd
-      </button>
       <Table selectable singleline sortable celled>
         <Table.Header>
           <Table.Row>
@@ -236,7 +208,7 @@ const UserTable = memo((props: AppProps) => {
                     <Table.Cell>
                       {user.userDob?.replace("T00:00:00.000Z", "")}
                     </Table.Cell>
-                    <Table.Cell>{user.userPhoneNumber}</Table.Cell>
+                    <Table.Cell>0{user.userPhoneNumber}</Table.Cell>
                     <Table.Cell>đang fix</Table.Cell>
                     <Table.Cell>{user.userType}</Table.Cell>
                     <Table.Cell>
@@ -273,8 +245,11 @@ const UserTable = memo((props: AppProps) => {
                           getUserDetail({ id: user.id });
                           // console.log(user.id);
                           getTypeDetail({ id: user.userType });
-                          setId(user.id);
-                          handleModal("MODAL_OPEN");
+                          // setId(user.id);
+                          setDelUserState({ type: "SET_USER", data: user });
+                          console.log(delUserState);
+                          setTypeModal({ typeModal: ModalType.VIEW_USER });
+                          // handleModal("MODAL_OPEN");
                         }}
                       >
                         <img

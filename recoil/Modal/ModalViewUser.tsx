@@ -1,26 +1,16 @@
 import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { Button, Modal } from "semantic-ui-react";
-// import { delUser } from "../services/userService";
-import {
-  modalDeleteUserAction,
-  modalSetIdAction,
-  newActionModal,
-} from "./modalState";
+import { setCurrentModalState } from "./modalState";
 
-function ModalDelete() {
-  const modalState = useRecoilValue(newActionModal);
-  const onHandleModal = useSetRecoilState(newActionModal);
-  const idValue = useRecoilValue(modalSetIdAction);
-  const onHandleDeleteUser = useSetRecoilState(modalDeleteUserAction);
-  const handleDelete = async () => {
-    onHandleDeleteUser(await idValue);
-  };
+function ModalViewUser() {
+  const onHandleModal = useSetRecoilState(setCurrentModalState);
+
   return (
-    <div>
+    <>
       <Modal
         dimmer="blurring"
-        open={modalState.open}
+        open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
         <Modal.Header>Delete User</Modal.Header>
@@ -29,7 +19,8 @@ function ModalDelete() {
           <Button
             negative
             onClick={() => {
-              onHandleModal("MODAL_CLOSE");
+              //   onHandleModal("MODAL_CLOSE");
+              onHandleModal({ typeModal: "" });
             }}
           >
             Disagree
@@ -38,7 +29,7 @@ function ModalDelete() {
             positive
             onClick={async () => {
               // console.log("ok");
-              onHandleModal("MODAL_CLOSE");
+              onHandleModal({ typeModal: "" });
               // handleDelete();
             }}
           >
@@ -46,8 +37,8 @@ function ModalDelete() {
           </Button>
         </Modal.Actions>
       </Modal>
-    </div>
+    </>
   );
 }
 
-export default ModalDelete;
+export default ModalViewUser;

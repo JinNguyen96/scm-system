@@ -7,15 +7,12 @@ import Sidebar from "../components/main-template/Sidebar";
 import Header from "../components/main-template/Header";
 import "semantic-ui-css/semantic.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import { RecoilRoot } from "recoil";
-import NewList from "../recoil/recoilExample/newList";
-import InProgressList from "../recoil/recoilExample/inProcessList";
-import CompletedList from "../recoil/recoilExample/completedList";
-import NewActionInput from "../recoil/recoilExample/NewActionInput";
-import ModalExampleDimmer from "../recoil/Modal/Modal";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import { ToastContainer } from "react-toastify";
 import ModalDelete from "../recoil/Modal/ModalDeleteUser";
 import Loading from "../components/Loading";
+import ModalViewUser from "../recoil/Modal/ModalViewUser";
+import { setCurrentModalState } from "../recoil/Modal/modalState";
 function MyApp({ Component, pageProps }: AppProps) {
   const [isLogin, setIsLogin] = useState(false);
 
@@ -49,10 +46,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                 : ""
             }
           >
-            <Suspense fallback={<Loading />}>
-              <Component {...pageProps} />
-            </Suspense>
-            <ModalDelete />
+            {/* <Suspense fallback={<Loading />}> */}
+            <Component {...pageProps} />
+            {/* </Suspense> */}
+
             <ToastContainer pauseOnFocusLoss={false} />
           </div>
         </div>
