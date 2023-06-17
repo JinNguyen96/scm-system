@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Button, Modal } from "semantic-ui-react";
 import {
@@ -13,10 +13,6 @@ import {
 } from "./modalState";
 
 function ModalDelete() {
-  const modalState = useRecoilValue(newActionModal);
-  const onHandleModal = useSetRecoilState(newActionModal);
-  const idValue = useRecoilValue(modalSetIdAction);
-  // const onHandleDeleteUser = useSetRecoilState(modalDeleteUserAction);
   const setTypeModal = useSetRecoilState(setCurrentModalState);
 
   const userId = useRecoilValue(modalSetIdAction);
@@ -35,6 +31,7 @@ function ModalDelete() {
     // notifiError({ message: "Delete User Fail!!!" });
     // setTypeModal({ typeModal: "" });
   };
+ 
   return (
     <div>
       <Modal
@@ -42,7 +39,7 @@ function ModalDelete() {
         open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
-        <Modal.Header>Delete User</Modal.Header>
+        <Modal.Header>DELETE USER</Modal.Header>
         <Modal.Content>This action will be undone !!!</Modal.Content>
         <Modal.Actions>
           <Button

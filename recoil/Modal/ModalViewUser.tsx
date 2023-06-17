@@ -17,7 +17,7 @@ function ModalViewUser() {
       >
         <Modal.Header>USER DETAIL</Modal.Header>
         <Modal.Content>
-          <Form>
+          <Form loading={userData ? false : true}>
             <Form.Group widths="equal">
               <Form.Input
                 label="First Name"

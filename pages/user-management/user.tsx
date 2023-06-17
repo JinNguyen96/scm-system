@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import AdminTemplate from "../../components/templates/adminTemplate/AdminTemplate";
 import { ModalType } from "../../constain/ModalType";
 import ModalDelete from "../../recoil/Modal/ModalDeleteUser";
+import ModalEditUser from "../../recoil/Modal/ModalEditUser";
 import { setCurrentModalState } from "../../recoil/Modal/modalState";
 import ModalViewUser from "../../recoil/Modal/ModalViewUser";
 
@@ -14,6 +15,7 @@ function adminTemplate() {
       <AdminTemplate />
       {currentModal.typeModal === ModalType.VIEW_USER && <ModalViewUser />}
       {currentModal.typeModal === ModalType.DELETE_USER && <ModalDelete />}
+      {currentModal.typeModal === ModalType.UPDATE_USER && <ModalEditUser />}
     </>
   );
 }

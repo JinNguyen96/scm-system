@@ -25,20 +25,21 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
         relatedUser,
       } = req.body;
       let checkUser = await model.Users.findByPk(id);
+      console.log(id)
       if (checkUser) {
         let userUpdate = {
-        userFirstName,
-        userEmail,
-        userPassword,
-        userRole,
-        userType,
-        userPhoneNumber,
-        userLastName,
-        userDob,
-        userAdress,
-        userCategory,
-        relatedType,
-        relatedUser,
+          userFirstName,
+          userEmail,
+          userPassword,
+          userRole,
+          userType,
+          userPhoneNumber,
+          userLastName,
+          userDob,
+          userAdress,
+          userCategory,
+          relatedType,
+          relatedUser,
         };
         await model.Users.update(userUpdate, {
           where: {
