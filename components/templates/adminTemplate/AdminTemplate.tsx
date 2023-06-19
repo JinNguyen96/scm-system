@@ -82,7 +82,7 @@ function AdminTemplate() {
         setUsers(result.data.content.usersPerPage);
       })
       .catch((err) => {});
-  }, []);
+  }, [users]);
 
   const [isPasswordViewed, setIsPasswordViewed] = useState(false);
   const [isPasswordViewed2, setIsPasswordViewed2] = useState(false);
@@ -358,7 +358,7 @@ function AdminTemplate() {
 
     // console.log(window.document.URL)
   }, []);
-
+  useEffect(() => {}, [users]);
   return (
     <>
       <div className="admin">

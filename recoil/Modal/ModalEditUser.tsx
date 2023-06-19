@@ -38,7 +38,7 @@ const ModalEditUser = memo(() => {
   );
 
   const [dataState, setDataState] = useRecoilState(setTableDataState);
-  useEffect(() => {}, [onUpdateUser]);
+  useEffect(() => {}, [userData, onUpdateUser]);
   return (
     <>
       <Modal

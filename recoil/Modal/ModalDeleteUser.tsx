@@ -11,27 +11,35 @@ import {
   newActionModal,
   setCurrentModalState,
 } from "./modalState";
+import { setTableDataState } from "./sortUserTable";
+import { setUserState } from "./userModal";
 
 function ModalDelete() {
   const setTypeModal = useSetRecoilState(setCurrentModalState);
 
   const userId = useRecoilValue(modalSetIdAction);
   console.log(userId);
+  const [dataState, setDataState] = useRecoilState(setTableDataState);
+  const userData = useRecoilValue(setUserState);
 
   const deleteUser = async (id: any) => {
-    let data = await userService
-      .deleteUser(id)
-      .then((result) => console.log(result));
-
-    // if (data) {
-    //   notifiSuccess({ message: "Delete User Success!!!" });
-    //   setTypeModal({ typeModal: "" });
-    //   return;
-    // }
-    // notifiError({ message: "Delete User Fail!!!" });
-    // setTypeModal({ typeModal: "" });
+    await userService.deleteUser(id);
+    const { usersPerPage }: any = await userService.getAllUser();
+    console.log(usersPerPage);
+    setDataState({
+      column: null,
+      data: usersPerPage,
+      direction: undefined,
+      valueState: {
+        type: "",
+        column: null,
+      },
+    }),
+      [userData];
   };
- 
+
+  // const tableData = useRecoilValue(getDataTableState);
+  useEffect(() => {}, []);
   return (
     <div>
       <Modal
@@ -55,6 +63,7 @@ function ModalDelete() {
             onClick={async () => {
               // console.log("ok");
               deleteUser(userId);
+              setTypeModal({ typeModal: "" });
               // handleDelete();
             }}
           >

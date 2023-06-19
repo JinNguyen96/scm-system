@@ -57,219 +57,217 @@ const listUserData = atom({
   key: "listUser",
   default: [],
 });
-const UserTable = memo(
-  (props: AppProps) => {
-    const {
-      search,
-      usersPagi,
-      setformUpdate,
-      delUser,
-      getUserDetail,
-      getTypeDetail,
-    } = props;
-    const [dataState, setDataState] = useRecoilState(setTableDataState);
-    const [delUserState, setDelUserState] = useRecoilState(setUserState);
-    const tableState = useRecoilValue(getDataTableState);
-    const setTypeModal = useSetRecoilState(setCurrentModalState);
+const UserTable = memo((props: AppProps) => {
+  const {
+    search,
+    usersPagi,
+    setformUpdate,
+    delUser,
+    getUserDetail,
+    getTypeDetail,
+  } = props;
+  const [dataState, setDataState] = useRecoilState(setTableDataState);
+  const [delUserState, setDelUserState] = useRecoilState(setUserState);
+  const tableState = useRecoilValue(getDataTableState);
+  const setTypeModal = useSetRecoilState(setCurrentModalState);
 
-    const setDataTableState = useSetRecoilState(getDataTableState);
-    const setId = useSetRecoilState(modalSetIdAction);
+  const setDataTableState = useSetRecoilState(getDataTableState);
+  const setId = useSetRecoilState(modalSetIdAction);
 
-    useEffect(() => {
-      setDataState({
+  useEffect(() => {
+    setDataState({
+      column: null,
+      data: usersPagi,
+      direction: undefined,
+      valueState: {
+        type: "",
         column: null,
-        data: usersPagi,
-        direction: undefined,
-        valueState: {
-          type: "",
-          column: null,
-        },
-      });
-    }, [usersPagi]);
+      },
+    });
+  }, [usersPagi]);
 
-    return (
-      <>
-        <Table selectable singleline sortable celled>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "id" ? tableState.direction : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "id" };
-                  setDataTableState(data as any);
-                }}
-              >
-                No
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userFirstName"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "userFirstName" };
-                  setDataTableState(data as any);
-                }}
-              >
-                Name
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userEmail"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "userEmail" };
-                  setDataTableState(data as any);
-                }}
-              >
-                Email
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userDob"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "userDob" };
-                  setDataTableState(data as any);
-                }}
-              >
-                Day of birth
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userPhoneNumber"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = {
-                    type: "CHANGE_SORT",
-                    column: "userPhoneNumber",
-                  };
-                  setDataTableState(data as any);
-                }}
-              >
-                Phone
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userRole"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "userRole" };
-                  setDataTableState(data as any);
-                }}
-              >
-                Role
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                sorted={
-                  tableState.column === "userType"
-                    ? tableState.direction
-                    : undefined
-                }
-                onClick={() => {
-                  const data = { type: "CHANGE_SORT", column: "userType" };
-                  setDataTableState(data as any);
-                }}
-              >
-                Type
-              </Table.HeaderCell>
-              <Table.HeaderCell>More</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {tableState.data &&
-              tableState.data
-                ?.filter((item: any) => {
-                  return search.toLowerCase() === ""
-                    ? item
-                    : item.userEmail.toLowerCase().includes(search);
-                })
-                .map((user: any, index: number) => {
-                  return (
-                    <Table.Row key={user.id} className="item-material">
-                      <Table.Cell className="text-start">{index}</Table.Cell>
-                      <Table.Cell>{user.userFirstName}</Table.Cell>
-                      <Table.Cell style={{ textAlign: "start" }}>
-                        {user.userEmail}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {user.userDob?.replace("T00:00:00.000Z", "")}
-                      </Table.Cell>
-                      <Table.Cell>0{user.userPhoneNumber}</Table.Cell>
-                      <Table.Cell>đang fix</Table.Cell>
-                      <Table.Cell>{user.userType}</Table.Cell>
-                      <Table.Cell>
-                        <Button
-                          style={{ fontSize: "2px" }}
-                          onClick={() => {
-                            setId(user.id);
-                            console.log(ModalType.DELETE_USER);
-                            setTypeModal({ typeModal: ModalType.DELETE_USER });
-                            // handleModal("MODAL_OPEN");
-                          }}
-                        >
-                          <img
-                            src="/trash-icon.svg"
-                            alt="delete user"
-                            style={{ scale: "0.8" }}
-                          />
-                        </Button>
+  return (
+    <>
+      <Table selectable singleline sortable celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "id" ? tableState.direction : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "id" };
+                setDataTableState(data as any);
+              }}
+            >
+              No
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userFirstName"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "userFirstName" };
+                setDataTableState(data as any);
+              }}
+            >
+              Name
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userEmail"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "userEmail" };
+                setDataTableState(data as any);
+              }}
+            >
+              Email
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userDob"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "userDob" };
+                setDataTableState(data as any);
+              }}
+            >
+              Day of birth
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userPhoneNumber"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = {
+                  type: "CHANGE_SORT",
+                  column: "userPhoneNumber",
+                };
+                setDataTableState(data as any);
+              }}
+            >
+              Phone
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userRole"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "userRole" };
+                setDataTableState(data as any);
+              }}
+            >
+              Role
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              sorted={
+                tableState.column === "userType"
+                  ? tableState.direction
+                  : undefined
+              }
+              onClick={() => {
+                const data = { type: "CHANGE_SORT", column: "userType" };
+                setDataTableState(data as any);
+              }}
+            >
+              Type
+            </Table.HeaderCell>
+            <Table.HeaderCell>More</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {tableState.data &&
+            tableState.data
+              ?.filter((item: any) => {
+                return search.toLowerCase() === ""
+                  ? item
+                  : item.userEmail.toLowerCase().includes(search);
+              })
+              .map((user: any, index: number) => {
+                return (
+                  <Table.Row key={user.id} className="item-material">
+                    <Table.Cell className="text-start">{index}</Table.Cell>
+                    <Table.Cell>{user.userFirstName}</Table.Cell>
+                    <Table.Cell style={{ textAlign: "start" }}>
+                      {user.userEmail}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {user.userDob?.replace("T00:00:00.000Z", "")}
+                    </Table.Cell>
+                    <Table.Cell>0{user.userPhoneNumber}</Table.Cell>
+                    <Table.Cell>đang fix</Table.Cell>
+                    <Table.Cell>{user.userType}</Table.Cell>
+                    <Table.Cell>
+                      <Button
+                        style={{ fontSize: "2px" }}
+                        onClick={() => {
+                          setId(user.id);
+                          console.log(ModalType.DELETE_USER);
+                          setTypeModal({ typeModal: ModalType.DELETE_USER });
+                          // handleModal("MODAL_OPEN");
+                        }}
+                      >
+                        <img
+                          src="/trash-icon.svg"
+                          alt="delete user"
+                          style={{ scale: "0.8" }}
+                        />
+                      </Button>
 
-                        <Button
-                          style={{ fontSize: "2px" }}
-                          onClick={() => {
-                            // handleModal("MODAL_OPEN");
-                            setDelUserState({ type: "SET_USER", data: user });
+                      <Button
+                        style={{ fontSize: "2px" }}
+                        onClick={() => {
+                          // handleModal("MODAL_OPEN");
+                          setDelUserState({ type: "SET_USER", data: user });
 
-                            setTypeModal({ typeModal: "UPDATE_USER" });
-                          }}
-                        >
-                          <img
-                            src="/edit-icon.svg"
-                            alt="edit user"
-                            style={{ scale: "0.8" }}
-                          />
-                        </Button>
+                          setTypeModal({ typeModal: "UPDATE_USER" });
+                        }}
+                      >
+                        <img
+                          src="/edit-icon.svg"
+                          alt="edit user"
+                          style={{ scale: "0.8" }}
+                        />
+                      </Button>
 
-                        <Button
-                          style={{ fontSize: "2px" }}
-                          onClick={() => {
-                            getUserDetail({ id: user.id });
-                            // console.log(user.id);
-                            getTypeDetail({ id: user.userType });
-                            // setId(user.id);
-                            setDelUserState({ type: "SET_USER", data: user });
-                            console.log(delUserState);
-                            setTypeModal({ typeModal: ModalType.VIEW_USER });
-                            // handleModal("MODAL_OPEN");
-                          }}
-                        >
-                          <img
-                            src="/view-icon.svg"
-                            alt="view user"
-                            style={{ scale: "0.8" }}
-                          />
-                        </Button>
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                })}
-          </Table.Body>
-        </Table>
-      </>
-    );
-  }
-);
+                      <Button
+                        style={{ fontSize: "2px" }}
+                        onClick={() => {
+                          getUserDetail({ id: user.id });
+                          // console.log(user.id);
+                          getTypeDetail({ id: user.userType });
+                          // setId(user.id);
+                          setDelUserState({ type: "SET_USER", data: user });
+                          console.log(delUserState);
+                          setTypeModal({ typeModal: ModalType.VIEW_USER });
+                          // handleModal("MODAL_OPEN");
+                        }}
+                      >
+                        <img
+                          src="/view-icon.svg"
+                          alt="view user"
+                          style={{ scale: "0.8" }}
+                        />
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
+        </Table.Body>
+      </Table>
+    </>
+  );
+});
 
 export default UserTable;
