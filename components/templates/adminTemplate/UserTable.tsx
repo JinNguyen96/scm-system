@@ -8,7 +8,7 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
-import { Button, Tab, Table } from "semantic-ui-react";
+import { Button, Image, Popup, Tab, Table } from "semantic-ui-react";
 import { ModalType } from "../../../constain/ModalType";
 import {
   modalSetIdAction,
@@ -20,6 +20,8 @@ import {
   setTableDataState,
 } from "../../../recoil/Modal/sortUserTable";
 import { setUserState } from "../../../recoil/Modal/userModal";
+import { roleService } from "../../../recoil/services/roleService";
+import { typeService } from "../../../recoil/services/typeService";
 import { userService } from "../../../recoil/services/userService";
 // import { getAllUser } from "../../../recoil/services/userService";
 
@@ -73,7 +75,26 @@ const UserTable = memo((props: AppProps) => {
 
   const setDataTableState = useSetRecoilState(getDataTableState);
   const setId = useSetRecoilState(modalSetIdAction);
+  const [optionsRole, setOptionsRole] = useState([]);
+  const [optionsType, setOptionsType] = useState([]);
+  const onGetAllRole = useCallback(async () => {
+    let data: any = await roleService.getAllRole();
+    setOptionsRole(
+      data?.map((item: any) => {
+        return { value: item.id, label: item.roleName };
+      })
+    );
+    console.log(optionsRole);
+  }, []);
 
+  const onGetAllType = useCallback(async () => {
+    let data: any = await typeService.getAllType();
+    setOptionsType(
+      data?.map((item: any) => {
+        return { value: item.id, label: item.typeName };
+      })
+    );
+  }, []);
   useEffect(() => {
     setDataState({
       column: null,
@@ -84,6 +105,8 @@ const UserTable = memo((props: AppProps) => {
         column: null,
       },
     });
+    onGetAllRole();
+    onGetAllType();
   }, [usersPagi]);
 
   return (
@@ -206,8 +229,59 @@ const UserTable = memo((props: AppProps) => {
                       {user.userDob?.replace("T00:00:00.000Z", "")}
                     </Table.Cell>
                     <Table.Cell>0{user.userPhoneNumber}</Table.Cell>
-                    <Table.Cell>đang fix</Table.Cell>
-                    <Table.Cell>{user.userType}</Table.Cell>
+                    <Table.Cell>
+                      {" "}
+                      {user.userRole &&
+                        user.userRole.split(",").map((item: any) => {
+                          const content = optionsRole.map((obj: any) => {
+                            if (obj.value === item) {
+                              return obj.label;
+                            }
+                          });
+                          return (
+                            <Popup
+                              content={content}
+                              key={item}
+                              trigger={
+                                <Image
+                                  as={"img"}
+                                  className="image-trigger"
+                                  src="/user-login-icon.svg"
+                                  avatar
+                                  bordered
+                                  verticalAlign="middle"
+                                />
+                              }
+                            />
+                          );
+                        })}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {user.userType &&
+                        user.userType.split(",").map((item: any) => {
+                          const content = optionsType.map((obj: any) => {
+                            if (obj.value === item) {
+                              return obj.label;
+                            }
+                          });
+                          return (
+                            <Popup
+                              content={content}
+                              key={item}
+                              trigger={
+                                <Image
+                                  as={"img"}
+                                  src="/user-login-icon.svg"
+                                  avatar
+                                  className="image-trigger"
+                                  bordered
+                                  verticalAlign="middle"
+                                />
+                              }
+                            />
+                          );
+                        })}
+                    </Table.Cell>
                     <Table.Cell>
                       <Button
                         style={{ fontSize: "2px" }}
@@ -229,8 +303,7 @@ const UserTable = memo((props: AppProps) => {
                         style={{ fontSize: "2px" }}
                         onClick={() => {
                           // handleModal("MODAL_OPEN");
-                          setDelUserState({ type: "SET_USER", data: user });
-
+                          setDelUserState({ type: "UPDATE_USER", data: user });
                           setTypeModal({ typeModal: "UPDATE_USER" });
                         }}
                       >

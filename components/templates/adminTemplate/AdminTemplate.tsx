@@ -346,7 +346,7 @@ function AdminTemplate() {
   const npage = Math.ceil(users.length / usersPerPage);
   const numbers = [...Array(npage + 1).keys()].slice(1);
   useEffect(() => {
-    getRole();
+    // getRole();
     getAllUser();
 
     let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
@@ -358,7 +358,9 @@ function AdminTemplate() {
 
     // console.log(window.document.URL)
   }, []);
-  useEffect(() => {}, [users]);
+  useEffect(() => {
+    getRole();
+  }, [users]);
   return (
     <>
       <div className="admin">

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -13,6 +14,7 @@ import {
   Image,
 } from "semantic-ui-react";
 import { roleService } from "../services/roleService";
+import { typeService } from "../services/typeService";
 import { userService } from "../services/userService";
 import { setCurrentModalState } from "./modalState";
 import { setTableDataState } from "./sortUserTable";
@@ -24,44 +26,44 @@ const ModalEditUser = memo(() => {
   const [userUpdateData, setUserUpdateData] = useRecoilState(setUserState);
   const [dataState, setDataState] = useRecoilState(setTableDataState);
   const animatedComponents = makeAnimated();
-  const [userUpdateForm, setUserUpdateForm] = useState({
-    userType: [""],
-    userEmail: "",
-    userPassword: "",
-    userRole: [""],
-    userPhoneNumber: "",
-    userFirstName: "",
-    userLastName: "",
-    userDob: "",
-    userAdress: "",
-    relatedUser: "",
-    relatedType: "",
-  });
-  const [options, setOptions] = useState([]);
-
+  const [optionsRole, setOptionsRole] = useState([]);
+  const [optionsType, setOptionsType] = useState([]);
   const handleOnChange = useCallback(
     (e: any) => {
-      const { value, name } = e;
+      const { value, name } = e.target;
       // console.log(e.target.name)
-
-      setUserUpdateData({ data: { ...userUpdateData.data, [name]: value } });
+      console.log([name]);
+      setUserUpdateData({
+        data: { ...userUpdateData.data, [name]: value, type: "UPDATE_USER" },
+      });
     },
     [userUpdateData]
   );
   const onGetAllRole = useCallback(async () => {
     let data: any = await roleService.getAllRole();
-    setOptions(
+    setOptionsRole(
       data?.map((item: any) => {
         return { value: item.id, label: item.roleName };
       })
     );
-    console.log(options);
+    // console.log(optionsRole);
   }, []);
+
+  const onGetAllType = useCallback(async () => {
+    let data: any = await typeService.getAllType();
+    setOptionsType(
+      data?.map((item: any) => {
+        return { value: item.id, label: item.typeName };
+      })
+    );
+  }, []);
+
   const onUpdateUser = useCallback(
     async (userData: object) => {
+      console.log(userData);
       await userService.updateUser(userData);
       const { usersPerPage }: any = await userService.getAllUser();
-      console.log(usersPerPage);
+      // console.log(usersPerPage);
       setDataState({
         column: null,
         data: usersPerPage,
@@ -74,24 +76,9 @@ const ModalEditUser = memo(() => {
     },
     [userData]
   );
-  const onHandleChangeUpdate = useCallback(
-    async (e: any) => {
-      setUserUpdateData({
-        data: {
-          ...userUpdateData.data,
-          userRole: e.map((item: any) => item.value),
-        },
-      });
-      setUserUpdateForm({
-        ...userUpdateForm,
-        userRole: e.map((item: any) => item.value),
-      });
-      console.log(userData, userUpdateData.data);
-    },
-    [userUpdateForm]
-  );
   useEffect(() => {
     onGetAllRole();
+    onGetAllType();
   }, [userData, onUpdateUser]);
   return (
     <>
@@ -158,42 +145,47 @@ const ModalEditUser = memo(() => {
                 <Message color="green">
                   {" "}
                   Current Type:
-                  {userData.data.userType.split(",").map((item: any) => {
-                    const content = options.map((obj: any) =>
-                      {
-                        if(obj.value.includes(item)){
-                          return obj.label
+                  {userData.data.userType &&
+                    userData.data.userType.split(",").map((item: any) => {
+                      const content = optionsType.map((obj: any) => {
+                        if (obj.value === item) {
+                          // console.log(obj.value, item);
+                          return obj.label;
                         }
-                      }
-                    );
-                    return (
-                      <Popup
-                        content={content}
-                        key={item}
-                        header={item}
-                        trigger={<Image src="/user-login-icon.svg" avatar />}
-                      />
-                    );
-                  })}
+                      });
+                      return (
+                        <Popup
+                          content={content}
+                          key={item}
+                          trigger={<Image src="/user-login-icon.svg" avatar />}
+                        />
+                      );
+                    })}
                 </Message>
                 <label htmlFor="userType">Type</label>
                 <Select
-                  // value={userData.data.userRole}
                   className="w-100"
-                  options={options}
+                  options={optionsType}
                   isMulti={true}
+                  autoFocus
+                  name="userType"
                   components={animatedComponents}
                   instanceId="userType"
                   placeholder="Select Type"
-                  value={userData.data.userType.split(",").map((item: any) => {
-                    return { value: item, label: item };
-                  })}
                   onChange={(e: any) => {
+                    // setUserUpdateForm({
+                    //   ...userUpdateForm,
+                    //   userType: _.union(
+                    //     e.map((item: any) => item.value),
+                    //     userUpdateData.data.userType
+                    //   ),
+                    // });
                     setUserUpdateData({
-                      data: {
-                        ...userUpdateData.data,
-                        userType: e.map((item: any) => item.value),
-                      },
+                      ...userUpdateData,
+                      userType: _.union(
+                        e.map((item: any) => item.value),
+                        userUpdateData.data.userType
+                      ),
                     });
                   }}
                 />
@@ -203,31 +195,45 @@ const ModalEditUser = memo(() => {
                 <Message color="green">
                   {" "}
                   Current Role:
-                  {userData.data.userRole.split(",").map((item: any) => {
-                    return (
-                      <Popup
-                        content={item}
-                        key={item}
-                        header={item}
-                        trigger={<Image src="/user-login-icon.svg" avatar />}
-                      />
-                    );
-                  })}
+                  {userData.data.userRole &&
+                    userData.data.userRole.split(",").map((item: any) => {
+                      const content = optionsRole.map((obj: any) => {
+                        if (obj.value === item) {
+                          return obj.label;
+                        }
+                      });
+                      return (
+                        <Popup
+                          content={content}
+                          key={item}
+                          trigger={<Image src="/user-login-icon.svg" avatar />}
+                        />
+                      );
+                    })}
                 </Message>
                 <label htmlFor="userRole">Role</label>
                 <Select
                   className="w-100"
-                  options={options}
+                  options={optionsRole}
                   isMulti={true}
                   components={animatedComponents}
                   instanceId="userRole"
                   placeholder="Select Role"
                   onChange={(e: any) => {
+                    // console.log(userUpdateForm);
+                    // setUserUpdateForm({
+                    //   ...userUpdateForm,
+                    //   userRole: _.union(
+                    //     e.map((item: any) => item.value),
+                    //     userUpdateData.data.userRole
+                    //   ),
+                    // });
                     setUserUpdateData({
-                      data: {
-                        ...userUpdateData.data,
-                        userRole: e.map((item: any) => item.value),
-                      },
+                      ...userUpdateData,
+                      userRole: _.union(
+                        e.map((item: any) => item.value),
+                        userUpdateData.data.userRole
+                      ),
                     });
                   }}
                 />
@@ -247,6 +253,22 @@ const ModalEditUser = memo(() => {
           <Button
             positive
             onClick={() => {
+              // setUserUpdateData({
+              //   ...userUpdateData,
+              //   data: userUpdateData,
+              //   type: "UPDATE_USER",
+              // });
+              // console.log(userUpdateData.data);
+
+              // setUserUpdateData({
+              //   data: {
+              //     ...userUpdateData.data,
+              //     userRole: _.toString(userUpdateForm.userRole),
+              //     userType: _.toString(userUpdateForm.userType),
+              //   },
+              //   type: "UPDATE_USER",
+              // });
+              console.log(userUpdateData.data);
               onUpdateUser(userUpdateData.data);
               onHandleModal({ typeModal: "" });
             }}
