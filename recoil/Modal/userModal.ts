@@ -5,10 +5,10 @@ const user = {
     type: "",
     data: {
         id: 0,
-        userType: [""],
+        userType: [],
         userEmail: "",
         userPassword: "",
-        userRole: [""],
+        userRole: [],
         userPhoneNumber: "",
         userFirstName: "",
         userLastName: "",
@@ -50,10 +50,10 @@ export const setUserState = selector({
 const updateUser = {
     data: {
         id: 0,
-        userType: [""],
+        userType: "",
         userEmail: "",
         userPassword: "",
-        userRole: [""],
+        userRole: "",
         userPhoneNumber: "",
         userFirstName: "",
         userLastName: "",

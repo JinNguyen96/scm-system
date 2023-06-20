@@ -5,7 +5,7 @@ export const http = axios.create();
 http.interceptors.request.use(
     function (config) {
         // Do something before request is sent
-        config.baseURL = 'http://localhost:3000'
+        // config.baseURL = 'http://localhost:3000'
         // config.headers = {
         //     TokenCybersoft: TOKEN,
         //     Authorization: `Bearer ` + localStorage.getItem("accessToken")
