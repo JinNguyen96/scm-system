@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Button, Form, Modal } from "semantic-ui-react";
+import { Button, Form, Image, Message, Modal, Popup } from "semantic-ui-react";
 import { setCurrentModalState } from "./modalState";
 import { setUserState } from "./userModal";
 
@@ -11,7 +11,6 @@ function ModalViewUser() {
   return (
     <>
       <Modal
-        dimmer="blurring"
         open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
@@ -43,8 +42,49 @@ function ModalViewUser() {
               <Form.Input label="Address" value={userData.data.userAdress} />
             </Form.Group>
             <Form.Group widths="equal">
-              <Form.Input label="Type" value={userData.data.userType} />
-              <Form.Input label="Role" value={userData.data.userRole} />
+              <Form.Field>
+                <Message color="green">
+                  {" "}
+                  Type: {userData.data.userType &&
+                    userData.data.userType.split(",").map((item: any) => {
+                      // const content = optionsType.map((obj: any) => {
+                      //   if (obj.value === item) {
+                      //     // console.log(obj.value, item);
+                      //     return obj.label;
+                      //   }
+                      // });
+                      return (
+                        <Popup
+                          content={"sd"}
+                          key={item}
+                          trigger={<Image src="/user-login-icon.svg" avatar />}
+                        />
+                      );
+                    })}
+                </Message>
+              </Form.Field>
+              <Form.Field>
+                <Message color="green">
+                  {" "}
+                  Role: {userData.data.userRole &&
+                    userData.data.userRole.split(",").map((item: any) => {
+                      // const content = optionsType.map((obj: any) => {
+                      //   if (obj.value === item) {
+                      //     // console.log(obj.value, item);
+                      //     return obj.label;
+                      //   }
+                      // });
+                      console.log(item);
+                      return (
+                        <Popup
+                          content={"sd"}
+                          key={item}
+                          trigger={<Image src="/user-login-icon.svg" avatar />}
+                        />
+                      );
+                    })}
+                </Message>
+              </Form.Field>
             </Form.Group>
           </Form>
         </Modal.Content>

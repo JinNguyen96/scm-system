@@ -25,20 +25,19 @@ const ModalEditUser = memo(() => {
   const userData = useRecoilValue(setUserState);
   const [userUpdateData, setUserUpdateData] = useRecoilState(setUserState);
   const [dataState, setDataState] = useRecoilState(setTableDataState);
+  const [userDataBind, setUserDataBind] = useState(userData.data);
   const animatedComponents = makeAnimated();
   const [optionsRole, setOptionsRole] = useState([]);
   const [optionsType, setOptionsType] = useState([]);
+
   const handleOnChange = useCallback(
     (e: any) => {
       const { value, name } = e.target;
-      // console.log(e.target.name)
-      console.log([name]);
-      setUserUpdateData({
-        data: { ...userUpdateData.data, [name]: value, type: "UPDATE_USER" },
-      });
+      setUserDataBind({ ...userDataBind, [name]: value });
     },
-    [userUpdateData]
+    [setUserDataBind]
   );
+
   const onGetAllRole = useCallback(async () => {
     let data: any = await roleService.getAllRole();
     setOptionsRole(
@@ -46,8 +45,7 @@ const ModalEditUser = memo(() => {
         return { value: item.id, label: item.roleName };
       })
     );
-    // console.log(optionsRole);
-  }, []);
+  }, [setOptionsRole]);
 
   const onGetAllType = useCallback(async () => {
     let data: any = await typeService.getAllType();
@@ -56,7 +54,7 @@ const ModalEditUser = memo(() => {
         return { value: item.id, label: item.typeName };
       })
     );
-  }, []);
+  }, [setOptionsType]);
 
   const onUpdateUser = useCallback(
     async (userData: object) => {
@@ -74,7 +72,7 @@ const ModalEditUser = memo(() => {
         },
       });
     },
-    [userData]
+    [userData, setDataState]
   );
   useEffect(() => {
     onGetAllRole();
@@ -83,24 +81,23 @@ const ModalEditUser = memo(() => {
   return (
     <>
       <Modal
-        dimmer=""
         open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
         <Modal.Header>UPDATE USER</Modal.Header>
         <Modal.Content>
-          <Form loading={userData ? false : true}>
+          <Form loading={userDataBind ? false : true}>
             <Form.Group widths="equal">
               <Form.Input
                 label="First Name"
                 name="userFirstName"
-                value={userData && userData.data.userFirstName}
+                value={userDataBind && userDataBind.userFirstName}
                 onChange={handleOnChange}
               />
               <Form.Input
                 label="Last Name"
                 name="userLastName"
-                value={userData && userData.data.userLastName}
+                value={userDataBind && userDataBind.userLastName}
                 onChange={handleOnChange}
               />
             </Form.Group>
@@ -110,14 +107,14 @@ const ModalEditUser = memo(() => {
                 // disabled
                 name="userEmail"
                 control={Input}
-                value={userData && userData.data.userEmail}
+                value={userDataBind && userDataBind.userEmail}
                 type="email"
                 error
               />
               <Form.Input
                 label="Phone Number"
                 name="userPhoneNumber"
-                value={`0${userData && userData.data.userPhoneNumber}`}
+                value={`0${userDataBind && userDataBind.userPhoneNumber}`}
                 type="number"
                 onChange={handleOnChange}
               />
@@ -127,15 +124,15 @@ const ModalEditUser = memo(() => {
                 label="Date Of Birth"
                 name="userDob"
                 value={
-                  userData &&
-                  userData.data.userDob.replace("T00:00:00.000Z", "")
+                  userDataBind &&
+                  userDataBind.userDob.replace("T00:00:00.000Z", "")
                 }
                 onChange={handleOnChange}
               />
               <Form.Input
                 label="Address"
                 name="userAdress"
-                value={userData && userData.data.userAdress}
+                value={userDataBind && userDataBind.userAdress}
                 onChange={handleOnChange}
               />
             </Form.Group>
@@ -180,11 +177,11 @@ const ModalEditUser = memo(() => {
                     //     userUpdateData.data.userType
                     //   ),
                     // });
-                    setUserUpdateData({
-                      ...userUpdateData,
+                    setUserDataBind({
+                      ...userDataBind,
                       userType: _.union(
                         e.map((item: any) => item.value),
-                        userUpdateData.data.userType
+                        userDataBind.userType
                       ),
                     });
                   }}
@@ -228,11 +225,11 @@ const ModalEditUser = memo(() => {
                     //     userUpdateData.data.userRole
                     //   ),
                     // });
-                    setUserUpdateData({
-                      ...userUpdateData,
+                    setUserDataBind({
+                      ...userDataBind,
                       userRole: _.union(
                         e.map((item: any) => item.value),
-                        userUpdateData.data.userRole
+                        userDataBind.userRole
                       ),
                     });
                   }}
@@ -268,8 +265,11 @@ const ModalEditUser = memo(() => {
               //   },
               //   type: "UPDATE_USER",
               // });
-              console.log(userUpdateData.data);
-              onUpdateUser(userUpdateData.data);
+              onUpdateUser(userDataBind);
+              setUserUpdateData({
+                data: userDataBind,
+                type: "UPDATE_USER",
+              });
               onHandleModal({ typeModal: "" });
             }}
           >

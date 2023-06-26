@@ -79,22 +79,26 @@ const UserTable = memo((props: AppProps) => {
   const [optionsType, setOptionsType] = useState([]);
   const onGetAllRole = useCallback(async () => {
     let data: any = await roleService.getAllRole();
-    setOptionsRole(
-      data?.map((item: any) => {
-        return { value: item.id, label: item.roleName };
-      })
-    );
-    console.log(optionsRole);
+    if (data) {
+      setOptionsRole(
+        data?.map((item: any) => {
+          return { value: item.id, label: item.roleName };
+        })
+      );
+    }
   }, []);
 
   const onGetAllType = useCallback(async () => {
     let data: any = await typeService.getAllType();
-    setOptionsType(
-      data?.map((item: any) => {
-        return { value: item.id, label: item.typeName };
-      })
-    );
-  }, []);
+    console.log(data);
+    if (data) {
+      setOptionsType(
+        data?.map((item: any) => {
+          return { value: item.id, label: item.typeName };
+        })
+      );
+    }
+  }, [setOptionsType]);
   useEffect(() => {
     setDataState({
       column: null,

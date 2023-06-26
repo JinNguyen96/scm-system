@@ -9,8 +9,11 @@ import ExportUserToCsv from "./ExportUserToCsv";
 import { notifiError, notifiSuccess } from "../../toastify-noti/notifi";
 import { ToastContainer } from "react-toastify";
 import UserTable from "./UserTable";
-import { getUserDefaultData } from "../../../recoil/Modal/modalState";
-import { useRecoilValue } from "recoil";
+import {
+  getUserDefaultData,
+  setCurrentModalState,
+} from "../../../recoil/Modal/modalState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import _ from "lodash";
 const animatedComponents = makeAnimated();
 
@@ -345,16 +348,21 @@ function AdminTemplate() {
   const usersPagi = users.slice(firstIndex, lastIndex);
   const npage = Math.ceil(users.length / usersPerPage);
   const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  const modalTypeHandle = useSetRecoilState(setCurrentModalState);
+
   useEffect(() => {
     // getRole();
     getAllUser();
 
-    let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
-    let info: any = decode(dataInfo);
-    getUserRoleDetail({ id: info.data.id });
-    setId(info.data.id);
-    console.log(info.data.id);
-    getType({ id: info.data.id });
+    // if (typeof window !== null) {
+    //   let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
+    //   let info: any = decode(dataInfo);
+    //   getUserRoleDetail({ id: info.data.id });
+    //   setId(info.data.id);
+    //   console.log(info.data.id);
+    //   getType({ id: info.data.id });
+    // }
 
     // console.log(window.document.URL)
   }, []);
@@ -397,9 +405,10 @@ function AdminTemplate() {
                 <span>All ({users.length}) </span>
                 <button
                   className="--button-create"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createUserModal"
                   type="button"
+                  onClick={() => {
+                    modalTypeHandle({ typeModal: "CREATE_USER" });
+                  }}
                 >
                   Create new user
                 </button>
@@ -413,7 +422,7 @@ function AdminTemplate() {
                 >
                   <ExportUserToCsv users={users} />
                 </span>
-                <div
+                {/* <div
                   className="w-full modal fade"
                   id="createUserModal"
                   tabIndex={-1}
@@ -630,7 +639,7 @@ function AdminTemplate() {
                               ""
                             )} */}
 
-                          <div className="pb-3 flex flex-column flex-start">
+                {/* <div className="pb-3 flex flex-column flex-start">
                             <label
                               htmlFor="user-role"
                               className="info-required pr-5"
@@ -939,7 +948,7 @@ function AdminTemplate() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <UserTable
