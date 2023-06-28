@@ -19,8 +19,10 @@ export class UserService extends BaseServices {
     createUser = async (data: object) => {
         return await this.post(`/api/userApi/signup`, data).then(result => {
             notifiSuccess({ message: "Create new user success!!" })
+            return result
         }).catch(err => {
             notifiError({ message: 'Create user failure!!!' })
+            return err
         })
     }
 }

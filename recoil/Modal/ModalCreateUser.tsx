@@ -25,6 +25,23 @@ import { userService } from "../services/userService";
 import { getDataTableState, setTableDataState } from "./sortUserTable";
 import axios from "axios";
 
+const ErrorLog = {
+  USER_EMAIL: "userEmail",
+  USER_PASSWORD: "userPassword",
+  USER_FIRSTNAME: "userFirstName",
+  USER_LASTNAME: "userLastName",
+  USER_PHONENUMBER: "userPhoneNumber",
+  USER_DOB: "userDob",
+  USER_ADRESS: "userAdress",
+};
+const errorLogHandle = (errArr: any, type: string) => {
+  if (type === "confirmPassword") {
+    return "Password not match";
+  }
+  return errArr?.map((item: any) => {
+    if (item.context.key === type) return item.message.split(`user`);
+  });
+};
 function ModalCreateUser() {
   const setModalHandle = useSetRecoilState(setCurrentModalState);
   const animatedComponents = makeAnimated();
@@ -50,7 +67,10 @@ function ModalCreateUser() {
     relatedUser: [""],
     relatedType: [""],
   });
-  console.log(signUpForm);
+  const [error, setError] = useState({
+    type: "",
+    content: [],
+  });
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
     setSignUpForm({ ...signUpForm, [name]: value });
@@ -83,8 +103,16 @@ function ModalCreateUser() {
     [setRoleDetail]
   );
   const createUserHandler = useCallback(async () => {
-    console.log(signUpForm);
-    await userService.createUser(_.omit(signUpForm, ["userConfirmPassword"]));
+    let data = await userService.createUser(
+      _.omit(signUpForm, ["userConfirmPassword"])
+    );
+    if (data?.status !== 200) {
+      setError({ ...error, content: data.data.content.details, type: "ERROR" });
+      console.log(errorLogHandle(error.content, ErrorLog.USER_FIRSTNAME));
+    } else {
+      setError({ type: "", content: [] });
+      setModalHandle({ typeModal: "" });
+    }
     const { usersPerPage }: any = await userService.getAllUser();
     setDataState({
       column: null,
@@ -95,7 +123,8 @@ function ModalCreateUser() {
         column: null,
       },
     });
-  }, [signUpForm]);
+  }, [signUpForm, setError]);
+  console.log(error);
   useEffect(() => {
     if (typeof window !== null) {
       let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
@@ -105,6 +134,7 @@ function ModalCreateUser() {
       RoleDetailHandle({ id: info.data.userRole });
     }
   }, []);
+  console.log(signUpForm.userPassword.match(signUpForm.userConfirmPassword));
   return (
     <>
       <Modal
@@ -122,10 +152,32 @@ function ModalCreateUser() {
                 label="First Name"
                 name="userFirstName"
                 onChange={handleOnChange}
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_FIRSTNAME
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
               />
               <Form.Input
                 label="Last Name"
                 name="userLastName"
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_LASTNAME
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
                 onChange={handleOnChange}
               />
             </Form.Group>
@@ -137,12 +189,34 @@ function ModalCreateUser() {
                 name="userEmail"
                 control={Input}
                 type="email"
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_EMAIL
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
               />
               <Form.Input
                 label="Phone Number"
                 name="userPhoneNumber"
                 type="number"
                 onChange={handleOnChange}
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_PHONENUMBER
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
               />
             </Form.Group>
             <Form.Group widths="equal">
@@ -151,11 +225,33 @@ function ModalCreateUser() {
                 type="date"
                 name="userDob"
                 onChange={handleOnChange}
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_DOB
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
               />
               <Form.Input
                 label="Address"
                 name="userAdress"
                 onChange={handleOnChange}
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_ADRESS
+                        ),
+                        pointing: "below",
+                      }
+                    : null
+                }
               />
             </Form.Group>
             <Form.Group widths="equal">
@@ -164,11 +260,33 @@ function ModalCreateUser() {
                 type="password"
                 name="userPassword"
                 onChange={handleOnChange}
+                error={
+                  error.type === "ERROR"
+                    ? {
+                        content: errorLogHandle(
+                          error.content,
+                          ErrorLog.USER_PASSWORD
+                        ),
+                        pointing: "below",
+                      }
+                    : false
+                }
               />
               <Form.Input
                 label="Confirm Password"
                 type="password"
                 name="userConfirmPassword"
+                error={
+                  signUpForm.userPassword === signUpForm.userConfirmPassword
+                    ? false
+                    : {
+                        content: errorLogHandle(
+                          error.content,
+                          "confirmPassword"
+                        ),
+                        pointing: "below",
+                      }
+                }
                 onChange={handleOnChange}
               />
             </Form.Group>
@@ -549,7 +667,6 @@ function ModalCreateUser() {
           <Button
             positive
             onClick={() => {
-              setModalHandle({ typeModal: "" });
               createUserHandler();
             }}
           >
