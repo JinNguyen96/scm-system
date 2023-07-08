@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import Router from "next/router";
@@ -6,7 +6,8 @@ import swal from "sweetalert";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import { ToastContainer, toast } from "react-toastify";
+import { notifiError, notifiSuccess } from "../toastify-noti/notifi";
 const schema = yup
   .object({
     userEmail: yup
@@ -25,6 +26,9 @@ const schema = yup
 export default function LoginForm() {
   const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
 
+  const notifyError = (mess: string) => {
+    toast.error(`${mess}`);
+  };
   const {
     register,
     handleSubmit,
@@ -36,28 +40,30 @@ export default function LoginForm() {
 
   const formSignUpFecth = async (data: object) => {
     try {
-      let result = await axios.post("/api/userApi/login", data);
-
-      if (result.status === 200) {
-        Router.reload();
-        let userToken: string = JSON.stringify(result.data.content.accessToken);
-        let userInfo: string = JSON.stringify(
-          result.data.content.userFirstName
-        );
-        localStorage.setItem("userToken", userToken);
-        localStorage.setItem("userName", userInfo);
-        document.cookie = `USER_LOGIN=${userToken}`;
-        swal({
-          title: `Welcome back! ${result.data?.content.userFirstName}`,
-          text: "You clicked the button!",
-          icon: "success",
-        });
-      }
+      await axios.post("/api/userApi/login", data).then((result) => {
+        notifiSuccess({message:result.data.message});
+        setTimeout(() => {
+          if (result.status === 200) {
+            Router.reload();
+            let userToken: string = JSON.stringify(
+              result.data.content.accessToken
+            );
+            let userInfo: string = JSON.stringify(
+              result.data.content.userFirstName
+            );
+            localStorage.setItem("userToken", userToken);
+            localStorage.setItem("userName", userInfo);
+            document.cookie = `USER_LOGIN=${userToken}`;
+          }
+        }, 5000);
+      });
     } catch (err: any) {
+      notifiError({ message: err.response.data.message });
       setErr({ message: err.response.data.message });
     }
   };
   const onSubmit = (data: object) => formSignUpFecth(data);
+  useEffect(() => {}, []);
   return (
     <>
       <div className="m-auto h-screen ">
@@ -246,6 +252,7 @@ export default function LoginForm() {
                       fontWeight: 700,
                       padding: "10px 182px",
                     }}
+                    // onClick={notify}
                   >
                     Login
                   </button>
@@ -257,6 +264,7 @@ export default function LoginForm() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

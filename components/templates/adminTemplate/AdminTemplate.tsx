@@ -1,37 +1,25 @@
-import React, { Fragment, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { object, string, date } from "yup";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
 import Pagination from "../../panigation";
-import { RoleScopes } from "../../../models/roles";
+import ExportUserToCsv from "./ExportUserToCsv";
+import { notifiError, notifiSuccess } from "../../toastify-noti/notifi";
+import { ToastContainer } from "react-toastify";
+import UserTable from "./UserTable";
+import {
+  getUserDefaultData,
+  setCurrentModalState,
+} from "../../../recoil/Modal/modalState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import _ from "lodash";
 const animatedComponents = makeAnimated();
-const RolePermOption = [
-  { value: "perUser_view", label: "USER_VIEW" },
-  { value: "perUser_add", label: "USER_ADD" },
-  { value: "perUser_edit", label: "USER_EDIT" },
-  { value: "perUser_delete", label: "USER_DELETE" },
-  { value: "perScopes_view", label: "SCOPES_VIEW" },
-  { value: "perScopes_add", label: "SCOPES_ADD" },
-  { value: "perScopes_edit", label: "SCOPES_EDIT" },
-  { value: "perScopes_delete", label: "SCOPES_DELETE" },
-  { value: "perMaterial_view", label: "MATERIAL_VIEW" },
-  { value: "perMaterial_add", label: "MATERIAL_ADD" },
-  { value: "perMaterial_edit", label: "MATERIAL_EDIT" },
-  { value: "perMaterial_delete", label: "MATERIAL_DELETE" },
-];
-const roleScopesOption = [
-  { value: "own", label: "OWN" },
-  { value: "point", label: "POINT" },
-  { value: "type", label: "TYPE" },
-  { value: "all", label: "ALL" },
-];
 
 function AdminTemplate() {
-  const [users, setUsers] = React.useState([]);
-  const [userDetail, setUserDetail] = React.useState({
+  const [users, setUsers] = useState([]);
+  const [userDetail, setUserDetail] = useState({
     relatedType: 1,
     relatedUser: 2,
     userAdress: "",
@@ -43,9 +31,9 @@ function AdminTemplate() {
     userRole: "",
     userType: "",
   });
-  const [relaType, setRelaType] = React.useState({ relaType: [] });
-  const [relaUser, setRelaUser] = React.useState({ relaUser: [] });
-  const [formSignup, setFormSignUp] = React.useState({
+  const [relaType, setRelaType] = useState([]);
+  const [relaUser, setRelaUser] = useState({ relaUser: [] });
+  const [formSignup, setFormSignUp] = useState({
     userType: [""],
     userEmail: "",
     userPassword: "",
@@ -58,9 +46,8 @@ function AdminTemplate() {
     relatedUser: [""],
     relatedType: [""],
   });
-  const handleChangeChecked = (e: any) => {
-    console.log(e.target.name, "eee");
 
+  const handleChangeChecked = (e: any) => {
     if (e.target.name === "relaType") {
       if (e.target.checked) {
         setFormSignUp({
@@ -74,7 +61,6 @@ function AdminTemplate() {
             (obj: any) => obj !== e.target.value || obj === ""
           ),
         });
-        console.log(formSignup, "relatye");
       }
     } else if (e.target.name === "relaUser") {
       if (e.target.checked) {
@@ -82,7 +68,6 @@ function AdminTemplate() {
           ...formSignup,
           relatedUser: [...formSignup.relatedUser, e.target.value],
         });
-        console.log(formSignup, "relatype");
       } else {
         setFormSignUp({
           ...formSignup,
@@ -90,24 +75,26 @@ function AdminTemplate() {
             (obj: any) => obj !== e.target.value || obj === ""
           ),
         });
-        console.log(formSignup, "relatye");
       }
     }
   };
-  const getAllUser = async () => {
-    const { data: res } = await axios.get("/api/userApi/get-all-user");
-    console.log(res.content.usersPerPage);
-    setUsers(res.content.usersPerPage);
-  };
+  const getAllUser = useCallback(async () => {
+    await axios
+      .get("/api/userApi/get-all-user")
+      .then((result) => {
+        setUsers(result.data.content.usersPerPage);
+      })
+      .catch((err) => {});
+  }, [users]);
 
-  const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
-  const [isPasswordViewed2, setIsPasswordViewed2] = React.useState(false);
+  const [isPasswordViewed, setIsPasswordViewed] = useState(false);
+  const [isPasswordViewed2, setIsPasswordViewed2] = useState(false);
 
-  const [formUpdate, setformUpdate] = React.useState({
-    userType: 0,
+  const [formUpdate, setformUpdate] = useState({
+    userType: [""],
     userEmail: "",
     userPassword: "",
-    userRole: 0,
+    userRole: [""],
     userPhoneNumber: "",
     userFirstName: "",
     userLastName: "",
@@ -125,14 +112,12 @@ function AdminTemplate() {
     let { name } = e.target;
     setFormSignUp({ ...formSignup, [name]: e.target.value });
     setConfirmPass({ ...confirmPass, [name]: e.target.value });
-    console.log(formSignup, "form");
   };
-  const [isError, setIsError] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  console.log(search);
-  const [roles, setRoles] = React.useState([]);
-  const [roleDetail, setRoleDetail] = React.useState([]);
-  const [rol, setRol]: any = React.useState([]);
+  const [isError, setIsError] = useState(false);
+  const [search, setSearch] = useState("");
+  const [roles, setRoles] = useState([]);
+  const [roleDetail, setRoleDetail] = useState([]);
+  const [rol, setRol]: any = useState([]);
   let userInfo = {
     userDayOfBirth: "",
     userFirstName: "",
@@ -140,10 +125,10 @@ function AdminTemplate() {
     confirmPassword: "",
   };
 
-  const [confirmPass, setConfirmPass] = React.useState({
+  const [confirmPass, setConfirmPass] = useState({
     confirmPassword: "",
   });
-  const [typeDetail, setTypeDetail] = React.useState([]);
+  const [typeDetail, setTypeDetail] = useState([]);
   const schema = object({
     userRole: string().required(),
     userEmail: string().required().email(),
@@ -158,24 +143,21 @@ function AdminTemplate() {
     userLasName: string().required().min(2).max(50),
   });
 
-  const getUserDetail = async (id: object) => {
-    let result = await axios.post("/api/userApi/get-all-user", id);
-    console.log(result.data.content.data, "");
-    setUserDetail(result.data.content.dataUsers);
-    setRoles(result.data.content.roleData);
-    setRoleDetail(result.data.content.data);
-    console.log(rol, "roleDetail");
-  };
+  const getUserDetail = useCallback(() => {
+    async (id: object) => {
+      let result = await axios.post("/api/userApi/get-all-user", id);
+      setUserDetail(result.data.content.dataUsers);
+      setRoles(result.data.content.roleData);
+      setRoleDetail(result.data.content.data);
+    };
+  }, []);
   const getTypeDetail = async (id: any) => {
     await axios
       .put("/api/typeApi/type-detail", id)
       .then((result) => {
-        console.log(result, "getTypeDetail");
         setTypeDetail(result.data.content);
       })
-      .catch((err) => {
-        console.log(err, "ees");
-      });
+      .catch((err) => {});
   };
   const getRoleDetail = async (id: any) => {
     await axios
@@ -192,26 +174,17 @@ function AdminTemplate() {
                 return item.roleScopes;
               });
         setRol(data);
-        console.log(data, "roleeeee");
       })
-      .catch((err) => {
-        console.log(err, "ees");
-      });
+      .catch((err) => {});
   };
   const delUser = async (id: object) => {
     await axios
       .post("/api/userApi/delete-user", id)
       .then((result) => {
-        console.log(result.data.message);
-        swal({
-          title: "Delete User success!!",
-          text: `${result.data.message}`,
-          icon: "success",
-        });
-        getAllUser();
+        notifiSuccess({ message: "Delete User success!!" });
       })
       .catch((err: any) => {
-        console.log(err);
+        notifiError({ message: "Delete User Failed!!!" });
       });
   };
 
@@ -219,30 +192,19 @@ function AdminTemplate() {
     await axios
       .put("api/update/update-user", data)
       .then((result) => {
-        console.log(result);
-        swal({
-          title: "Update User success!!",
-          text: `${result}`,
-          icon: "success",
-        });
-        getAllUser();
+        notifiSuccess({ message: "Update User success!!" });
       })
       .catch((err) => {
-        console.log(err);
+        notifiError({ message: "Update User Failed!!!" });
       });
   };
 
-  const formCreateUserFetch = async (data: object) => {
+  const formCreateUserFetch = useCallback(async (data: object) => {
     try {
       await axios
         .post("/api/userApi/signup", data)
         .then((result) => {
-          swal({
-            title: "Create New User success!!",
-            text: `CONGRATULATION`,
-            icon: "success",
-          });
-          getAllUser();
+          notifiSuccess({ message: "Create New User success!!" });
           setFormSignUp({
             userType: [""],
             userEmail: "",
@@ -258,52 +220,63 @@ function AdminTemplate() {
           });
         })
         .catch((err) => {
-          alert(`${err.response.data.message}`);
+          // console.log(err);
+          notifiError({ message: "Create New User fail!!" });
         });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const [role, setRole] = React.useState([]);
+    } catch (err) {}
+  }, []);
+  const [role, setRole] = useState([]);
   const getRole = async () => {
     await axios
       .get("/api/roleApi/get-all-role")
       .then((result) => {
         setRole(result.data.content);
-        console.log(result, "role result");
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
-  const [typeFilter, setTypeFilter] = React.useState([]);
-  const [type, setType] = React.useState([]);
+
+  const [type, setType] = useState([]);
+
   const getType = async (id: any) => {
     let typeFilter: any = [];
     await axios
-      .put("/api/typeApi/get-all-type", { id })
+      .put("/api/typeApi/get-all-type", id)
       .then((result) => {
-        typeFilter.push(result.data.content[0]);
-        console.log(result, "typeFilter");
+        // console.log(_.union(result.data.content.map((obj: any) => obj)));
 
-        setTypeFilter(typeFilter);
+        result.data.content.map(
+          (type: { [x: string]: any; typeLevel: any }) => {
+            type.map((level: any) => {
+              // console.log(level);
+              return typeFilter.push(type[0]);
+            });
+          }
+        );
+        for (let i = 1; i < typeFilter.length; i++) {
+          let max = typeFilter[0].typeLevel;
+          typeFilter = typeFilter[0];
+          if (typeFilter[i].typeLevel < max) {
+            typeFilter = typeFilter[i];
+            max = typeFilter[i].typeLevel;
+          }
+        }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
+
     await axios
       .get("/api/typeApi/get-all-type")
       .then((result) => {
-        console.log(result, "");
+        // console.log(result.data.content);
+
         setType(
           result.data.content.filter((lv: any) => {
-            return lv.typeLevel >= typeFilter[0].typeLevel;
+            return lv.typeLevel >= typeFilter.typeLevel;
           })
         );
+
+        // console.log(typeFilter.typeLevel);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err: any) => {});
   };
 
   const [sort, setSort] = useState("ASC");
@@ -324,48 +297,51 @@ function AdminTemplate() {
     }
   };
 
-  const [userRoleDetail, setUserRoleDetail] = React.useState([]);
+  const [userRoleDetail, setUserRoleDetail] = useState([]);
 
-  const getUserRoleDetail = async (id: object) => {
-    await axios
-      .post(`/api/userApi/get-all-user`, id)
-      .then((result) => {
-        console.log(result.data.content);
-        setUserRoleDetail(
+  const getUserRoleDetail = useCallback(
+    async (id: object) => {
+      await axios
+        .post(`/api/userApi/get-all-user`, id)
+        .then((result) => {
+          // console.log(result.data.content.data);
+          const arr: any[] = [];
           result.data.content.data.map((roleId: any) => {
-            return roleId.roleScopes;
-          })
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const tryRole = [
-    role?.map((rol: any, index: number) => {
-      index = rol.id;
+            return roleId.map((user: any) => {
+              arr.push(user);
+            });
+          });
+          setUserRoleDetail(
+            arr.map((obj: any) => {
+              return obj.roleScopes;
+            }) as any
+          );
+        })
+        .catch((err) => {});
+    },
+    [userRoleDetail]
+  );
 
-      return rol.roleScopes;
-    }),
-  ];
-
-  const roleOptionEdit = [
-    role
-      ?.filter((rol: any) => rol.roleScopes.includes(userRoleDetail))
+  const roleOptionEdit = useMemo(() => {
+    return role
+      .filter((rol: any) =>
+        rol.roleScopes.includes(userRoleDetail.map((item) => item))
+      )
       .map((obj: any) => {
         return { value: obj.id, label: obj.roleName };
-      }),
-  ];
+      });
+  }, [role]);
 
-  const typeOptionEdit = [
-    type?.map((type: any, index: number) => {
+  const typeOptionEdit = useMemo(() => {
+    return type?.map((type: any) => {
       return { value: `${type.id}`, label: `${type.typeName}` };
-    }),
-  ];
-  console.log(type, "typeeeeee");
+    });
+  }, [type]);
 
-  const [id, setId] = React.useState({});
-  const [currentPage, setCurrentPage] = React.useState(1);
+  // console.log(type);
+
+  const [id, setId] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
   const lastIndex = currentPage * usersPerPage;
   const firstIndex = lastIndex - usersPerPage;
@@ -373,19 +349,26 @@ function AdminTemplate() {
   const npage = Math.ceil(users.length / usersPerPage);
   const numbers = [...Array(npage + 1).keys()].slice(1);
 
-  React.useEffect(() => {
-    getAllUser();
-    getRole();
-    if (localStorage.getItem("userToken")) {
-      let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
-      let info: any = decode(dataInfo);
-      getUserRoleDetail({ id: info.data.id });
-      setId(info.data.id);
-      console.log(info.data.id, " info.data.id");
-      getType(info.data.id);
-    }
-  }, []);
+  const modalTypeHandle = useSetRecoilState(setCurrentModalState);
 
+  useEffect(() => {
+    // getRole();
+    getAllUser();
+
+    // if (typeof window !== null) {
+    //   let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
+    //   let info: any = decode(dataInfo);
+    //   getUserRoleDetail({ id: info.data.id });
+    //   setId(info.data.id);
+    //   console.log(info.data.id);
+    //   getType({ id: info.data.id });
+    // }
+
+    // console.log(window.document.URL)
+  }, []);
+  useEffect(() => {
+    getRole();
+  }, [users]);
   return (
     <>
       <div className="admin">
@@ -395,6 +378,7 @@ function AdminTemplate() {
               <div className="col-lg-6 flex align-items-center">
                 <h1 className="--title-page">USER </h1>
               </div>
+
               <div className="col-lg-6 search-bar">
                 <label htmlFor="search-bar" className="sr-only">
                   Search
@@ -421,9 +405,10 @@ function AdminTemplate() {
                 <span>All ({users.length}) </span>
                 <button
                   className="--button-create"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createUserModal"
                   type="button"
+                  onClick={() => {
+                    modalTypeHandle({ typeModal: "CREATE_USER" });
+                  }}
                 >
                   Create new user
                 </button>
@@ -435,11 +420,9 @@ function AdminTemplate() {
                     transform: "translateY(50%)",
                   }}
                 >
-                  <a href="#" className="inline-block">
-                    <img src="/download-user.svg" alt="download icon" />
-                  </a>
+                  <ExportUserToCsv users={users} />
                 </span>
-                <div
+                {/* <div
                   className="w-full modal fade"
                   id="createUserModal"
                   tabIndex={-1}
@@ -621,8 +604,8 @@ function AdminTemplate() {
                                 setConfirmPass({
                                   confirmPassword: e.target.value,
                                 });
-                                console.log(confirmPass, "eee");
-                                console.log(formSignup.userPassword, "aaa");
+                                // console.log(confirmPass, "eee");
+                                // console.log(formSignup.userPassword, "aaa");
                                 handleOnChangeSignup;
                                 if (
                                   confirmPass.confirmPassword !== e.target.value
@@ -631,7 +614,7 @@ function AdminTemplate() {
                                 } else {
                                   setIsError(false);
                                 }
-                                console.log(isError);
+                                // console.log(isError);
                               }}
                             />
                             <span>
@@ -656,7 +639,7 @@ function AdminTemplate() {
                               ""
                             )} */}
 
-                          <div className="pb-3 flex flex-column flex-start">
+                {/* <div className="pb-3 flex flex-column flex-start">
                             <label
                               htmlFor="user-role"
                               className="info-required pr-5"
@@ -667,7 +650,7 @@ function AdminTemplate() {
                             <Select
                               isMulti={true}
                               instanceId="userRole"
-                              options={roleOptionEdit[0]}
+                              options={roleOptionEdit}
                               className="w-100 rounded-md shadow-sm mb-1  "
                               components={animatedComponents}
                               onChange={async (e: any) => {
@@ -677,7 +660,7 @@ function AdminTemplate() {
                                     return item.value;
                                   }),
                                 });
-
+                                // console.log(formSignup.userRole);
                                 getRoleDetail({
                                   id: e.map((item: any) => {
                                     return item.value;
@@ -695,18 +678,18 @@ function AdminTemplate() {
                                       ...relaUser,
                                       relaUser: result.data.content.map(
                                         (item: any) => {
-                                          console.log(item, "item");
+                                          // console.log(item, "item");
                                           return item;
                                         }
                                       ),
                                     });
-                                    console.log(
-                                      result.data.content,
-                                      "relaUser"
-                                    );
+                                    // console.log(
+                                    //   result.data.content,
+                                    //   "relaUser"
+                                    // );
                                   })
                                   .catch((err) => {
-                                    console.log(err);
+                                    // console.log(err);
                                   });
                               }}
                               placeholder="Select Role"
@@ -722,7 +705,7 @@ function AdminTemplate() {
                             </label>
                             <Select
                               className="w-100 rounded-md shadow-sm mb-1 "
-                              options={typeOptionEdit[0]}
+                              options={typeOptionEdit}
                               components={animatedComponents}
                               isMulti={true}
                               instanceId="userType"
@@ -733,7 +716,7 @@ function AdminTemplate() {
                                     return item.value;
                                   }),
                                 });
-                                console.log(rol, "esđsds");
+                                // console.log(rol, "esđsds");
 
                                 await axios
                                   .put("/api/userApi/signup", {
@@ -743,13 +726,11 @@ function AdminTemplate() {
                                     }),
                                   })
                                   .then((result) => {
-                                    setRelaType({
-                                      ...relaType,
-                                      relaType: result.data.content,
-                                    });
+                                    // console.log(result);
+                                    setRelaType(result.data.content);
                                   })
                                   .catch((err) => {
-                                    console.log(err);
+                                    // console.log(err);
                                   });
                               }}
                               placeholder="Select Type"
@@ -801,40 +782,42 @@ function AdminTemplate() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {relaType.relaType.map(
-                                    (item: any, index: number) => {
-                                      return (
-                                        <tr
-                                          key={item.id}
-                                          className="item-material"
-                                        >
-                                          <td>
-                                            <input
-                                              name="relaType"
-                                              type="checkbox"
-                                              value={item.id}
-                                              onChange={handleChangeChecked}
-                                            />
-                                          </td>
-                                          <td style={{ fontSize: 12 }}>
-                                            {index++}
-                                          </td>
-                                          <td style={{ fontSize: 12 }}>
-                                            {item.userFirstName}
-                                          </td>
-                                          <td style={{ fontSize: 12 }}>
-                                            {item.userLastName}
-                                          </td>
-                                          <td style={{ fontSize: 12 }}>
-                                            {item.userEmail}
-                                          </td>
-                                          <td style={{ fontSize: 12 }}>
-                                            {item.userPhoneNumber}
-                                          </td>
-                                        </tr>
-                                      );
-                                    }
-                                  )}
+                                  {relaType
+                                    ? relaType?.map(
+                                        (item: any, index: number) => {
+                                          return (
+                                            <tr
+                                              key={item.id}
+                                              className="item-material"
+                                            >
+                                              <td>
+                                                <input
+                                                  name="relaType"
+                                                  type="checkbox"
+                                                  value={item.id}
+                                                  onChange={handleChangeChecked}
+                                                />
+                                              </td>
+                                              <td style={{ fontSize: 12 }}>
+                                                {index++}
+                                              </td>
+                                              <td style={{ fontSize: 12 }}>
+                                                {item.userFirstName}
+                                              </td>
+                                              <td style={{ fontSize: 12 }}>
+                                                {item.userLastName}
+                                              </td>
+                                              <td style={{ fontSize: 12 }}>
+                                                {item.userEmail}
+                                              </td>
+                                              <td style={{ fontSize: 12 }}>
+                                                {item.userPhoneNumber}
+                                              </td>
+                                            </tr>
+                                          );
+                                        }
+                                      )
+                                    : null}
                                 </tbody>
                               </table>
                             </div>
@@ -965,10 +948,18 @@ function AdminTemplate() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
-            <table
+            <UserTable
+              usersPagi={usersPagi}
+              search={search}
+              delUser={delUser}
+              setformUpdate={setformUpdate}
+              getUserDetail={getUserDetail}
+              getTypeDetail={getTypeDetail}
+            />
+            {/* <table
               className="table-fixed middle-main "
               style={{ minHeight: "273px" }}
             >
@@ -1130,7 +1121,7 @@ function AdminTemplate() {
                                 console.log(user.userType, "id");
                                 getTypeDetail({ id: user.userType });
                                 console.log(userDetail.userDob, "eee");
-                                // let role =
+                           
                               }}
                             >
                               <img src="/view-icon.svg" alt="view user" />
@@ -1141,7 +1132,7 @@ function AdminTemplate() {
                     );
                   })}
               </tbody>
-            </table>
+            </table> */}
           </div>
 
           <div className="material-footer">
@@ -1199,7 +1190,7 @@ function AdminTemplate() {
                             type="text"
                             value={userDetail.userFirstName}
                             readOnly
-                            className="block w-full placeholder-gray-300 border border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm rounded-md shadow-sm"
+                            className="block w-full placeholder-gray-300 `border` border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm rounded-md shadow-sm"
                             placeholder="Your first name"
                             style={{ borderRadius: 4 }}
                           />
@@ -1218,7 +1209,7 @@ function AdminTemplate() {
                                 ...userInfo,
                                 userLastName: e.target.value,
                               };
-                              console.log(formSignup);
+                              // console.log(formSignup);
                             }}
                             type="text"
                             autoComplete="current-password"
@@ -1498,7 +1489,7 @@ function AdminTemplate() {
                             style={{ borderRadius: 4 }}
                           />
                           <Select
-                            options={roleOptionEdit[0]}
+                            options={roleOptionEdit}
                             isMulti
                             instanceId="userRoleCreate"
                             className="select-option"
@@ -1507,9 +1498,9 @@ function AdminTemplate() {
                               let data = e.map((e: any) => e.value);
                               setformUpdate({
                                 ...formUpdate,
-                                userRole: Number(data),
+                                userRole: data,
                               });
-                              console.log(formUpdate, "select role");
+                              // console.log(formUpdate.userRole, "select role");
                             }}
                           />
                         </div>
@@ -1549,7 +1540,7 @@ function AdminTemplate() {
                         </label>
                         <div className="pb-3">
                           <Select
-                            options={typeOptionEdit[0]}
+                            options={typeOptionEdit}
                             isMulti
                             instanceId="userTypeCreate"
                             components={animatedComponents}
@@ -1557,9 +1548,9 @@ function AdminTemplate() {
                               let data = e.map((e: any) => e.value);
                               setformUpdate({
                                 ...formUpdate,
-                                userType: Number(data),
+                                userType: data,
                               });
-                              console.log(formUpdate, "select type");
+                              // console.log(formUpdate, "select type");
                             }}
                           />
                         </div>

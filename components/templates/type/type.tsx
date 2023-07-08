@@ -5,6 +5,7 @@ import makeAnimated from "react-select/animated";
 
 import swal from "sweetalert";
 import Pagination from "../../panigation";
+import ExportTypeToCsv from "./ExportTypeToCsv";
 
 function Type() {
   const [typeDetail, setTypeDetail] = React.useState({
@@ -182,9 +183,7 @@ function Type() {
                     transform: "translateY(50%)",
                   }}
                 >
-                  <a href="#" className="inline-block">
-                    <img src="/download-user.svg" alt="download icon" />
-                  </a>
+                  <ExportTypeToCsv types={type} />
                 </span>
                 <div
                   className="w-full modal fade"

@@ -7,6 +7,7 @@ import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
 import { Label } from "flowbite-react";
 import Pagination from "../../panigation";
+import ExportRoleToCsv from "./ExportRoleToCsv";
 
 const animatedComponents = makeAnimated();
 const RolePermOption = [
@@ -217,17 +218,15 @@ function Role() {
                   Create new role
                 </button>
                 <span
-                          style={{
-                            position: "absolute",
-                            right: "-14%",
-                            bottom: "48%",
-                            transform:"translateY(50%)"
-                          }}
-                        >
-                          <a href="#" className="inline-block">
-                            <img src="/download-user.svg" alt="download icon" />
-                          </a>
-                        </span>
+                  style={{
+                    position: "absolute",
+                    right: "-14%",
+                    bottom: "48%",
+                    transform: "translateY(50%)",
+                  }}
+                >
+                  <ExportRoleToCsv roles={role} />
+                </span>
                 <div
                   className="w-full modal fade"
                   id="createRoleModal"
@@ -251,7 +250,7 @@ function Role() {
                           CREATE NEW ROLE
                         </h2>
                       </div>
-                       
+
                       <div className=" flex justify-between w-full center modal-body">
                         <div style={{ width: "55%" }}>
                           <label htmlFor="first-name" className="info-required">

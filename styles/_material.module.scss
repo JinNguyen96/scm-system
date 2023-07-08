@@ -39,8 +39,23 @@
         &:nth-child(6) {
             text-align: center;
         }
+        .image-trigger {
+            width: 25px !important;
+            height: 25px !important;
+            &:nth-child(1) {
+                margin-left: 0;
+            }
+            &:nth-child(n + 1) {
+                border-color: $main-color !important;
+                transition: all 0.2s ease-in-out;
+                margin-left: -12px;
+                &:hover {
+                    transition: all 0.2s ease-in-out;
+                    z-index: 1000;
+                }
+            }
+        }
     }
-
     .status-disable {
         padding: 2.5px 19px;
         background-color: #dc3545;
@@ -480,7 +495,6 @@ input {
         width: 100%;
         height: 100%;
         cursor: pointer;
-
     }
     input[type="checkbox"]:checked {
         background-color: #fdcf6f;

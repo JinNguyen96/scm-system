@@ -24,12 +24,11 @@ aside {
     height: 100vh;
     position: sticky;
     padding-top: 120px;
-    z-index:10;
+    z-index: 10;
     background: $main-color;
- 
   }
-  &:hover{
-    .side-bar-hover{
+  &:hover {
+    .side-bar-hover {
       left: 70px;
       z-index: 0;
       transition: all 0.5s ease;
@@ -52,12 +51,28 @@ aside {
   }
 }
 
-.side-bar-active{
-    border-radius: 50%;
-    height: 46px;
-    width: 46px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
+.side-bar-active {
+  border-radius: 50%;
+  height: 46px;
+  width: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 10px solid #f3f3f3; /* Light grey */
+  border-top: 10px solid #383636; /* Black */
+  border-radius: 50%;
+  animation: spinner 1.5s linear infinite;
 }

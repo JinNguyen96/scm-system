@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import "react-calendar/dist/Calendar.css";
 import Router from "next/router";
+import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil";
 
+const urlState = atom({
+  key: "urlState",
+  default: { url: "" },
+});
+const getUrlState = selector({
+  key: "getUrlState",
+  get: ({ get }) => {
+    const url = get(urlState);
+    return url;
+  },
+  set: ({ set, get }, newUrl: any) => {
+    const url = get(urlState);
+    return set(urlState, { url: newUrl });
+  },
+});
 export default function Sidebar() {
-  const [value, onChange] = useState(new Date());
-  const [isActive, setIsActive] = useState(true);
-  const handleActive = () => {
-    setIsActive(!isActive);
-    console.log(isActive);
-  };
-
+  // const [url, setUrl] = useState("");
+  // const [isActive, setIsActive] = useState(true);
+  const setUrl = useSetRecoilState(getUrlState);
+  const url = useRecoilValue(getUrlState);
+  const handleActive = useCallback(() => {
+    if (typeof window !== undefined) {
+      let checkUrl = window.document.URL;
+      console.log(checkUrl);
+      setUrl(checkUrl);
+      // return checkUrl
+    }
+  }, [url]);
+  console.log(url);
   return (
     <>
       <aside
@@ -140,16 +162,18 @@ export default function Sidebar() {
               >
                 <li>
                   <a
-                    onClick={() => {
-                      handleActive();
-                    }}
                     className={
-                      !isActive
+                      url.url?.includes("/user-management")
                         ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
                         : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     }
                   >
-                    <span className="flex-1 ml-3 whitespace-nowrap">
+                    <span
+                      onClick={() => {
+                        handleActive();
+                      }}
+                      className="flex-1 ml-3 whitespace-nowrap"
+                    >
                       User Managerment
                     </span>
                     <svg
@@ -174,10 +198,17 @@ export default function Sidebar() {
               <ul className="collapse collapsed" id="userManagerment">
                 <li>
                   <Link
-                    href="/admin-template"
+                    href="/user-management/user"
                     className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
+                    <span
+                      onClick={() => {
+                        handleActive();
+                      }}
+                      className="flex-1 ml-3 whitespace-nowrap"
+                    >
+                      Users
+                    </span>
                   </Link>
                 </li>
                 <li>
@@ -244,7 +275,7 @@ export default function Sidebar() {
                       handleActive();
                     }}
                     className={
-                      !isActive
+                      url.url?.includes("/material")
                         ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
                         : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     }
@@ -277,7 +308,14 @@ export default function Sidebar() {
                     href="/material/material"
                     className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <span className="flex-1 ml-3 whitespace-nowrap">Material</span>
+                    <span
+                      onClick={() => {
+                        handleActive();
+                      }}
+                      className="flex-1 ml-3 whitespace-nowrap"
+                    >
+                      Material
+                    </span>
                   </Link>
                 </li>
                 <li>
@@ -285,7 +323,9 @@ export default function Sidebar() {
                     href="/material/category"
                     className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <span className="flex-1 ml-3 whitespace-nowrap">Category</span>
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Category
+                    </span>
                     <svg
                       width="7"
                       height="10"

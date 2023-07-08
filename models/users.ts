@@ -16,6 +16,7 @@ export interface UserAttributes {
 }
 export default (sequelize: any, DataTypes: any) => {
   class Users extends Model<UserAttributes> implements UserAttributes {
+    [x: string]: any;
     id!: number;
     userType!: number[];
     userEmail!: string;

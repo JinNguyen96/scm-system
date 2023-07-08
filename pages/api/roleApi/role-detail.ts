@@ -17,12 +17,15 @@ export default async function getAllRole(
   try {
     if (req.method == "PUT") {
       let { id } = req.body;
+      let arrId = id?.split(',')
       let data: any = []
-      if (id.length > 1) {
-        for (let i = 0; i < id.length; i++) {
+      console.log(id, arrId)
+
+      if (arrId.length > 1) {
+        for (let i = 0; i < arrId.length; i++) {
           data.push(await model.Roles.findAll({
             where: {
-              id: id[i]
+              id: arrId[i]
             }
           }))
         }
@@ -38,42 +41,47 @@ export default async function getAllRole(
       successCode(res, data, "Roles detail");
     } else if (req.method === "POST") {
       let { userRole } = req.body;
-      let data: any = []
-      if (userRole.length > 1) {
-        for (let i = 0; i <= userRole.length; i++) {
-          await model.Users.findAll({
-            where: {
-              userRole: userRole[i],
-            },
-          })
-            .then((result) => {
+      // let data: any = []
+      // if (userRole.length > 1) {
+      //   for (let i = 0; i <= userRole.length; i++) {
+      //     await model.Users.findAll({
+      //       where: {
+      //         userRole: userRole[i],
+      //       },
+      //     })
+      //       .then((result) => {
 
 
-              return data.push(result.map(e => e.dataValues))
-            })
-            .catch((err: any) => {
+      //         return data.push(result.map(e => e.dataValues))
+      //       })
+      //       .catch((err: any) => {
 
-            });
+      //       });
 
-        }
-      } else {
-        await model.Users.findAll({
-          where: {
-            userRole,
-          },
-        })
-          .then((result) => {
-
-
-            return data.push(result.map(e => e.dataValues))
-          })
-          .catch((err: any) => {
-
-          });
-      }
+      //   }
+      // } else {
+      //   await model.Users.findAll({
+      //     where: {
+      //       userRole,
+      //     },
+      //   })
+      //     .then((result) => {
 
 
-      successCode(res, data, "tim thanh cong");
+      //       return data.push(result.map(e => e.dataValues))
+      //     })
+      //     .catch((err: any) => {
+
+      //     });
+      // }
+      // let { userType } = req.body;
+      let findUserByType = await model.Users.findAll({
+        where: {
+          userRole,
+        },
+      });
+
+      successCode(res, findUserByType, "tim thanh cong");
 
     } else {
       failCode(res, req, "Error method");
