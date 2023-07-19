@@ -42,6 +42,6 @@ export default async function deleteMaterial(
         }
 
     } catch (error: any) {
-        return errorCode(error, error, error, error);
+        return errorCode(error,'something was wrong!!!');
     }
 }
