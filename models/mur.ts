@@ -7,7 +7,7 @@ interface MURAttributes {
   measurmentId: number,
   unitId: number
 }
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   class MURs extends Model {
     /**
      * Helper method for defining associations.

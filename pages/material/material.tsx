@@ -1,12 +1,20 @@
-import React from 'react'
-import Material from '../../components/material-group/material/Material'
+import React from "react";
+import { useRecoilValue } from "recoil";
+import Material from "../../components/material-group/material/Material";
+import { ModalType } from "../../constain/ModalType";
+import ModalDeleteMaterial from "../../recoil/Modal/ModalDeleteMaterial";
+import { setCurrentModalState } from "../../recoil/Modal/modalState";
 
 function material() {
+  const currentModal = useRecoilValue(setCurrentModalState);
   return (
- <>
- <Material />
- </>
-  )
+    <>
+      <Material />
+      {currentModal.typeModal === ModalType.DELETE_MATERIAL && (
+        <ModalDeleteMaterial />
+      )}
+    </>
+  );
 }
 
-export default material
+export default material;

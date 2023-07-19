@@ -7,7 +7,7 @@ interface TMURAttributes {
   materialTypeId: number,
   MURId: number
 }
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   class TMURs extends Model<TMURAttributes> implements TMURAttributes {
     /**
      * Helper method for defining associations.

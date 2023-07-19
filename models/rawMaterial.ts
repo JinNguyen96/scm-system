@@ -8,7 +8,7 @@ interface RawMaterialAttributes {
   descRawMater: string,
 
 }
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   class RawMaterials extends Model {
     /**
      * Helper method for defining associations.

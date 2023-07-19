@@ -8,7 +8,7 @@ interface MaterialTypeAttributes {
   id: number
 }
 
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   class MaterialTypes extends Model<MaterialTypeAttributes> implements MaterialTypeAttributes {
     /**
      * Helper method for defining associations.

@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { Button, Form, Input } from "semantic-ui-react";
+import { setEditMaterialState } from "../../../recoil/material/materialRecoil";
 
 export default function EditMaterial() {
+  const materialData = useRecoilValue(setEditMaterialState);
+  const { data } = materialData;
+
   const [buttonSwitch, setButtonSwitch] = useState(true);
   useEffect(() => {}, []);
   return (
@@ -21,7 +27,7 @@ export default function EditMaterial() {
                 console.log(buttonSwitch);
               }}
               className={
-                buttonSwitch === true
+                buttonSwitch !== true
                   ? "button-detail switch-content"
                   : "button-detail"
               }
@@ -34,7 +40,7 @@ export default function EditMaterial() {
                 console.log(buttonSwitch);
               }}
               className={
-                buttonSwitch !== true
+                buttonSwitch === true
                   ? "button-detail switch-content"
                   : "button-detail"
               }
@@ -46,245 +52,271 @@ export default function EditMaterial() {
             ></span>
           </div>
           <div className="form-create">
-            <form
+            <Form
+              unstackable
               className={
                 buttonSwitch === true
-                  ? "row form-detail row-cols-4"
-                  : "row form-detail row-cols-4 d-none"
+                  ? "row form-detail form-relative"
+                  : "row form-detail  d-none"
               }
             >
-              <div className="col-lg-6">
-                <label htmlFor="maName">Name</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maName"
-                    name="maName"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maQuality">Safe Quantity</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maQuality"
-                    name="maQuality"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maCategory">Category </label>
-                <div className="group-input search-bar ">
-                  <div className="tag-name ">
-                    Jean
-                    <span>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M16 16L8 8"
-                          stroke="#B3B3B3"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M16 8L8 16"
-                          stroke="#B3B3B3"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <div className="tag-name ">
-                    Jean
-                    <span>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M16 16L8 8"
-                          stroke="#B3B3B3"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M16 8L8 16"
-                          stroke="#B3B3B3"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maCategory"
-                    name="maCategory"
-                    className="col-lg-12"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maStatus">Status </label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maStatus"
-                    name="maStatus"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maGroup">Group</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maGroup"
-                    name="maGroup"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maColor">Color</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maColor"
-                    name="maColor"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maNote">Note</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maNote"
-                    name="maNote"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-            </form>
-            <form
+              {/* <label htmlFor="name">Name</label> */}
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  label="Name"
+                  control={Input}
+                  value={data.name}
+                  // error={
+                  //   error.type === "ERROR"
+                  //     ? {
+                  //         content: errorCreateMaterialHandle(
+                  //           error.content,
+                  //           err.NAME
+                  //         ),
+                  //         pointing: "below",
+                  //       }
+                  //     : error.type === "VALID"
+                  //     ? { content: "Email already exists" }
+                  //     : null
+                  // }
+                  inline
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="name"
+                  name="name"
+                  required
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="quantity"
+                  name="quantity"
+                  control={Input}
+                  inline
+                  label="Safe Quantity"
+                  value={data.quantity}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="status"
+                  name="status"
+                  control={Input}
+                  inline
+                  label="Status"
+                  value={data.status}
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="subtotal"
+                  name="subtotal"
+                  control={Input}
+                  inline
+                  label="Subtotal"
+                  value={data.subtotal}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  type="text"
+                  placeholder="Fill in Material price "
+                  id="price"
+                  name="price"
+                  inline
+                  label="Price"
+                  value={data.price}
+                />
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  inline
+                  label="No"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="no"
+                  name="no"
+                  value={data.no}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Field
+                  control={Input}
+                  width={8}
+                  label="Group"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="group"
+                  name="group"
+                  inline
+                  value={data.group}
+                />
+                <Form.Field
+                  width={8}
+                  label="Note"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="note"
+                  name="note"
+                  inline
+                  control={Input}
+                  value={data.note}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  inline
+                  required
+                  label="Category"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="category"
+                  name="category"
+
+                  // error={
+                  //   error.type === "ERROR"
+                  //     ? {
+                  //         content: errorCreateMaterialHandle(
+                  //           error.content,
+                  //           err.NAME
+                  //         ),
+                  //         pointing: "below",
+                  //       }
+                  //     : error.type === "VALID"
+                  //     ? { content: "Email already exists" }
+                  //     : null
+                  // }
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material raw  "
+                  id="rawMaterial"
+                  name="rawMaterial"
+                  label="Raw Material"
+                  inline
+                  control={Input}
+                  value={data.rawMaterial}
+                />
+              </Form.Group>
+            </Form>
+            <Form
               className={
                 buttonSwitch === false
-                  ? "row form-detail row-cols-4"
-                  : "row form-detail row-cols-4 d-none"
+                  ? "row form-detail  form-relative"
+                  : "row form-detail  d-none"
               }
             >
-              <div className="col-lg-6">
-                <label htmlFor="maHeight">Height</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maHeight"
-                    name="maHeight"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maVolumn">Volume</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maVolumn"
-                    name="maVolumn"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maWeight">Weight</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maWeight"
-                    name="maWeight"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maStatus">Status </label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maStatus"
-                    name="maStatus"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maLenght">Lenght</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maLenght"
-                    name="maLenght"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maColor">Color</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maColor"
-                    name="maColor"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-              <div className="col-lg-6">
-                <label htmlFor="maThickness">Thickness</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maThickness"
-                    name="maThickness"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div>
-            </form>
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  inline
+                  label="Height"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="statHeight"
+                  name="statHeight"
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material raw  "
+                  id="statWeight"
+                  name="statWeight"
+                  label="Weight"
+                  inline
+                  control={Input}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  inline
+                  label="Volume"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="statVolume"
+                  name="statVolume"
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material raw  "
+                  id="statLength"
+                  name="statLength"
+                  label="Length"
+                  inline
+                  control={Input}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  control={Input}
+                  inline
+                  label="Color"
+                  type="text"
+                  placeholder="Fill in Material name "
+                  id="statColor"
+                  name="statColor"
+                />
+                <Form.Field
+                  width={8}
+                  type="text"
+                  placeholder="Fill in Material raw  "
+                  id="statThickness"
+                  name="statThickness"
+                  label="Thickness"
+                  inline
+                  control={Input}
+                />
+              </Form.Group>
+              {/* <Form.Group className="d-flex justify-content-end gap-4">
+                <button
+                  onClick={() => {
+                    setButtonSwitch(false);
+                  }}
+                  className="btnEffect create-button"
+                  type="button"
+                >
+                  Back
+                </button>
+                <button
+                  className="btnEffect create-button"
+                  type="button"
+                  onClick={() => {
+                    // console.log(data.name !== "");
+                    // const isFill = data.Object(keys)
+                    if (
+                      data.name === "" &&
+                      data.category === ""
+                    ) {
+                      setButtonSwitch(false);
+                      return;
+                    }
+                    handleEditMaterial(data);
+                  }}
+                >
+                  Update
+                </button>
+              </Form.Group> */}
+            </Form>
           </div>
         </div>
         <div className="material-footer material-create-footer"></div>

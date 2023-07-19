@@ -1,3 +1,4 @@
+import { ModalType } from './../../constain/ModalType';
 import { userService } from './../services/userService';
 import { selector } from 'recoil';
 import { atom } from 'recoil';
@@ -29,16 +30,15 @@ export const setUserState = selector({
         return get(userState)
     },
     set: ({ set, get }, newUserData: any) => {
-        console.log(newUserData)
         const detail: any = get(userState)
         const { type, data }: any = newUserData
         switch (type) {
-            case "VIEW_USER":
+            case ModalType.VIEW_USER:
                 return set(userState, newUserData)
-            case "UPDATE_USER":
+            case ModalType.UPDATE_USER:
 
                 return set(userState, { ...detail.data, data: data, type: "" })
-            case "DELETE_USER":
+            case ModalType.DELETE_USER:
                 return userService.deleteUser({ id: data.id })
             default:
                 break;

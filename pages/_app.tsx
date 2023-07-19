@@ -9,10 +9,6 @@ import "semantic-ui-css/semantic.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { ToastContainer } from "react-toastify";
-import ModalDelete from "../recoil/Modal/ModalDeleteUser";
-import Loading from "../components/Loading";
-import ModalViewUser from "../recoil/Modal/ModalViewUser";
-import { setCurrentModalState } from "../recoil/Modal/modalState";
 function MyApp({ Component, pageProps }: AppProps) {
   const [isLogin, setIsLogin] = useState(false);
 

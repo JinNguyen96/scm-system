@@ -10,6 +10,7 @@
 }
 .material-main {
     margin-top: 30px;
+    margin-bottom: 10px;
 }
 .layout-create {
 }
@@ -312,12 +313,15 @@ input {
     position: relative;
 }
 .create-button {
-    position: absolute;
+    // position: absolute;
     display: inline-block;
     width: fit-content;
+    height: fit-content;
     padding: 10px 10px;
-    bottom: 0;
-    right: 0;
+    // bottom: 0;
+    // right: 0;
+    float: right;
+    color: white;
 }
 .material-create-footer {
     background-color: unset;

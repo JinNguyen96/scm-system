@@ -42,7 +42,8 @@ const errorLogHandle = (errArr: any, type: string) => {
     if (item.context.key === type) return item.message.split(`user`);
   });
 };
-function ModalCreateUser() {
+
+const ModalCreateUser = React.memo(() => {
   const setModalHandle = useSetRecoilState(setCurrentModalState);
   const animatedComponents = makeAnimated();
   const [typeDetail, setTypeDetail] = useState<any>();
@@ -67,14 +68,17 @@ function ModalCreateUser() {
     relatedUser: [""],
     relatedType: [""],
   });
+
   const [error, setError] = useState({
     type: "",
     content: [],
   });
+
   const handleOnChange = (e: any) => {
     const { name, value } = e.target;
     setSignUpForm({ ...signUpForm, [name]: value });
   };
+
   const TypeDetailHandle = useCallback(
     async (id: any) => {
       const optionType: any[] = [];
@@ -88,11 +92,11 @@ function ModalCreateUser() {
     },
     [setTypeDetail]
   );
+
   const RoleDetailHandle = useCallback(
     async (id: any) => {
       const optionRole: any[] = [];
       let data = await roleService.getRoleDetail(id);
-      console.log(data);
       data.map((type: any[]) => {
         return type.map((item: any) => {
           return optionRole.push({ value: item.id, label: item.roleName });
@@ -102,13 +106,21 @@ function ModalCreateUser() {
     },
     [setRoleDetail]
   );
+
   const createUserHandler = useCallback(async () => {
     let data = await userService.createUser(
       _.omit(signUpForm, ["userConfirmPassword"])
     );
     if (data?.status !== 200) {
+      if (data.data.content.details === undefined) {
+        setError({
+          ...error,
+          content: data.data.message,
+          type: "VALID",
+        });
+        return;
+      }
       setError({ ...error, content: data.data.content.details, type: "ERROR" });
-      console.log(errorLogHandle(error.content, ErrorLog.USER_FIRSTNAME));
     } else {
       setError({ type: "", content: [] });
       setModalHandle({ typeModal: "" });
@@ -124,7 +136,7 @@ function ModalCreateUser() {
       },
     });
   }, [signUpForm, setError]);
-  console.log(error);
+
   useEffect(() => {
     if (typeof window !== null) {
       let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
@@ -134,7 +146,7 @@ function ModalCreateUser() {
       RoleDetailHandle({ id: info.data.userRole });
     }
   }, []);
-  console.log(signUpForm.userPassword.match(signUpForm.userConfirmPassword));
+
   return (
     <>
       <Modal
@@ -194,10 +206,12 @@ function ModalCreateUser() {
                     ? {
                         content: errorLogHandle(
                           error.content,
-                          ErrorLog.USER_EMAIL
+                          ErrorLog.USER_FIRSTNAME
                         ),
                         pointing: "below",
                       }
+                    : error.type === "VALID"
+                    ? { content: "Email already exists" }
                     : null
                 }
               />
@@ -676,6 +690,6 @@ function ModalCreateUser() {
       </Modal>
     </>
   );
-}
+});
 
 export default ModalCreateUser;

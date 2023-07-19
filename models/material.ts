@@ -33,6 +33,8 @@ export default (sequelize: any, DataTypes: any) => {
     static associate(models: any) {
       Materials.hasOne(models.MaterialType)
       Materials.hasOne(models.RawMaterial)
+      Materials.hasMany(models.Stat)
+      Materials.hasMany(models.Categories)
     }
   }
   Materials.init(
@@ -81,7 +83,11 @@ export default (sequelize: any, DataTypes: any) => {
       stat: {
         type: DataTypes.STRING,
         allowNull: false,
-
+        primaryKey: true,
+        references: {
+          model: "Stat",
+          key: "id",
+        },
       },
       status: {
         type: DataTypes.STRING,

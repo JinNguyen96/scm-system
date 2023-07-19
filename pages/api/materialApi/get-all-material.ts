@@ -15,8 +15,8 @@ export default async function getAllRole(
 ) {
   try {
     if (req.method == "GET") {
-         let data = await model.Materials.findAll()
-        successCode(res,data," Get list of material success")
+      let data = await model.Materials.findAll()
+      successCode(res, data, " Get list of material success")
     } else {
       failCode(res, req, "Error method");
     }

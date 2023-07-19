@@ -7,7 +7,7 @@ interface MeasurmentAttributes {
   nameMeasur: string,
   descMeasur: string,
 }
-module.exports = (sequelize: any, DataTypes: any) => {
+export default  (sequelize: any, DataTypes: any) => {
   class Measurments extends Model<MeasurmentAttributes> implements MeasurmentAttributes {
     id!: number;
     nameMeasur!: string;

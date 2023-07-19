@@ -8,7 +8,7 @@ interface UnitAttributes {
   descUnit: string,
 
 }
-module.exports = (sequelize: any, DataTypes: any) => {
+export default (sequelize: any, DataTypes: any) => {
   class Units extends Model<UnitAttributes> implements UnitAttributes {
     /**
      * Helper method for defining associations.

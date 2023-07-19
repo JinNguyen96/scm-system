@@ -10,52 +10,38 @@ interface T {
     res: NextApiResponse;
     req: NextApiRequest;
 }
-export default async function getAllRole(
+export default async function deleteMaterial(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     try {
-        // let { id } = req.body;
-        // let isRoleUnLink = await model.Users.count({
-        //   where: {
-        //     userRole: id,
-        //   },
-        // });
-        // if (isRoleUnLink) {
-        //   let userInRole = await model.Users.findAll({
-        //     where: { userRole: id },
-        //   });
-
-        //   failCode(
-        //     res,
-        //     userInRole,
-        //     "Can not delete this role because someone is on the role, remove user from this role and try again"
-        //   );
-        // } else {
-        //   let result = await model.Roles.destroy({
-        //     where: {
-        //       id,
-        //     },
-        //   });
-        if (req.method === "DELETE") {
+        if (req.method === "POST") {
             let { id } = req.body;
             let findMaterById = await model.Materials.findByPk(id)
+            console.log(findMaterById)
             if (findMaterById) {
+
                 await model.Materials.destroy({
                     where: {
                         id
                     }
                 })
+                await model.Stats.destroy({
+                    where: {
+                        id: findMaterById.dataValues.stat
+                    }
+                })
             } else {
                 failCode(res, '', "Can not find material")
             }
-            successCode(res, "", "Delete material success");
+            successCode(res, '', "Delete material success");
             // }
 
         } else {
-            failCode(res, `${req.method}`, 'Sai method')
+            failCode(res, '', 'wrong method !!!')
         }
+
     } catch (error: any) {
-        return errorCode(error, "Delete unsuccess");
+        return errorCode(error, error, error, error);
     }
 }

@@ -5,6 +5,8 @@ import {
   notifiError,
   notifiSuccess,
 } from "../../components/toastify-noti/notifi";
+import { setEditMaterialState } from "../material/materialRecoil";
+import { materialService } from "../services/materialService";
 import { userService } from "../services/userService";
 import {
   modalSetIdAction,
@@ -14,29 +16,13 @@ import {
 import { setTableDataState } from "./sortUserTable";
 import { setUserState } from "./userModal";
 
-const ModalDelete = React.memo(() => {
+const ModalDeleteMaterial = React.memo(() => {
   const setTypeModal = useSetRecoilState(setCurrentModalState);
-
-  const userId = useRecoilValue(modalSetIdAction);
-  console.log(userId);
-  const [dataState, setDataState] = useRecoilState(setTableDataState);
-  const userData = useRecoilValue(setUserState);
-
-  const deleteUser = async (id: any) => {
-    await userService.deleteUser(id);
-    const { usersPerPage }: any = await userService.getAllUser();
-    console.log(usersPerPage);
-    setDataState({
-      column: null,
-      data: usersPerPage,
-      direction: undefined,
-      valueState: {
-        type: "",
-        column: null,
-      },
-    }),
-      [userData];
-  };
+  const materialId: any = useRecoilValue(setEditMaterialState);
+  console.log(materialId.data.id);
+  const handleDeleteMaterial = useCallback(async (id: any) => {
+    const result = await materialService.deleteMaterial(id);
+  }, []);
 
   // const tableData = useRecoilValue(getDataTableState);
   useEffect(() => {}, []);
@@ -47,7 +33,7 @@ const ModalDelete = React.memo(() => {
         open={true}
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
-        <Modal.Header>DELETE USER</Modal.Header>
+        <Modal.Header>DELETE MATERIAL</Modal.Header>
         <Modal.Content>This action will be undone !!!</Modal.Content>
         <Modal.Actions>
           <Button
@@ -61,11 +47,9 @@ const ModalDelete = React.memo(() => {
           <Button
             positive
             onClick={async () => {
-              // console.log("ok");
-              deleteUser(userId);
+              console.log(materialId.data.id);
+              handleDeleteMaterial({ id: materialId.data.id });
               setTypeModal({ typeModal: "" });
-
-              // handleDelete();
             }}
           >
             Agree
@@ -75,4 +59,4 @@ const ModalDelete = React.memo(() => {
     </div>
   );
 });
-export default ModalDelete;
+export default ModalDeleteMaterial;

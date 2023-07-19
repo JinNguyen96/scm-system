@@ -1,5 +1,5 @@
 import axios from "axios";
-import _, { PropertyName, ObjectIterator, PartialShallow } from "lodash";
+import _ from "lodash";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   atom,
@@ -12,7 +12,6 @@ import { Button, Image, Popup, Tab, Table } from "semantic-ui-react";
 import { ModalType } from "../../../constain/ModalType";
 import {
   modalSetIdAction,
-  newActionModal,
   setCurrentModalState,
 } from "../../../recoil/Modal/modalState";
 import {
