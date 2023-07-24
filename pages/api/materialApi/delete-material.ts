@@ -26,11 +26,7 @@ export default async function deleteMaterial(
                         id
                     }
                 })
-                await model.Stats.destroy({
-                    where: {
-                        id: findMaterById.dataValues.stat
-                    }
-                })
+
             } else {
                 failCode(res, '', "Can not find material")
             }
@@ -42,6 +38,6 @@ export default async function deleteMaterial(
         }
 
     } catch (error: any) {
-        return errorCode(error,'something was wrong!!!');
+        return errorCode(error, 'something was wrong!!!');
     }
 }

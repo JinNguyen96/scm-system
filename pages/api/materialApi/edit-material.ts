@@ -45,23 +45,13 @@ export default async function editCategory(
             const { statId, statLength, statWeight, statHeight, statColor, statThickness, statVolume
             } = stat;
 
-            const statDetail: any = await model.Stats.update({ statLength, statWeight, statHeight, statColor, statThickness, statVolume }, { where: { id: statId } })
-
             let data = await model.Materials.update(updateInfo, {
                 where: {
                     id
                 }
             })
             successCode(res, data, "Update success")
-        } else if (req.method === "POST") {
 
-            const { id, statLength, statWeight, statHeight, statColor, statThickness, statVolume
-            } = req.body;
-
-            const statDetail: any = await model.Stats.update({ statLength, statWeight, statHeight, statColor, statThickness, statVolume }, { where: { id: id } })
-
-            const result = await model.Stats.findAll()
-            successCode(res, result, 'Get stat detail success')
         } else {
             failCode(res, req, "Error method");
         }
