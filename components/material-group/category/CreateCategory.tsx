@@ -1,4 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Divider, Form, Input } from "semantic-ui-react";
+import { categoryService } from "../../../recoil/services/categoryService";
 
 function CreateCategory() {
   const [statQuantity, setStatQuantity] = useState([
@@ -9,33 +17,56 @@ function CreateCategory() {
       unit: "",
       isRequired: true,
     },
+  ]);
+  const [categoryTags, setCategoryTags] = useState([
     {
       name: "",
-      description: "",
-      stat: "",
-      unit: "",
-      isRequired: true,
+      id: "",
     },
   ]);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    stat: "",
+    unit: "",
+    isRequired: false,
+  });
+  const [unitData, setUnitData] = useState<any>();
+  const [statData, setStatData] = useState<any>();
+  const checkedRef: any = useRef(null);
 
-  const categoryTags = [
-    { caName: "Jeans" },
-    { caName: "Iron" },
-    { caName: "Table" },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-    { caName: "..." },
-  ];
-  const renderField = () => {
+  const handleOnChange = useCallback(
+    (e: any) => {
+      const { value, name, index } = e.target;
+      if (name === "isRequired") {
+        let isChecked = document.getElementById(`caRequired${index}`);
+        if (checkedRef?.current.checked) {
+          setFormData({ ...formData, isRequired: true });
+          console.log(formData);
+          return;
+        } else {
+          setFormData({ ...formData, isRequired: false });
+          return;
+        }
+      }
+      setFormData({ ...formData, [name]: value });
+    },
+    [formData]
+  );
+  const getListCategory = useCallback(async () => {
+    const result = await categoryService.getAllCategory();
+    setCategoryTags(
+      result.map((item: any) => {
+        return { name: item.name, id: item.id };
+      })
+    );
+    const unit = await categoryService.getAllUnits();
+    setUnitData(unit);
+    const stat = await categoryService.getAllStats();
+    setStatData(stat);
+  }, [setCategoryTags]);
+  console.log(statData, unitData);
+  const renderField = useCallback(() => {
     return statQuantity.map((item: any, index: number) => {
       return (
         <div className="option-create " key={index}>
@@ -45,11 +76,18 @@ function CreateCategory() {
                 Stat
               </label>
               <div className="select-field">
-                <select name={`caStat${index}`} id={`caStat${index}`}>
-                  <option value="">Stat</option>
-                  <option value="stat1">Stat-1</option>
-                  <option value="stat2">Stat-2</option>
-                  <option value="stat3">Stat-3</option>
+                <select
+                  name="stat"
+                  id={`caStat${index}`}
+                  onChange={handleOnChange}
+                >
+                  {statData?.map((stat: any, index: number) => {
+                    return (
+                      <option value={stat.value} key={index}>
+                        {stat.name}
+                      </option>
+                    );
+                  })}
                 </select>
                 <img
                   className="icon-category"
@@ -64,15 +102,22 @@ function CreateCategory() {
               </div>
             </div>
             <div className="col-lg-4 drop-category">
-              <label className="sr-only" htmlFor={`caUnit${index}`}>
+              <label className="sr-only" htmlFor="unit">
                 Unit
               </label>
               <div className="select-field">
-                <select name={`caUnit${index}`} id={`caUnit${index}`}>
-                  <option value="">Unit</option>
-                  <option value="unit1">unit-1</option>
-                  <option value="unit2">unit-2</option>
-                  <option value="unit3">unit-3</option>
+                <select
+                  name="unit"
+                  id={`caUnit${index}`}
+                  onChange={handleOnChange}
+                >
+                  {unitData?.map((unit: any, index: number) => {
+                    return (
+                      <option value={unit.value} key={index}>
+                        {unit.name}
+                      </option>
+                    );
+                  })}
                 </select>
                 <img
                   className="icon-category"
@@ -87,11 +132,13 @@ function CreateCategory() {
               </div>
             </div>
             <div className="col-lg-3 drop-category">
-              <label htmlFor={`caRequired${index}`}>
+              <label htmlFor="isRequired">
                 <input
                   type="checkbox"
                   id={`caRequired${index}`}
-                  name={`caRequired${index}`}
+                  name="isRequired"
+                  onChange={handleOnChange}
+                  ref={checkedRef}
                 />
                 <img
                   className="icon-category"
@@ -121,12 +168,17 @@ function CreateCategory() {
                 <img src="/plus-icon.svg" alt="plus icon" />
               </button>
               <button
-                className="create-row-category"
+                className={
+                  statQuantity.length > 1 ? "create-row-category" : "d-none"
+                }
+                disabled={statQuantity.length > 1 ? false : true}
                 onClick={() => {
-                    statQuantity.splice(index,1)
-                console.log(statQuantity)
-                // setStatQuantity(...statQuantity)
-                setStatQuantity([...statQuantity])
+                  console.log(statQuantity.length);
+                  if (statQuantity.length > 1) {
+                    statQuantity.splice(index, 1);
+                    // setStatQuantity(...statQuantity)
+                    setStatQuantity([...statQuantity]);
+                  }
                 }}
               >
                 {" "}
@@ -137,9 +189,11 @@ function CreateCategory() {
         </div>
       );
     });
-  };
+  }, [statData, unitData]);
+  console.log(formData);
   useEffect(() => {
     renderField();
+    getListCategory();
   }, [statQuantity]);
   return (
     <>
@@ -157,32 +211,33 @@ function CreateCategory() {
               <div className="quantity-stat">
                 <p>All ({statQuantity.length})</p>
               </div>
-              <div className="row row-cols-2 flex-column gap-5 mb-5">
-                <div className="col-lg-6">
-                  <label htmlFor="caName">Name</label>
-                  <div className="group-input search-bar">
-                    <input
-                      type="text"
-                      placeholder="Fill in Category name "
-                      id="caName"
-                      name="caName"
-                    />
-                    <span className="error-message">Required</span>
-                  </div>
-                </div>
-                <div className="col-lg-6">
-                  <label htmlFor="caDescription">Description</label>
-                  <div className="group-input search-bar">
-                    <input
-                      type="text"
-                      placeholder="Fill in Category description "
-                      id="caDescription"
-                      name="caDescription"
-                    />
-                    <span className="error-message">Required</span>
-                  </div>
-                </div>
-              </div>
+              <Form>
+                <Form.Group>
+                  <Form.Field
+                    width={8}
+                    control={Input}
+                    required
+                    placeholder="Fill in Category name "
+                    id="name"
+                    name="name"
+                    label="Name"
+                    onChange={handleOnChange}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Field
+                    control={Input}
+                    width={8}
+                    required
+                    placeholder="Fill in Category description "
+                    id="description"
+                    name="description"
+                    label="Description"
+                    onChange={handleOnChange}
+                  />
+                </Form.Group>
+              </Form>
+              <Divider />
               {renderField()}
               <div className="w-100 flex justify-end mt-5">
                 <button
@@ -198,21 +253,30 @@ function CreateCategory() {
               <h2 className="title-category">Category</h2>
               <div className="tags-group">
                 <div className="tag-detail">
-                  {categoryTags.map((tag, index) => {
-                    return (
-                      <Fragment key={index}>
-                        <div className="tag-item">
-                          <label htmlFor={`tag${index}`}>{tag.caName}</label>
-                          <input
-                            type="checkbox"
-                            id={`tag${index}`}
-                            name={`tag${index}`}
-                            value={tag.caName}
-                          />
-                        </div>
-                      </Fragment>
-                    );
-                  })}
+                  {categoryTags &&
+                    categoryTags?.map((tag, index) => {
+                      if (index > 20) {
+                        return;
+                      }
+                      return (
+                        <Fragment key={index}>
+                          <div className="tag-item">
+                            <label
+                              htmlFor={`tag${index}`}
+                              className="category-tag-name"
+                            >
+                              {tag.name}
+                            </label>
+                            <input
+                              type="checkbox"
+                              id={`tag${index}`}
+                              name={`tag${index}`}
+                              value={tag.id}
+                            />
+                          </div>
+                        </Fragment>
+                      );
+                    })}
                 </div>
               </div>
             </div>

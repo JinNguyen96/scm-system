@@ -3,9 +3,9 @@ import {
   Model
 } from 'sequelize';
 interface RawMaterialAttributes {
-  id: number,
-  nameRawMater: string,
-  descRawMater: string,
+  id: string,
+  name: string,
+  description: string,
 
 }
 export default (sequelize: any, DataTypes: any) => {
@@ -15,7 +15,7 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    id!: number;
+    id!: string;
     nameRawMater!: string;
     descRawMater!: string;
     static associate(models: any) {
@@ -24,16 +24,16 @@ export default (sequelize: any, DataTypes: any) => {
     }
   }
   RawMaterials.init({
-    nameRawMater: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    descRawMater: {
+    description: {
       type: DataTypes.STRING,
       allowNull: false
     },
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true

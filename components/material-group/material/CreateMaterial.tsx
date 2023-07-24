@@ -15,7 +15,7 @@ const errorCreateMaterialHandle = (errArr: any, type: string) => {
 const ErrorLog = {
   MATERIAL_NAME: "Name",
   MATERIAL_NO: "No",
-  MATERIAL_TYPE_ID: "type_id",
+  MATERIAL_TYPE_ID: "category_id",
   MATERIAL_RAW_MATERIAL: "rawMaterial",
   MATERIAL_QUANTITY: "quantity",
   MATERIAL_GROUP: "group",
@@ -38,20 +38,12 @@ const CreateMaterial = React.memo(() => {
   const [materialForm, setMaterialForm] = useState<any>({
     name: "",
     no: 0,
-    type_id: 0,
+    category_id: "",
     rawMaterial: 0,
     quantity: "",
     group: "",
     price: 0,
     subtotal: "",
-    stat: {
-      statHeight: 0,
-      statWeight: 0,
-      statLength: 0,
-      statColor: "",
-      statThickness: 0,
-      statVolume: 0,
-    },
     status: "",
     note: "",
   });
@@ -66,16 +58,7 @@ const CreateMaterial = React.memo(() => {
     (e: any) => {
       const { name, value } = e.target;
       console.log(name);
-      if (name.includes("stat") && name !== "status") {
-        setMaterialForm({
-          ...materialForm,
-          stat: {
-            ...materialForm.stat,
-            [name]: value,
-          },
-        });
-        return;
-      }
+
       setMaterialForm({ ...materialForm, [name]: value });
     },
     [setMaterialForm, materialForm, materialForm.stat]

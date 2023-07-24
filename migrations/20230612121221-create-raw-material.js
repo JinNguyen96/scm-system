@@ -1,36 +1,36 @@
-'use strict';
+"use strict";
 
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RawMaterials', {
-      nameRawMater: {
+    await queryInterface.createTable("RawMaterials", {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      descRawMater: {
+      description: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      id:{
+      id: {
         type: DataTypes.INTEGER,
-        allowNull:false,
-        primaryKey:true,
-        autoIncrement:true
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RawMaterials');
-  }
+    await queryInterface.dropTable("RawMaterials");
+  },
 };

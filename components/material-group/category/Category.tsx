@@ -1,5 +1,6 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { categoryService } from "../../../recoil/services/categoryService";
 import Pagination from "../../panigation";
 
 function Category() {
@@ -65,7 +66,17 @@ function Category() {
       caDateUpdate: "2023-01-25",
     },
   ];
-
+  const [listData, setListData] = useState([
+    {
+      name: "",
+      description: "",
+      updatedAt: "",
+    },
+  ]);
+  const getListCategory = useCallback(async () => {
+    const result = await categoryService.getAllCategory();
+    setListData(result);
+  }, []);
   const npage = Math.ceil(categoryMaterialData.length / 2);
   const numbers = [...Array(npage + 1).keys()].slice(1);
   const [count, setCount] = useState(0);
@@ -99,7 +110,9 @@ function Category() {
     }
   };
 
-  useEffect(() => {}, [count]);
+  useEffect(() => {
+    getListCategory();
+  }, []);
   return (
     <>
       <div className="material category">
@@ -131,7 +144,7 @@ function Category() {
         <div className="material-main">
           <div className="top-main row ">
             <div className="side-top-main col-lg-6 relative d-flex gap-1 align-items-center">
-              <span>All (20) </span>
+              <span>All ({listData.length}) </span>
               <Link href="create-category" className="--button-create">
                 Create new Category
               </Link>
@@ -153,16 +166,14 @@ function Category() {
                 </tr>
               </thead>
               <tbody>
-                {categoryMaterialData.map((item: any, index: number) => {
+                {listData?.map((item: any, index: number) => {
                   return (
                     <>
                       <tr
                         key={index}
                         className="item-material"
                         onChange={() => {
-                          console.log(index);
                           handleChangeInput(index);
-                          console.log(count, "inputIndex");
                         }}
                         id={`td${index + 1}`}
                       >
@@ -171,20 +182,19 @@ function Category() {
                             type="checkbox"
                             id={`input${index}`}
                             onChange={() => {
-                              console.log(index);
                               handleChangeInput(index);
                             }}
                           />
                         </td>
                         <td className="name-material">
-                          <span>{item.caName}</span>
+                          <span>{item.name}</span>
                         </td>
                         <td className="category-material">
-                          <span>{item.caDescription} </span>
+                          <span>{item.description} </span>
                         </td>
 
                         <td className="date-material">
-                          <span>{item.caDateUpdate}</span>
+                          <span>{item.updatedAt.slice(0, 9)}</span>
                         </td>
                         <td className="option-material">
                           <div

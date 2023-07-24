@@ -24,41 +24,38 @@ export default async function signup(
             else {
                 let { no,
                     name,
-                    type_id,
+                    category_id,
                     quantity,
                     group,
                     rawMaterial,
                     price,
                     subtotal,
-                    stat,
                     status,
+                    metadata,
+                    safe_quantity,
                     note, } = req.body;
 
                 const uniqueId = uuid()
-                const { statLength, statWeight, statHeight, statColor, statThickness, statVolume } = stat
 
-                let statCreate = await model.Stats.create({ id: uniqueId, statLength, statWeight, statHeight, statColor, statThickness, statVolume })
+                let data = {
+                    no,
+                    id: uniqueId,
+                    name,
+                    category_id,
+                    quantity,
+                    group,
+                    rawMaterial,
+                    price,
+                    subtotal,
+                    status,
+                    metadata,
+                    safe_quantity,
+                    note,
+                };
 
-                if (statCreate.dataValues) {
-                    const { id } = statCreate.dataValues
-                    let data = {
-                        no,
-                        id: uniqueId,
-                        name,
-                        type_id,
-                        quantity,
-                        group,
-                        rawMaterial,
-                        price,
-                        subtotal,
-                        stat: id,
-                        status,
-                        note,
-                    };
+                let newMaterial = await model.Materials.create(data)
+                successCode(res, newMaterial, 'Create material success')
 
-                    let newMaterial = await model.Materials.create(data)
-                    successCode(res, newMaterial, 'Create material success')
-                }
             }
         } else {
             failCode(res, req, "Error method");

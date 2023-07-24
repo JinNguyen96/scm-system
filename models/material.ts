@@ -6,14 +6,15 @@ interface MaterialAttributes {
   no: number,
   id: string,
   name: string,
-  type_id: number,
+  category_id: string,
   rawMaterial: number[],
   quantity: string,
   group: string,
   price: string,
   subtotal: string,
-  stat: string,
+  safe_quantity: number,
   status: string,
+  metadata: string,
   note: string,
 }
 export default (sequelize: any, DataTypes: any) => {
@@ -21,14 +22,15 @@ export default (sequelize: any, DataTypes: any) => {
     no!: number;
     id!: string;
     name!: string;
-    type_id!: number;
+    category_id!: string;
     rawMaterial!: number[];
     quantity!: string;
     group!: string;
     price!: string;
     subtotal!: string;
-    stat!: string;
+    safe_quantity!: number;
     status!: string;
+    metadata!: string;
     note!: string;
     static associate(models: any) {
       Materials.hasOne(models.MaterialType)
@@ -53,8 +55,8 @@ export default (sequelize: any, DataTypes: any) => {
         autoIncrement: true,
         allowNull: false
       },
-      type_id: {
-        type: DataTypes.INTEGER,
+      category_id: {
+        type: DataTypes.STRING,
         allowNull: false
       },
       rawMaterial: {
@@ -80,19 +82,17 @@ export default (sequelize: any, DataTypes: any) => {
         allowNull: false,
 
       },
-      stat: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        primaryKey: true,
-        references: {
-          model: "Stat",
-          key: "id",
-        },
+      safe_quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       status: {
         type: DataTypes.STRING,
         allowNull: false,
-
+      },
+      metadata: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       note: {
         type: DataTypes.STRING,

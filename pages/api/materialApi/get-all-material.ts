@@ -9,7 +9,7 @@ interface T {
   res: NextApiResponse;
   req: NextApiRequest;
 }
-export default async function getAllRole(
+export default async function getAllMaterial(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

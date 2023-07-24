@@ -5,6 +5,9 @@ interface CategoriesAttributes {
   id: string,
   name: string,
   description: string,
+  stat: string,
+  unit: string,
+  isRequired: boolean,
 
 }
 export default (sequelize: any, DataTypes: any) => {
@@ -12,6 +15,9 @@ export default (sequelize: any, DataTypes: any) => {
     id!: string;
     name!: string;
     description!: string;
+    stat!: string;
+    unit!: string;
+    isRequired!: boolean;
     static associate(models: any) {
       // define association here
     }
@@ -29,6 +35,18 @@ export default (sequelize: any, DataTypes: any) => {
     description: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    stat: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    unit: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    isRequired: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     }
   }, {
     sequelize,

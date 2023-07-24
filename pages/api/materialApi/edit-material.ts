@@ -11,7 +11,7 @@ interface T {
     res: NextApiResponse;
     req: NextApiRequest;
 }
-export default async function getAllRole(
+export default async function editCategory(
     req: NextApiRequest,
     res: NextApiResponse
 ) {

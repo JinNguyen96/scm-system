@@ -39,15 +39,13 @@ const createRole: any = Joi.object({
 
 const createMaterial: any = Joi.object({
   name: Joi.string().required(),
-  category: Joi.string().required(),
+  category_id: Joi.string().required(),
   no: Joi.number(),
-  type_id: Joi.number(),
   quantity: Joi.string(),
   group: Joi.string(),
   price: Joi.number(),
   rawMaterial: Joi.number(),
   subtotal: Joi.string(),
-  stat: Joi.object(),
   status: Joi.string(),
   note: Joi.string(),
 })

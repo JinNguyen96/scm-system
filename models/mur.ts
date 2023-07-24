@@ -4,7 +4,7 @@ import {
 } from 'sequelize';
 interface MURAttributes {
   id: number,
-  measurmentId: number,
+  statId: number,
   unitId: number
 }
 export default (sequelize: any, DataTypes: any) => {
@@ -15,7 +15,7 @@ export default (sequelize: any, DataTypes: any) => {
      * The `models/index` file will call this method automatically.
      */
     id!: number;
-    measurmentId!: number;
+    statId!: number;
     unitId!: number;
     static associate(models: any) {
       // define association here
@@ -25,7 +25,7 @@ export default (sequelize: any, DataTypes: any) => {
     }
   }
   MURs.init({
-    measurmentId: {
+    statId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

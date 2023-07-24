@@ -20,12 +20,12 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      type_id: {
-        type: DataTypes.INTEGER,
+      category_id: {
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: "MaterialTypes",
+          model: "Category",
           key: "id",
         },
       },

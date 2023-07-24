@@ -12,7 +12,7 @@ import Pagination from "../../panigation";
 const Material = React.memo(() => {
   const [count, setCount] = useState(0);
   const setMaterialState = useSetRecoilState(setEditMaterialState);
-  
+
   const handleSelect = useCallback(
     (
       deleteOption: HTMLInputElement | null,
@@ -57,12 +57,11 @@ const Material = React.memo(() => {
     [count, handleSelect]
   );
 
-  const [material, setMaterialData] = useState<any>();
+  const [material, setMaterialData] = useState<any>([]);
   const setTypeModal = useSetRecoilState(setCurrentModalState);
   const getMaterialData = useCallback(async () => {
-    await axios.get("/api/materialApi/get-all-material").then((result) => {
-      setMaterialData(result.data.content);
-    });
+    let result = await materialService.getAllMaterial();
+    setMaterialData(result);
   }, [setMaterialData]);
 
   useEffect(() => {
@@ -124,7 +123,7 @@ const Material = React.memo(() => {
               </thead>
               <tbody>
                 {material &&
-                  material.map((item: any, index: number) => {
+                  material?.map((item: any, index: number) => {
                     return (
                       <>
                         <tr
