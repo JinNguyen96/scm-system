@@ -10,7 +10,7 @@ interface T {
   res: NextApiResponse;
   req: NextApiRequest;
 }
-export default async function signup(
+export default async function createRole(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

@@ -15,7 +15,7 @@ function CreateCategory() {
       description: "",
       stat: "",
       unit: "",
-      isRequired: true,
+      isRequired: false,
     },
   ]);
   const [categoryTags, setCategoryTags] = useState([
@@ -27,6 +27,8 @@ function CreateCategory() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+  });
+  const [fieldArray, setFieldArray] = useState<any>({
     stat: "",
     unit: "",
     isRequired: false,
@@ -35,24 +37,26 @@ function CreateCategory() {
   const [statData, setStatData] = useState<any>();
   const checkedRef: any = useRef(null);
 
-  const handleOnChange = useCallback(
+  const handleOnChangeCategory = useCallback(
     (e: any) => {
-      const { value, name, index } = e.target;
-      if (name === "isRequired") {
-        let isChecked = document.getElementById(`caRequired${index}`);
-        if (checkedRef?.current.checked) {
-          setFormData({ ...formData, isRequired: true });
-          console.log(formData);
-          return;
-        } else {
-          setFormData({ ...formData, isRequired: false });
-          return;
-        }
-      }
-      setFormData({ ...formData, [name]: value });
+      const { value, name } = e.target;
+
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
     },
-    [formData]
+    [setFormData, formData]
   );
+
+  const handleOnchangeMeasurment = useCallback(
+    (e: any) => {
+      const { value, name } = e.target;
+      setFieldArray({ ...fieldArray, [name]: value });
+    },
+    [setFieldArray, fieldArray]
+  );
+
   const getListCategory = useCallback(async () => {
     const result = await categoryService.getAllCategory();
     setCategoryTags(
@@ -64,8 +68,8 @@ function CreateCategory() {
     setUnitData(unit);
     const stat = await categoryService.getAllStats();
     setStatData(stat);
-  }, [setCategoryTags]);
-  console.log(statData, unitData);
+  }, [setCategoryTags, setUnitData, setStatData]);
+  console.log(fieldArray);
   const renderField = useCallback(() => {
     return statQuantity.map((item: any, index: number) => {
       return (
@@ -79,8 +83,19 @@ function CreateCategory() {
                 <select
                   name="stat"
                   id={`caStat${index}`}
-                  onChange={handleOnChange}
+                  onChange={(e: any) => {
+                    const { value, name } = e.target;
+                    console.log(index);
+                    if (checkedRef?.current.checked) {
+                      setFieldArray({ ...fieldArray, isRequired: true });
+                      return;
+                    } else {
+                      setFieldArray({ ...fieldArray, isRequired: false });
+                      return;
+                    }
+                  }}
                 >
+                  <option value="">Stat</option>
                   {statData?.map((stat: any, index: number) => {
                     return (
                       <option value={stat.value} key={index}>
@@ -109,8 +124,9 @@ function CreateCategory() {
                 <select
                   name="unit"
                   id={`caUnit${index}`}
-                  onChange={handleOnChange}
+                  onChange={handleOnchangeMeasurment}
                 >
+                  <option value="">Unit</option>
                   {unitData?.map((unit: any, index: number) => {
                     return (
                       <option value={unit.value} key={index}>
@@ -137,7 +153,7 @@ function CreateCategory() {
                   type="checkbox"
                   id={`caRequired${index}`}
                   name="isRequired"
-                  onChange={handleOnChange}
+                  onChange={handleOnchangeMeasurment}
                   ref={checkedRef}
                 />
                 <img
@@ -190,7 +206,7 @@ function CreateCategory() {
       );
     });
   }, [statData, unitData]);
-  console.log(formData);
+  // console.log(formData);
   useEffect(() => {
     renderField();
     getListCategory();
@@ -221,7 +237,7 @@ function CreateCategory() {
                     id="name"
                     name="name"
                     label="Name"
-                    onChange={handleOnChange}
+                    onChange={handleOnChangeCategory}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -233,7 +249,7 @@ function CreateCategory() {
                     id="description"
                     name="description"
                     label="Description"
-                    onChange={handleOnChange}
+                    onChange={handleOnChangeCategory}
                   />
                 </Form.Group>
               </Form>

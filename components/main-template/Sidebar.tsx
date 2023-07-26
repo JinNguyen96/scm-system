@@ -2,37 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import "react-calendar/dist/Calendar.css";
 import Router from "next/router";
-import { atom, selector, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
+import { routePath } from "../../recoil/route/sideBar";
+import { RouteType } from "../../constain/RouteType";
 
-const urlState = atom({
-  key: "urlState",
-  default: { url: "" },
-});
-const getUrlState = selector({
-  key: "getUrlState",
-  get: ({ get }) => {
-    const url = get(urlState);
-    return url;
-  },
-  set: ({ set, get }, newUrl: any) => {
-    const url = get(urlState);
-    return set(urlState, { url: newUrl });
-  },
-});
 export default function Sidebar() {
   // const [url, setUrl] = useState("");
   // const [isActive, setIsActive] = useState(true);
-  const setUrl = useSetRecoilState(getUrlState);
-  const url = useRecoilValue(getUrlState);
-  const handleActive = useCallback(() => {
-    if (typeof window !== undefined) {
-      let checkUrl = window.document.URL;
-      console.log(checkUrl);
-      setUrl(checkUrl);
-      // return checkUrl
-    }
-  }, [url]);
-  console.log(url);
+  const [presentRoute, setPresentRoute] = useRecoilState(routePath);
+  console.log(presentRoute);
+  useEffect(() => {}, []);
   return (
     <>
       <aside
@@ -130,7 +109,15 @@ export default function Sidebar() {
             <li>
               <Link
                 href="/dashboard"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700  ${
+                  presentRoute.path.match(RouteType.DASHBOARD) ? "isAcTive" : ""
+                }`}
+                onClick={() => {
+                  setPresentRoute({
+                    path: RouteType.DASHBOARD,
+                    status: RouteType.DASHBOARD,
+                  });
+                }}
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">Dashboard</span>
                 <svg
@@ -162,18 +149,13 @@ export default function Sidebar() {
               >
                 <li>
                   <a
-                    className={
-                      url.url?.includes("/user-management")
-                        ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
-                        : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    }
+                    className={`flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700  cursor-pointer ${
+                      presentRoute.status.match(RouteType.USER_MANAGEMENT)
+                        ? "isAcTive"
+                        : ""
+                    }`}
                   >
-                    <span
-                      onClick={() => {
-                        handleActive();
-                      }}
-                      className="flex-1 ml-3 whitespace-nowrap"
-                    >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
                       User Managerment
                     </span>
                     <svg
@@ -195,68 +177,66 @@ export default function Sidebar() {
                   </a>
                 </li>
               </ul>
-              <ul className="collapse collapsed" id="userManagerment">
+              <ul
+                className={` ${
+                  presentRoute.status.match(RouteType.USER_MANAGEMENT)
+                    ? ""
+                    : "collapse collapsed"
+                }`}
+                id="userManagerment"
+              >
                 <li>
                   <Link
                     href="/user-management/user"
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.USER)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.USER,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
                   >
-                    <span
-                      onClick={() => {
-                        handleActive();
-                      }}
-                      className="flex-1 ml-3 whitespace-nowrap"
-                    >
-                      Users
-                    </span>
+                    <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/role"
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.ROLE)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.ROLE,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
                   >
                     <span className="flex-1 ml-3 whitespace-nowrap">Role</span>
-                    <svg
-                      width="7"
-                      height="10"
-                      viewBox="0 0 7 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 1L5.15094 4.78082L1 8.56164"
-                        stroke="#1C1D22"
-                        strokeOpacity="0.5"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/type"
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.TYPE)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.TYPE,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
                   >
                     <span className="flex-1 ml-3 whitespace-nowrap">Type</span>
-                    <svg
-                      width="7"
-                      height="10"
-                      viewBox="0 0 7 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 1L5.15094 4.78082L1 8.56164"
-                        stroke="#1C1D22"
-                        strokeOpacity="0.5"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </Link>
                 </li>
               </ul>
@@ -271,14 +251,11 @@ export default function Sidebar() {
               >
                 <li>
                   <a
-                    onClick={() => {
-                      handleActive();
-                    }}
-                    className={
-                      url.url?.includes("/material")
-                        ? "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 isAcTive cursor-pointer"
-                        : "flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    }
+                    className={`flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.status.match(RouteType.MATERIAL_MANAGEMENT)
+                        ? "isAcTive"
+                        : ""
+                    }  cursor-pointer`}
                   >
                     <span className="flex-1 ml-3 whitespace-nowrap">
                       Material Managerment
@@ -302,18 +279,30 @@ export default function Sidebar() {
                   </a>
                 </li>
               </ul>
-              <ul className="collapse collapsed" id="materialManagerment">
+              <ul
+                className={` ${
+                  presentRoute.status.match(RouteType.MATERIAL_MANAGEMENT)
+                    ? ""
+                    : "collapse collapsed"
+                }`}
+                id="materialManagerment"
+              >
                 <li>
                   <Link
                     href="/material/material"
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.MATERIAL)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.MATERIAL,
+                        status: RouteType.MATERIAL_MANAGEMENT,
+                      });
+                    }}
                   >
-                    <span
-                      onClick={() => {
-                        handleActive();
-                      }}
-                      className="flex-1 ml-3 whitespace-nowrap"
-                    >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
                       Material
                     </span>
                   </Link>
@@ -321,27 +310,21 @@ export default function Sidebar() {
                 <li>
                   <Link
                     href="/material/category"
-                    className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 my-1 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.CATEGORY)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.CATEGORY,
+                        status: RouteType.MATERIAL_MANAGEMENT,
+                      });
+                    }}
                   >
                     <span className="flex-1 ml-3 whitespace-nowrap">
                       Category
                     </span>
-                    <svg
-                      width="7"
-                      height="10"
-                      viewBox="0 0 7 10"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 1L5.15094 4.78082L1 8.56164"
-                        stroke="#1C1D22"
-                        strokeOpacity="0.5"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
                   </Link>
                 </li>
               </ul>
@@ -375,7 +358,17 @@ export default function Sidebar() {
             <li>
               <Link
                 href="#"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  presentRoute.path.match(RouteType.USER_INFOMATION)
+                    ? "isAcTive"
+                    : ""
+                }`}
+                onClick={() => {
+                  setPresentRoute({
+                    path: RouteType.USER_INFOMATION,
+                    status: RouteType.USER_INFOMATION,
+                  });
+                }}
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">...</span>
                 <svg

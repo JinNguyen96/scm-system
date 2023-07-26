@@ -14,8 +14,9 @@ export default async function getAllMaterial(
   res: NextApiResponse
 ) {
   try {
-    if (req.method == "GET") {
-      let data = await model.Materials.findAll()
+    if (req.method === "GET") {
+      let data = await model.Materials.findAll();
+      console.log(data)
       successCode(res, data, " Get list of material success")
     } else {
       failCode(res, req, "Error method");

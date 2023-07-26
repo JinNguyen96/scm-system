@@ -122,8 +122,8 @@ const Material = React.memo(() => {
                 </tr>
               </thead>
               <tbody>
-                {material &&
-                  material?.map((item: any, index: number) => {
+                {!material &&
+                  material.map((item: any, index: number) => {
                     return (
                       <>
                         <tr

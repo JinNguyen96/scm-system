@@ -1,5 +1,12 @@
-#logo-sidebar{
-    .isAcTive{
-        background-color: rgb(243,244,246);
+#logo-sidebar {
+    .isAcTive {
+        background-color: rgb(243, 244, 246);
+        transition: all 0.3s ease-in-out;
+    }
+    .isAcTivePath {
+        margin-top: 5px;
+        background-color: rgb(243, 244, 246);
+        border-bottom: 3px solid gray;
+        transition: all 0.3s ease-in-out;
     }
 }
