@@ -3,9 +3,10 @@ import {
   Model
 } from 'sequelize';
 interface TMURAttributes {
-  id: number,
-  materialTypeId: number,
-  MURId: number
+  id: string,
+  categoryId: string,
+  MURId: string,
+  isRequired: boolean
 }
 export default (sequelize: any, DataTypes: any) => {
   class TMURs extends Model<TMURAttributes> implements TMURAttributes {
@@ -14,28 +15,33 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    id!: number;
-    materialTypeId!: number;
-    MURId!: number;
+    id!: string;
+    categoryId!: string;
+    MURId!: string;
+    isRequired!: boolean;
     static associate(models: any) {
       // define association here
       TMURs.hasMany(models.MURs)
     }
   }
   TMURs.init({
-    materialTypeId: {
+    categoryId: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true
     },
     MURId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
+    },
+    isRequired: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
     }
   }, {
     sequelize,

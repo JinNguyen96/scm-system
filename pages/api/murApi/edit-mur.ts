@@ -19,7 +19,7 @@ export default async function editMUR(
             let findMURById = await model.MURs.findByPk(id)
             if (findMURById) {
                 let updateInfo = { id, unitId, statId }
-                await model.Roles.update(updateInfo, {
+                await model.MURs.update(updateInfo, {
                     where: {
                         id
                     }
