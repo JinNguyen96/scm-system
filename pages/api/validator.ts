@@ -8,17 +8,21 @@ const signupSchema: any = Joi.object({
   userPassword: Joi.string()
     .min(6)
     .max(16)
-    .regex(new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,16}$/))
+    .regex(
+      new RegExp(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,16}$/
+      )
+    )
     .required(),
   userRole: Joi.required(),
   userFirstName: Joi.string().required(),
   userLastName: Joi.string().required(),
-  userType:Joi.required(),
+  userType: Joi.required(),
   userPhoneNumber: Joi.number(),
-  userDob:Joi.date(),
-  userAdress:Joi.string(),
+  userDob: Joi.date(),
+  userAdress: Joi.string(),
   relatedType: Joi.array(),
-  relatedUser: Joi.array()
+  relatedUser: Joi.array(),
 });
 
 const signinShema: any = Joi.object({
@@ -30,8 +34,23 @@ const createRole: any = Joi.object({
   roleName: Joi.required(),
   roleDescription: Joi.required(),
   roleScopes: Joi.required(),
-  rolePermission: Joi.required()
+  rolePermission: Joi.string().required()
+});
+
+const createMaterial: any = Joi.object({
+  name: Joi.string().required(),
+  category_id: Joi.string().required(),
+  no: Joi.number(),
+  quantity: Joi.string(),
+  group: Joi.string(),
+  price: Joi.number(),
+  rawMaterial: Joi.number(),
+  subtotal: Joi.string(),
+  status: Joi.string(),
+  note: Joi.string(),
 })
+
 export const validateSignup = validator(signupSchema);
 export const validateSignin = validator(signinShema);
 export const validateCreateRole = validator(createRole);
+export const validateCreateMaterial = validator(createMaterial);

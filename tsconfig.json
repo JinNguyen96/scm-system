@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "es5", "es6"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,10 +21,12 @@
     "**/*.tsx",
     "config/config.js",
     "pages/api/index.ts",
-     "models/config.ts",
-      "middleware/auth.ts", "config/index.js", "models/users.js", "models/type.js", "models/roles.js"  ],
-  "exclude": [
-    "node_modules"
+    "models/config.ts",
+    "lib/auth.ts",
+    "config/index.js",
+    "models/users.js",
+    "models/type.ts",
+    "models/roles.js"
   ],
-  
+  "exclude": ["node_modules"]
 }

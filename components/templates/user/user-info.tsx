@@ -16,38 +16,34 @@ function AccountInfo() {
     relatedUser: 0,
     relatedType: 0,
   });
-  const [role,setRole] = useState('')
-  const [type,setType] = useState('')
+  const [role, setRole] = useState("");
+  const [type, setType] = useState("");
   const getAccount = async (id: any) => {
     await axios
       .post(`/api/userApi/get-all-user`, id)
       .then((result) => {
-        console.log(result);
         setAccount(result.data.content.dataUsers);
-        getTypeDetail({id: result.data.content.dataUsers.userType})
-        getRoleDetail({id: result.data.content.dataUsers.userRole})
+        getTypeDetail({ id: result.data.content.dataUsers.userType });
+        getRoleDetail({ id: result.data.content.dataUsers.userRole });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
-  const getTypeDetail = async (id:object) =>{
-    await axios.put('/api/typeApi/type-detail',id).then((result) => { 
-      console.log(result.data.content[0].typeName)
-      setType(result.data.content[0].typeName)
-     }).catch((err) => { 
-      console.log(err)
+  const getTypeDetail = async (id: object) => {
+    await axios
+      .put("/api/typeApi/type-detail", id)
+      .then((result) => {
+        setType(result.data.content[0].typeName);
       })
-  }
-  const getRoleDetail = async (id: object) =>{
-    await axios.put('/api/roleApi/role-detail',id).then((result) => { 
-      console.log(result)
-      setRole(result.data.content[0].roleName)
-
-     }).catch((err) => { 
-      console.log(err)
+      .catch((err) => {});
+  };
+  const getRoleDetail = async (id: object) => {
+    await axios
+      .put("/api/roleApi/role-detail", id)
+      .then((result) => {
+        setRole(result.data.content[0].roleName);
       })
-  }
+      .catch((err) => {});
+  };
   useEffect(() => {
     if (localStorage.getItem("userToken")) {
       let dataInfo = JSON.parse(`${localStorage.getItem("userToken")}`);
@@ -106,7 +102,6 @@ function AccountInfo() {
                             id="last-name"
                             name="userLastName"
                             type="text"
-                        
                             value={account.userLastName}
                             readOnly
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
@@ -133,7 +128,6 @@ function AccountInfo() {
                               ""
                             )}
                             readOnly
-
                             type="date"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
                             style={{ borderRadius: 4 }}
@@ -148,7 +142,6 @@ function AccountInfo() {
                             name="userEmail"
                             value={account.userEmail}
                             readOnly
-
                             type="email"
                             autoComplete="email"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
@@ -165,7 +158,6 @@ function AccountInfo() {
                             name="userAdress"
                             value={account.userAdress}
                             readOnly
-
                             type="text"
                             autoComplete="current-password"
                             className=" block w-full border placeholder-gray-300 border-gray-300 px-7 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm rounded-md shadow-sm"
@@ -187,7 +179,6 @@ function AccountInfo() {
                             name="userPhoneNumber"
                             value={account.userPhoneNumber}
                             readOnly
-
                             type="number"
                             autoComplete="current-password"
                             required
@@ -275,7 +266,6 @@ function AccountInfo() {
                   </div>
                 </div>
               </div>
-             
             </div>
           </div>
           <div className="search-by-tag"></div>

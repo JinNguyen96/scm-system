@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import "react-calendar/dist/Calendar.css";
 import Router from "next/router";
+import { useRecoilState } from "recoil";
+import { routePath } from "../../recoil/route/sideBar";
+import { RouteType } from "../../constain/RouteType";
 
 export default function Sidebar() {
-  const [value, onChange] = useState(new Date());
-
+  // const [url, setUrl] = useState("");
+  // const [isActive, setIsActive] = useState(true);
+  const [presentRoute, setPresentRoute] = useRecoilState(routePath);
+  console.log(presentRoute);
+  useEffect(() => {}, []);
   return (
     <>
       <aside
         id="logo-sidebar"
-        className="fixed  flex top-0 z-40 h-screen  bg-white border-r border-gray-200  dark:bg-gray-800 dark:border-gray-700"
+        className="fixed  flex top-0 z-40 h-screen   bg-white border-r border-gray-200  dark:bg-gray-800 dark:border-gray-700"
         aria-label="Sidebar"
       >
         <div className="side-bar-fixed h-full">
@@ -82,7 +88,6 @@ export default function Sidebar() {
               <Link
                 href="#"
                 className="block px-4 py-2 text-sm text-gray-700 align-self-end"
-               
                 role="menuitem"
                 onClick={() => {
                   document.cookie = "USER_LOGIN=";
@@ -90,7 +95,7 @@ export default function Sidebar() {
                   Router.reload();
                 }}
               >
-                <img src="logout.svg" alt="logout icon" />
+                <img src="/logout.svg" alt="logout icon" />
               </Link>
             </li>
           </ul>
@@ -99,12 +104,20 @@ export default function Sidebar() {
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 side-bar-hover">
           <ul className="space-y-2 ">
             <li className="flex ml-3 items-center p-2">
-              <img src="scm.svg" alt="scm logo" />
+              <img src="/scm.svg" alt="scm logo" />
             </li>
             <li>
               <Link
-                href="dashboard"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                href="/dashboard"
+                className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700  ${
+                  presentRoute.path.match(RouteType.DASHBOARD) ? "isAcTive" : ""
+                }`}
+                onClick={() => {
+                  setPresentRoute({
+                    path: RouteType.DASHBOARD,
+                    status: RouteType.DASHBOARD,
+                  });
+                }}
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">Dashboard</span>
                 <svg
@@ -125,81 +138,200 @@ export default function Sidebar() {
                 </svg>
               </Link>
             </li>
+
             <li>
-              <Link
-                href="role"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              <ul
+                data-bs-toggle="collapse"
+                data-bs-target="#userManagerment"
+                aria-expanded="false"
+                className="pl-0"
+                aria-controls="collapseExample"
               >
-                <span className="flex-1 ml-3 whitespace-nowrap">Role</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
+                <li>
+                  <a
+                    className={`flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700  cursor-pointer ${
+                      presentRoute.status.match(RouteType.USER_MANAGEMENT)
+                        ? "isAcTive"
+                        : ""
+                    }`}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      User Managerment
+                    </span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+              <ul
+                className={` ${
+                  presentRoute.status.match(RouteType.USER_MANAGEMENT)
+                    ? ""
+                    : "collapse collapsed"
+                }`}
+                id="userManagerment"
+              >
+                <li>
+                  <Link
+                    href="/user-management/user"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.USER)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.USER,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/role"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.ROLE)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.ROLE,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Role</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/type"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.TYPE)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.TYPE,
+                        status: RouteType.USER_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">Type</span>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <ul
+                data-bs-toggle="collapse"
+                data-bs-target="#materialManagerment"
+                aria-expanded="false"
+                className="pl-0"
+                aria-controls="collapseExample"
+              >
+                <li>
+                  <a
+                    className={`flex w-100 items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.status.match(RouteType.MATERIAL_MANAGEMENT)
+                        ? "isAcTive"
+                        : ""
+                    }  cursor-pointer`}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Material Managerment
+                    </span>
+                    <svg
+                      width="7"
+                      height="10"
+                      viewBox="0 0 7 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 1L5.15094 4.78082L1 8.56164"
+                        stroke="#1C1D22"
+                        strokeOpacity="0.5"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              </ul>
+              <ul
+                className={` ${
+                  presentRoute.status.match(RouteType.MATERIAL_MANAGEMENT)
+                    ? ""
+                    : "collapse collapsed"
+                }`}
+                id="materialManagerment"
+              >
+                <li>
+                  <Link
+                    href="/material/material"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.MATERIAL)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.MATERIAL,
+                        status: RouteType.MATERIAL_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Material
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/material/category"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 my-1 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.CATEGORY)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.CATEGORY,
+                        status: RouteType.MATERIAL_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Category
+                    </span>
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li>
               <Link
-                href="type"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <span className="flex-1 ml-3 whitespace-nowrap">Type</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="admin-template"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
-                <svg
-                  width="7"
-                  height="10"
-                  viewBox="0 0 7 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1 1L5.15094 4.78082L1 8.56164"
-                    stroke="#1C1D22"
-                    strokeOpacity="0.5"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="permission"
+                href="/get-info/account-info"
                 className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">
@@ -226,7 +358,17 @@ export default function Sidebar() {
             <li>
               <Link
                 href="#"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  presentRoute.path.match(RouteType.USER_INFOMATION)
+                    ? "isAcTive"
+                    : ""
+                }`}
+                onClick={() => {
+                  setPresentRoute({
+                    path: RouteType.USER_INFOMATION,
+                    status: RouteType.USER_INFOMATION,
+                  });
+                }}
               >
                 <span className="flex-1 ml-3 whitespace-nowrap">...</span>
                 <svg

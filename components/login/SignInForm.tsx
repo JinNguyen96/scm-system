@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import Router from "next/router";
@@ -6,7 +6,8 @@ import swal from "sweetalert";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import { ToastContainer, toast } from "react-toastify";
+import { notifiError, notifiSuccess } from "../toastify-noti/notifi";
 const schema = yup
   .object({
     userEmail: yup
@@ -25,6 +26,9 @@ const schema = yup
 export default function LoginForm() {
   const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
 
+  const notifyError = (mess: string) => {
+    toast.error(`${mess}`);
+  };
   const {
     register,
     handleSubmit,
@@ -36,29 +40,30 @@ export default function LoginForm() {
 
   const formSignUpFecth = async (data: object) => {
     try {
-      let result = await axios.post("/api/userApi/login", data);
-
-      if (result.status === 200) {
-        Router.reload();
-        let userToken: string = JSON.stringify(result.data.content.accessToken);
-        let userInfo: string = JSON.stringify(
-          result.data.content.userFirstName
-        );
-        localStorage.setItem("userToken", userToken);
-        localStorage.setItem("userName", userInfo);
-        document.cookie = `USER_LOGIN=${userToken}`;
-        swal({
-          title: `Welcome back! ${result.data?.content.userFirstName}`,
-          text: "You clicked the button!",
-          icon: "success",
-        });
-      }
+      await axios.post("/api/userApi/login", data).then((result) => {
+        notifiSuccess({message:result.data.message});
+        setTimeout(() => {
+          if (result.status === 200) {
+            Router.reload();
+            let userToken: string = JSON.stringify(
+              result.data.content.accessToken
+            );
+            let userInfo: string = JSON.stringify(
+              result.data.content.userFirstName
+            );
+            localStorage.setItem("userToken", userToken);
+            localStorage.setItem("userName", userInfo);
+            document.cookie = `USER_LOGIN=${userToken}`;
+          }
+        }, 5000);
+      });
     } catch (err: any) {
-      console.log(err, "err");
+      notifiError({ message: err.response.data.message });
       setErr({ message: err.response.data.message });
     }
   };
-  const onSubmit = (data: any) => formSignUpFecth(data);
+  const onSubmit = (data: object) => formSignUpFecth(data);
+  useEffect(() => {}, []);
   return (
     <>
       <div className="m-auto h-screen ">
@@ -148,7 +153,7 @@ export default function LoginForm() {
                       //     ...formLogin,
                       //     userEmail: e.target.value,
                       //   });
-                      //   console.log(formLogin);
+                      //
                       // }}
                       // required
                       className="relative block placeholder-gray-300 border border-gray-300 px-7 py-2 text-gray-900 focus:z-10  focus:outline-none sm:text-sm shadow-sm"
@@ -163,7 +168,7 @@ export default function LoginForm() {
                     >
                       <>
                         {errors.userEmail?.message}
-                        {err.message.includes("email") ? err.message : null}
+                        {err.message?.includes("email") ? err.message : null}
                       </>
                     </small>
                   </div>
@@ -197,7 +202,7 @@ export default function LoginForm() {
                     >
                       <>
                         {errors.userPassword?.message}
-                        {err.message.includes("password") ? err.message : null}
+                        {err.message?.includes("password") ? err.message : null}
                       </>
                     </small>
 
@@ -209,8 +214,8 @@ export default function LoginForm() {
                         }}
                         src={
                           isPasswordViewed
-                            ? "show-pass.svg"
-                            : "no-show-pass.svg"
+                            ? "/show-pass.svg"
+                            : "/no-show-pass.svg"
                         }
                       />
                     </span>
@@ -247,6 +252,7 @@ export default function LoginForm() {
                       fontWeight: 700,
                       padding: "10px 182px",
                     }}
+                    // onClick={notify}
                   >
                     Login
                   </button>
@@ -257,8 +263,8 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-      
       </div>
+      <ToastContainer />
     </>
   );
 }

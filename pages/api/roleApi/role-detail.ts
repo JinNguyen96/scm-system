@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { failCode, successCode, errorCode } from "../../../utils/response";
-import * as bcrypt from "bcrypt-ts";
+
 import initModels from "../../../models/init-models";
 import sequelize from "../../../models/config";
 
@@ -15,17 +15,17 @@ export default async function getAllRole(
   res: NextApiResponse
 ) {
   try {
-    if (req.method === "PUT") {
+    if (req.method == "PUT") {
       let { id } = req.body;
-
-
+      let arrId = id?.split(',')
       let data: any = []
-      console.log(id.length)
-      if (id.length > 1) {
-        for (let i = 0; i < id.length; i++) {
+      console.log(id, arrId)
+
+      if (arrId.length > 1) {
+        for (let i = 0; i < arrId.length; i++) {
           data.push(await model.Roles.findAll({
             where: {
-              id: id[i]
+              id: arrId[i]
             }
           }))
         }
@@ -37,34 +37,55 @@ export default async function getAllRole(
           }
         })
       }
-      successCode(res, data, "Role detail");
+
+      successCode(res, data, "Roles detail");
+    } else if (req.method === "POST") {
+      let { userRole } = req.body;
+      // let data: any = []
+      // if (userRole.length > 1) {
+      //   for (let i = 0; i <= userRole.length; i++) {
+      //     await model.Users.findAll({
+      //       where: {
+      //         userRole: userRole[i],
+      //       },
+      //     })
+      //       .then((result) => {
+
+
+      //         return data.push(result.map(e => e.dataValues))
+      //       })
+      //       .catch((err: any) => {
+
+      //       });
+
+      //   }
+      // } else {
+      //   await model.Users.findAll({
+      //     where: {
+      //       userRole,
+      //     },
+      //   })
+      //     .then((result) => {
+
+
+      //       return data.push(result.map(e => e.dataValues))
+      //     })
+      //     .catch((err: any) => {
+
+      //     });
+      // }
+      // let { userType } = req.body;
+      let findUserByType = await model.Users.findAll({
+        where: {
+          userRole,
+        },
+      });
+
+      successCode(res, findUserByType, "tim thanh cong");
+
+    } else {
+      failCode(res, req, "Error method");
     }
-
-    // if (req.method === "POST") {
-    //   let { userRole } = req.body;
-    //   let data: any = []
-    //   for (let i = 0; i <= userRole.length; i++) {
-    //     await model.Users.findAll({
-    //       where: {
-    //         userRole: userRole[i],
-    //       },
-    //     })
-    //       .then((result) => {
-   
-
-    //         return data.push(result.map(e => e.dataValues))
-    //       })
-    //       .catch((err: any) => {
-    //         console.log(err);
-    //       });
-
-    //   }
-
-    //   successCode(res, data, "tim thanh cong");
-
-    // } else {
-    //   failCode(res, req, "Error method");
-    // }
   } catch (error: any) {
     return errorCode(error, "Delete unsuccess");
   }
