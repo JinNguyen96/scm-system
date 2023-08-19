@@ -364,7 +364,6 @@ const CreateMaterial = React.memo(() => {
                   setButtonSwitch(false);
                   return;
                 }
-
                 handleCreateMaterial(materialForm);
               }}
             >
