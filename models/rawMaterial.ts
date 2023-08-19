@@ -1,12 +1,9 @@
-'use strict';
-import {
-  Model
-} from 'sequelize';
+"use strict";
+import { Model } from "sequelize";
 interface RawMaterialAttributes {
-  id: string,
-  name: string,
-  description: string,
-
+  id: string;
+  nameRawMater: string;
+  descRawMater: string;
 }
 export default (sequelize: any, DataTypes: any) => {
   class RawMaterials extends Model {
@@ -20,27 +17,30 @@ export default (sequelize: any, DataTypes: any) => {
     descRawMater!: string;
     static associate(models: any) {
       // define association here
-      RawMaterials.belongsToMany(models.Materials, { through: "rawMaterial" })
+      RawMaterials.belongsToMany(models.Materials, { through: "rawMaterial" });
     }
   }
-  RawMaterials.init({
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  RawMaterials.init(
+    {
+      nameRawMater: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      descRawMater: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+      },
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    id: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+    {
+      sequelize,
+      modelName: "RawMaterials",
     }
-  }, {
-    sequelize,
-    modelName: 'RawMaterials',
-  });
+  );
   return RawMaterials;
 };

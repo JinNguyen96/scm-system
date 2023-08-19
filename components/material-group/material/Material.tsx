@@ -64,6 +64,15 @@ const Material = React.memo(() => {
     setMaterialData(result);
   }, [setMaterialData]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [materialPerPag, setMaterialPerPag] = useState(5);
+  const lastIndex = currentPage * materialPerPag;
+  const firstIndex = lastIndex - materialPerPag;
+  const materialPagi = material.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(material.length / materialPerPag);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  console.log(material);
   useEffect(() => {
     getMaterialData();
   }, []);
@@ -98,7 +107,7 @@ const Material = React.memo(() => {
         <div className="material-main">
           <div className="top-main row">
             <div className="side-top-main col-lg-6 relative d-flex gap-1 align-items-center">
-              <span>All ({material?.length}) </span>
+              <span>All ({materialPagi?.length}) </span>
               <Link href="create-material" className="--button-create">
                 Create new material
               </Link>
@@ -122,8 +131,8 @@ const Material = React.memo(() => {
                 </tr>
               </thead>
               <tbody>
-                {!material &&
-                  material.map((item: any, index: number) => {
+                {materialPagi &&
+                  materialPagi.map((item: any, index: number) => {
                     return (
                       <>
                         <tr
@@ -294,7 +303,14 @@ const Material = React.memo(() => {
         <div className="material-footer">
           <div className="n-item-pagination">
             <label htmlFor="pagi-item-material">Showing </label>
-            <select name="pagi-item-material" id="pagi-item-material">
+            <select
+              name="pagi-item-material"
+              id="pagi-item-material"
+              onChange={(e) => {
+                setMaterialPerPag(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+            >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -303,30 +319,30 @@ const Material = React.memo(() => {
             <label htmlFor="pagi-item-material"> entries</label>
           </div>
           <div className="pagi-material">
-            {/* <Pagination
-              currentPage={1}
+            <Pagination
+              currentPage={currentPage}
               changePage={changePage}
               prePage={prePage}
-              // numbers={numbers}
+              numbers={numbers}
               nextPage={nextPage}
-            /> */}
+            />
           </div>
         </div>
       </div>
     </>
   );
   function prePage() {
-    // if (currentPage !== 1) {
-    //   setCurrentPage(currentPage - 1);
-    // }
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
   }
   function changePage(n: number) {
-    // setCurrentPage(n);
+    setCurrentPage(n);
   }
   function nextPage() {
-    // if (currentPage !== npage) {
-    //   setCurrentPage(currentPage + 1);
-    // }
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
   }
 });
 

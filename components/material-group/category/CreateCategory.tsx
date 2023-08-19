@@ -1,5 +1,6 @@
 import React, {
   Fragment,
+  memo,
   useCallback,
   useEffect,
   useRef,
@@ -7,8 +8,10 @@ import React, {
 } from "react";
 import { Divider, Form, Input } from "semantic-ui-react";
 import { categoryService } from "../../../recoil/services/categoryService";
+import Router from "next/router";
+import { notifiError } from "../../toastify-noti/notifi";
 
-function CreateCategory() {
+const CreateCategory = memo(() => {
   const [statQuantity, setStatQuantity] = useState([
     {
       name: "",
@@ -36,7 +39,7 @@ function CreateCategory() {
   const [unitData, setUnitData] = useState<any>();
   const [statData, setStatData] = useState<any>();
   const checkedRef: any = useRef(null);
-
+  console.log(fieldArray);
   const handleOnChangeCategory = useCallback(
     (e: any) => {
       const { value, name } = e.target;
@@ -49,13 +52,22 @@ function CreateCategory() {
     [setFormData, formData]
   );
 
-  const handleOnchangeMeasurment = useCallback(
-    (e: any) => {
-      const { value, name } = e.target;
-      setFieldArray({ ...fieldArray, [name]: value });
-    },
-    [setFieldArray, fieldArray]
-  );
+  const handleCreateCategory = useCallback(async () => {
+    if (
+      formData.name !== "" &&
+      fieldArray.unit !== "" &&
+      fieldArray.stat !== ""
+    ) {
+      const createMeasurment = await categoryService.createCategory({
+        formData,
+        fieldArray,
+      });
+      Router.push("/material/category");
+      return;
+    }
+    notifiError({ message: "fill up" });
+  }, [formData, fieldArray]);
+  console.log(formData, fieldArray);
 
   const getListCategory = useCallback(async () => {
     const result = await categoryService.getAllCategory();
@@ -69,8 +81,8 @@ function CreateCategory() {
     const stat = await categoryService.getAllStats();
     setStatData(stat);
   }, [setCategoryTags, setUnitData, setStatData]);
-  console.log(fieldArray);
-  const renderField = useCallback(() => {
+
+  const renderField = () => {
     return statQuantity.map((item: any, index: number) => {
       return (
         <div className="option-create " key={index}>
@@ -84,21 +96,16 @@ function CreateCategory() {
                   name="stat"
                   id={`caStat${index}`}
                   onChange={(e: any) => {
-                    const { value, name } = e.target;
-                    console.log(index);
-                    if (checkedRef?.current.checked) {
-                      setFieldArray({ ...fieldArray, isRequired: true });
-                      return;
-                    } else {
-                      setFieldArray({ ...fieldArray, isRequired: false });
-                      return;
-                    }
+                    setFieldArray({
+                      ...fieldArray,
+                      [e.target.name]: e.target.value,
+                    });
                   }}
                 >
                   <option value="">Stat</option>
                   {statData?.map((stat: any, index: number) => {
                     return (
-                      <option value={stat.value} key={index}>
+                      <option value={stat.id} key={index}>
                         {stat.name}
                       </option>
                     );
@@ -124,14 +131,21 @@ function CreateCategory() {
                 <select
                   name="unit"
                   id={`caUnit${index}`}
-                  onChange={handleOnchangeMeasurment}
+                  onChange={(e: any) => {
+                    setFieldArray({
+                      ...fieldArray,
+                      [e.target.name]: e.target.value,
+                    });
+                  }}
                 >
                   <option value="">Unit</option>
                   {unitData?.map((unit: any, index: number) => {
                     return (
-                      <option value={unit.value} key={index}>
-                        {unit.name}
-                      </option>
+                      <>
+                        <option value={unit.id} key={index}>
+                          {unit.name}
+                        </option>
+                      </>
                     );
                   })}
                 </select>
@@ -153,8 +167,15 @@ function CreateCategory() {
                   type="checkbox"
                   id={`caRequired${index}`}
                   name="isRequired"
-                  onChange={handleOnchangeMeasurment}
+                  onChange={(e: any) => {
+                    if (checkedRef.current.checked) {
+                      setFieldArray({ ...fieldArray, isRequired: true });
+                    } else {
+                      setFieldArray({ ...fieldArray, isRequired: false });
+                    }
+                  }}
                   ref={checkedRef}
+                  // checked={fieldArray.isRequired}x
                 />
                 <img
                   className="icon-category"
@@ -205,12 +226,12 @@ function CreateCategory() {
         </div>
       );
     });
-  }, [statData, unitData]);
+  };
   // console.log(formData);
   useEffect(() => {
     renderField();
     getListCategory();
-  }, [statQuantity]);
+  }, []);
   return (
     <>
       <div className="category page-layout">
@@ -238,6 +259,7 @@ function CreateCategory() {
                     name="name"
                     label="Name"
                     onChange={handleOnChangeCategory}
+                    error={formData.name !== "" ? false : true}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -250,6 +272,7 @@ function CreateCategory() {
                     name="description"
                     label="Description"
                     onChange={handleOnChangeCategory}
+                    error={formData.description !== "" ? false : true}
                   />
                 </Form.Group>
               </Form>
@@ -259,9 +282,11 @@ function CreateCategory() {
                 <button
                   className="btnEffect create-button col-lg-3 position-static"
                   type="button"
-                  onClick={() => {}}
+                  onClick={() => {
+                    handleCreateCategory();
+                  }}
                 >
-                  Save
+                  Create
                 </button>
               </div>
             </div>
@@ -271,7 +296,7 @@ function CreateCategory() {
                 <div className="tag-detail">
                   {categoryTags &&
                     categoryTags?.map((tag, index) => {
-                      if (index > 20) {
+                      if (index > 19) {
                         return;
                       }
                       return (
@@ -302,6 +327,6 @@ function CreateCategory() {
       </div>
     </>
   );
-}
+});
 
 export default CreateCategory;

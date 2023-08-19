@@ -22,7 +22,7 @@ export default async function deleteCategory(
             // }
             // else {
             let { id } = req.body;
-
+            console.log(id,'eeee')
             let isAvalable = await model.Categories.findByPk(id)
 
             if (isAvalable) {

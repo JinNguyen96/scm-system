@@ -1,29 +1,30 @@
-'use strict';
-import {
-  Model
-} from 'sequelize';
+"use strict";
+import { Model } from "sequelize";
 interface MaterialAttributes {
-  no: number,
-  id: string,
-  name: string,
-  category_id: string,
-  rawMaterial: number[],
-  quantity: string,
-  group: string,
-  price: string,
-  subtotal: string,
-  safe_quantity: number,
-  status: string,
-  metadata: string,
-  note: string,
+  no: number;
+  id: string;
+  name: string;
+  category_id: string;
+  rawMaterial: string;
+  quantity: string;
+  group: string;
+  price: string;
+  subtotal: string;
+  safe_quantity: number;
+  status: string;
+  metadata: string;
+  note: string;
 }
 export default (sequelize: any, DataTypes: any) => {
-  class Materials extends Model<MaterialAttributes> implements MaterialAttributes {
+  class Materials
+    extends Model<MaterialAttributes>
+    implements MaterialAttributes
+  {
     no!: number;
     id!: string;
     name!: string;
     category_id!: string;
-    rawMaterial!: number[];
+    rawMaterial!: string;
     quantity!: string;
     group!: string;
     price!: string;
@@ -33,10 +34,10 @@ export default (sequelize: any, DataTypes: any) => {
     metadata!: string;
     note!: string;
     static associate(models: any) {
-      Materials.hasOne(models.MaterialType)
-      Materials.hasOne(models.RawMaterial)
-      Materials.hasMany(models.Stat)
-      Materials.hasMany(models.Categories)
+      Materials.hasOne(models.MaterialType);
+      Materials.hasOne(models.RawMaterial);
+      Materials.hasMany(models.Stat);
+      Materials.hasMany(models.Categories);
     }
   }
   Materials.init(
@@ -53,14 +54,14 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.STRING,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        allowNull: false,
       },
       category_id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       rawMaterial: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       quantity: {
@@ -70,21 +71,18 @@ export default (sequelize: any, DataTypes: any) => {
       group: {
         type: DataTypes.STRING,
         allowNull: false,
-
       },
       price: {
         type: DataTypes.STRING,
         allowNull: false,
-
       },
       subtotal: {
         type: DataTypes.STRING,
         allowNull: false,
-
       },
       safe_quantity: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: DataTypes.STRING,
@@ -97,13 +95,13 @@ export default (sequelize: any, DataTypes: any) => {
       note: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
-
+      },
     },
     {
       sequelize,
-      modelName: 'Materials',
+      modelName: "Materials",
       timestamps: true,
-    });
+    }
+  );
   return Materials;
 };

@@ -2,70 +2,11 @@ import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { categoryService } from "../../../recoil/services/categoryService";
 import Pagination from "../../panigation";
-
+import { useSetRecoilState } from "recoil";
+import { setCurrentModalState } from "../../../recoil/Modal/modalState";
+import { ModalType } from "../../../constain/ModalType";
+import { setEditcategoryState } from "../../../recoil/material/categoryRecoil";
 function Category() {
-  const categoryMaterialData = [
-    {
-      caName: "Block fabric",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Jeans ",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Dye ",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Iron ",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Block fabric",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Yarn ",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "Table ",
-      caDescription: "Height 2 cm,... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "... ",
-      caDescription: "... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "... ",
-      caDescription: "... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "... ",
-      caDescription: "... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "... ",
-      caDescription: "... ",
-      caDateUpdate: "2023-01-25",
-    },
-    {
-      caName: "... ",
-      caDescription: "... ",
-      caDateUpdate: "2023-01-25",
-    },
-  ];
   const [listData, setListData] = useState([
     {
       name: "",
@@ -73,13 +14,20 @@ function Category() {
       updatedAt: "",
     },
   ]);
+  const setTypeModal = useSetRecoilState(setCurrentModalState);
+  const setCategoryState = useSetRecoilState(setEditcategoryState);
   const getListCategory = useCallback(async () => {
     const result = await categoryService.getAllCategory();
     setListData(result);
   }, []);
-  const npage = Math.ceil(categoryMaterialData.length / 2);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [categoryPerPage, setCategoryPerPage] = useState(5);
+  const lastIndex = currentPage * categoryPerPage;
+  const firstIndex = lastIndex - categoryPerPage;
+  const catePagi = listData.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(listData.length / categoryPerPage);
   const numbers = [...Array(npage + 1).keys()].slice(1);
-  const [count, setCount] = useState(0);
+
   const handleChangeInput = (index: any): any => {
     if (typeof window !== "undefined") {
       let inputIndex = document?.getElementById(
@@ -88,31 +36,21 @@ function Category() {
       let tdIndex = document.getElementById(
         `td${index + 1}`
       ) as HTMLInputElement | null;
-      let optiionIndex = document.getElementById(
-        `option${index}`
-      ) as HTMLInputElement | null;
       let deleteIndex = document.getElementById(
         `delete${index}`
       ) as HTMLInputElement | null;
       inputIndex?.checked
         ? tdIndex?.classList.add("input-checked-table")
         : tdIndex?.classList.remove("input-checked-table");
-      inputIndex?.checked ? setCount(count + 1) : setCount(count - 1);
-      if (count === 1) {
-        deleteIndex?.classList.remove("hidden");
-      } else if (count > 1) {
-        deleteIndex?.classList.add("hidden");
-        optiionIndex?.classList.remove("hidden");
-      } else {
-        deleteIndex?.classList.add("hidden");
-        optiionIndex?.classList.add("hidden");
-      }
+      inputIndex?.checked
+        ? deleteIndex?.classList.remove("hidden")
+        : deleteIndex?.classList.add("hidden");
     }
   };
 
   useEffect(() => {
     getListCategory();
-  }, []);
+  }, [categoryPerPage]);
   return (
     <>
       <div className="material category">
@@ -144,7 +82,7 @@ function Category() {
         <div className="material-main">
           <div className="top-main row ">
             <div className="side-top-main col-lg-6 relative d-flex gap-1 align-items-center">
-              <span>All ({listData.length}) </span>
+              <span>All ({catePagi.length}) </span>
               <Link href="create-category" className="--button-create">
                 Create new Category
               </Link>
@@ -166,7 +104,7 @@ function Category() {
                 </tr>
               </thead>
               <tbody>
-                {listData?.map((item: any, index: number) => {
+                {catePagi?.map((item: any, index: number) => {
                   return (
                     <>
                       <tr
@@ -198,8 +136,19 @@ function Category() {
                         </td>
                         <td className="option-material">
                           <div
-                            className="delete-material hidden"
+                            className="delete-material hidden cursor-pointer"
                             id={`delete${index}`}
+                            onClick={() => {
+                              console.log(item.id);
+                              setCategoryState({
+                                type: ModalType.VIEW_CATEGORY,
+                                data: item,
+                              });
+                              setTypeModal({
+                                typeModal: ModalType.DELETE_CATEGORY,
+                              });
+                              // handleDeleteCategory(item.id);
+                            }}
                           >
                             <svg
                               width="24"
@@ -238,7 +187,7 @@ function Category() {
                               />
                             </svg>
                           </div>
-                          <div
+                          {/* <div
                             className="more-option-material hidden"
                             id={`option${index}`}
                           >
@@ -285,7 +234,7 @@ function Category() {
                                 </li>
                               </ul>
                             </div>
-                          </div>
+                          </div> */}
                         </td>
                       </tr>
                     </>
@@ -298,7 +247,14 @@ function Category() {
         <div className="material-footer">
           <div className="n-item-pagination">
             <label htmlFor="pagi-item-material">Showing </label>
-            <select name="pagi-item-material" id="pagi-item-material">
+            <select
+              name="pagi-item-material"
+              id="pagi-item-material"
+              onChange={(e) => {
+                setCurrentPage(1);
+                setCategoryPerPage(Number(e.target.value));
+              }}
+            >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -308,7 +264,7 @@ function Category() {
           </div>
           <div className="pagi-material">
             <Pagination
-              currentPage={1}
+              currentPage={currentPage}
               changePage={changePage}
               prePage={prePage}
               numbers={numbers}
@@ -320,17 +276,17 @@ function Category() {
     </>
   );
   function prePage() {
-    // if (currentPage !== 1) {
-    //   setCurrentPage(currentPage - 1);
-    // }
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
   }
   function changePage(n: number) {
-    // setCurrentPage(n);
+    setCurrentPage(n);
   }
   function nextPage() {
-    // if (currentPage !== npage) {
-    //   setCurrentPage(currentPage + 1);
-    // }
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
   }
 }
 

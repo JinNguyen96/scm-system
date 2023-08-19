@@ -34,23 +34,32 @@ const createRole: any = Joi.object({
   roleName: Joi.required(),
   roleDescription: Joi.required(),
   roleScopes: Joi.required(),
-  rolePermission: Joi.string().required()
+  rolePermission: Joi.string().required(),
 });
 
 const createMaterial: any = Joi.object({
   name: Joi.string().required(),
-  category_id: Joi.string().required(),
+  category_id: Joi.required(),
   no: Joi.number(),
   quantity: Joi.string(),
   group: Joi.string(),
   price: Joi.number(),
-  rawMaterial: Joi.number(),
+  rawMaterial: Joi.string(),
   subtotal: Joi.string(),
   status: Joi.string(),
   note: Joi.string(),
-})
+  metadata: Joi.string(),
+  safe_quantity: Joi.number(),
+});
+
+const createRawMaterial: any = Joi.object({
+  nameRawMater: Joi.string(),
+  descRawMater: Joi.string(),
+  id: Joi.string(),
+});
 
 export const validateSignup = validator(signupSchema);
 export const validateSignin = validator(signinShema);
 export const validateCreateRole = validator(createRole);
 export const validateCreateMaterial = validator(createMaterial);
+export const validateCreateRawMaterial = validator(createRawMaterial);

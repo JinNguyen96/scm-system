@@ -2,6 +2,12 @@ import Router from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button, Form, Input } from "semantic-ui-react";
 import { materialService } from "../../../recoil/services/materialService";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { categoryService } from "../../../recoil/services/categoryService";
+import async from "../../../pages/api/categoryApi/create-category";
+import axios from "axios";
+const animatedComponents = makeAnimated();
 
 const errorCreateMaterialHandle = (errArr: any, type: string) => {
   // if (type === "confirmPassword") {
@@ -34,37 +40,76 @@ const CreateMaterial = React.memo(() => {
     type: "",
     content: [],
   });
-
+  const [statById, setStatById] = useState({
+    name: "",
+    description: "",
+  });
   const [materialForm, setMaterialForm] = useState<any>({
     name: "",
     no: 0,
-    category_id: "",
-    rawMaterial: 0,
+    category_id: [""],
+    rawMaterial: [""],
     quantity: "",
     group: "",
     price: 0,
     subtotal: "",
     status: "",
+    metadata: "",
     note: "",
+    safe_quantity: 0,
   });
-  console.log(materialForm);
+  const [rawMaterial, setRawMaterial] = useState([]);
+  const [categoryOption, setCategoryOption] = useState([]);
+
   const handleCreateMaterial = useCallback(async (data: object) => {
     const result = await materialService.createMaterial(data);
     console.log(result);
+    
     if (result) Router.push("/material/material");
   }, []);
+
+  const handleGetStat = useCallback(
+    async (id: any) => {
+      let stat = await categoryService.getStatById(id);
+      setStatById(stat);
+    },
+    [setStatById]
+  );
 
   const handleOnChange = useCallback(
     (e: any) => {
       const { name, value } = e.target;
       console.log(name);
-
       setMaterialForm({ ...materialForm, [name]: value });
     },
     [setMaterialForm, materialForm, materialForm.stat]
   );
+  const getCategory = useCallback(async () => {
+    const category = await categoryService.getAllCategory();
+    if (category) {
+      setCategoryOption(
+        category.map((item: any) => {
+          return { value: item.id, label: item.name };
+        })
+      );
+    }
+  }, [setCategoryOption]);
 
-  useEffect(() => {}, []);
+  const getRawMaterial = useCallback(async () => {
+    const result = await materialService.getRawMaterial();
+    if (result) {
+      setRawMaterial(
+        result.map((item: any) => {
+          return { value: item.id, label: item.nameRawMater };
+        })
+      );
+    }
+  }, [setRawMaterial]);
+  console.log(materialForm);
+  useEffect(() => {
+    getCategory();
+    getRawMaterial();
+  }, []);
   return (
     <div className="material page-layout">
       <div className="material-header page-header">
@@ -120,7 +165,7 @@ const CreateMaterial = React.memo(() => {
                 name="quantity"
                 control={Input}
                 inline
-                label="Safe Quantity"
+                label="Quantity"
               />
             </Form.Group>
 
@@ -154,7 +199,7 @@ const CreateMaterial = React.memo(() => {
                 onChange={handleOnChange}
                 width={8}
                 control={Input}
-                type="text"
+                type="number"
                 placeholder="Fill in Material price "
                 id="price"
                 name="price"
@@ -167,7 +212,7 @@ const CreateMaterial = React.memo(() => {
                 control={Input}
                 inline
                 label="No"
-                type="text"
+                type="number"
                 placeholder="Fill in Material name "
                 id="no"
                 name="no"
@@ -204,38 +249,62 @@ const CreateMaterial = React.memo(() => {
                 onChange={handleOnChange}
                 width={8}
                 control={Input}
+                type="number"
+                placeholder="Fill in Material price "
+                id="safe_quantity"
+                name="safe_quantity"
                 inline
-                required
-                label="Category"
-                type="text"
-                placeholder="Fill in Material name "
-                id="category"
-                name="category"
-                // error={
-                //   error.type === "ERROR"
-                //     ? {
-                //         content: errorCreateMaterialHandle(
-                //           error.content,
-                //           err.NAME
-                //         ),
-                //         pointing: "below",
-                //       }
-                //     : error.type === "VALID"
-                //     ? { content: "Email already exists" }
-                //     : null
-                // }
+                label="Safe Quantity"
               />
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                type="text"
-                placeholder="Fill in Material raw  "
-                id="rawMaterial"
-                name="rawMaterial"
-                label="Raw Material"
-                inline
-                control={Input}
-              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Field width={8}>
+                <label>Category</label>
+                <Select
+                  name="category"
+                  className="block w-full placeholder-gray-300 border-gray-300  text-gray-900  focus:z-10 focus:outline-none sm:text-sm   border border-gray-300 rounded-md shadow-sm"
+                  placeholder="Select Category"
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={categoryOption}
+                  onChange={(e) => {
+                    let arrayRole: string | any = e.map((item: any) => {
+                      handleGetStat({ id: item.value });
+
+                      return item.value;
+                    });
+                    setMaterialForm({
+                      ...materialForm,
+                      category_id: arrayRole,
+                    });
+                    console.log(arrayRole);
+                  }}
+                />
+              </Form.Field>
+
+              <Form.Field width={8}>
+                <label>Raw Material</label>
+                <Select
+                  name="rawMaterial"
+                  className="block w-full placeholder-gray-300 border-gray-300  text-gray-900  focus:z-10 focus:outline-none sm:text-sm   border border-gray-300 rounded-md shadow-sm"
+                  placeholder="Select Raw Material"
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  options={rawMaterial}
+                  onChange={(e) => {
+                    let arrayRole: string | any = e.map((item: any) => {
+                      return item.value;
+                    });
+                    setMaterialForm({
+                      ...materialForm,
+                      rawMaterial: arrayRole.toString(),
+                    });
+                    console.log(arrayRole);
+                  }}
+                />
+              </Form.Field>
             </Form.Group>
             <Button
               className="btnEffect create-button "
@@ -258,90 +327,33 @@ const CreateMaterial = React.memo(() => {
             <div className="form-header col-lg-12">
               <h2>Stat</h2>
             </div>
-            <Form.Group>
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                control={Input}
-                inline
-                label="Height"
-                type="text"
-                placeholder="Fill in Material name "
-                id="statHeight"
-                name="statHeight"
-              />
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                type="text"
-                placeholder="Fill in Material raw  "
-                id="statWeight"
-                name="statWeight"
-                label="Weight"
-                inline
-                control={Input}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                control={Input}
-                inline
-                label="Volume"
-                type="text"
-                placeholder="Fill in Material name "
-                id="statVolume"
-                name="statVolume"
-              />
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                type="text"
-                placeholder="Fill in Material raw  "
-                id="statLength"
-                name="statLength"
-                label="Length"
-                inline
-                control={Input}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                control={Input}
-                inline
-                label="Color"
-                type="text"
-                placeholder="Fill in Material name "
-                id="statColor"
-                name="statColor"
-              />
-              <Form.Field
-                onChange={handleOnChange}
-                width={8}
-                type="text"
-                placeholder="Fill in Material raw  "
-                id="statThickness"
-                name="statThickness"
-                label="Thickness"
-                inline
-                control={Input}
-              />
-            </Form.Group>
-            {/* <div className="col-lg-6">
-                <label htmlFor="maColor">Color</label>
-                <div className="group-input search-bar">
-                  <input
-                    type="text"
-                    placeholder="Fill in Material name "
-                    id="maColor"
-                    name="maColor"
-                  />
-                  <span className="error-message">Required</span>
-                </div>
-              </div> */}
+            {materialForm.category_id &&
+              materialForm.category_id?.map((category: any, index: number) => {
+                // handleGetStat({ id: category });
+                console.log(statById);
+                return (
+                  <div key={index}>
+                    <Form.Field
+                      // onChange={}
+                      width={8}
+                      control={Input}
+                      inline
+                      label={statById.name}
+                      type="text"
+                      placeholder="Fill in Material name "
+                      id={statById.name}
+                      name={statById.name}
+                      onChange={(e: any) => {
+                        setMaterialForm({
+                          ...materialForm,
+                          metadata: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                );
+              })}
+
             <Button
               className="btnEffect create-button"
               type="button"
@@ -352,6 +364,7 @@ const CreateMaterial = React.memo(() => {
                   setButtonSwitch(false);
                   return;
                 }
+
                 handleCreateMaterial(materialForm);
               }}
             >
