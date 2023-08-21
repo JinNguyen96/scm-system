@@ -59,19 +59,11 @@ const listUserData = atom({
   default: [],
 });
 const UserTable = memo((props: AppProps) => {
-  const {
-    search,
-    usersPagi,
-    setformUpdate,
-    delUser,
-    getUserDetail,
-    getTypeDetail,
-  } = props;
+  const { search, usersPagi, getUserDetail, getTypeDetail } = props;
   const [dataState, setDataState] = useRecoilState(setTableDataState);
   const [delUserState, setDelUserState] = useRecoilState(setUserState);
   const tableState = useRecoilValue(getDataTableState);
   const setTypeModal = useSetRecoilState(setCurrentModalState);
-
   const setDataTableState = useSetRecoilState(getDataTableState);
   const setId = useSetRecoilState(modalSetIdAction);
   const [optionsRole, setOptionsRole] = useState([]);

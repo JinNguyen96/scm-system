@@ -166,7 +166,7 @@ const Material = React.memo(() => {
                           <td>
                             <span
                               className={
-                                index % 2 == 0
+                                item.status === "Disable"
                                   ? "status-material status-disable"
                                   : "status-material status-available"
                               }

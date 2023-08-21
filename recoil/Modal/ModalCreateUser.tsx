@@ -53,6 +53,9 @@ const ModalCreateUser = React.memo(() => {
   const tableState = useRecoilValue(getDataTableState);
   const [relaType, setRelaType] = useState<any>();
   const [relaRole, setRelaRole] = useState<any>();
+  const [isPasswordViewed, setIsPasswordViewed] = React.useState(false);
+  const [isPasswordViewed2, setIsPasswordViewed2] = React.useState(false);
+
   const [signUpForm, setSignUpForm] = useState({
     id: 0,
     userType: "",
@@ -153,7 +156,7 @@ const ModalCreateUser = React.memo(() => {
         // dimmer="blurring"
         open
         // onClose={handleModal("MODAL_CLOSE")}
-        className="position-absolute"
+        className="position-absolute modal-create-user"
         style={{ top: "unset", left: "unset", height: "auto" }}
       >
         <Modal.Header>CREATE USER</Modal.Header>
@@ -270,8 +273,23 @@ const ModalCreateUser = React.memo(() => {
             </Form.Group>
             <Form.Group widths="equal">
               <Form.Input
+                // width={8}
+                action={
+                  <>
+                    <img
+                      onClick={() => {
+                        setIsPasswordViewed2(!isPasswordViewed2);
+                      }}
+                      src={
+                        isPasswordViewed2
+                          ? "/show-pass.svg"
+                          : "/no-show-pass.svg"
+                      }
+                    />
+                  </>
+                }
+                type={!isPasswordViewed2 ? "password" : "text"}
                 label="Password"
-                type="password"
                 name="userPassword"
                 onChange={handleOnChange}
                 error={
@@ -288,7 +306,24 @@ const ModalCreateUser = React.memo(() => {
               />
               <Form.Input
                 label="Confirm Password"
-                type="password"
+                // width={8}
+                action={
+                  <>
+                    <img
+                      id="on"
+                      onClick={() => {
+                        setIsPasswordViewed(!isPasswordViewed);
+                      }}
+                      src={
+                        isPasswordViewed
+                          ? "/show-pass.svg"
+                          : "/no-show-pass.svg"
+                      }
+                    />
+                  </>
+                }
+                type={!isPasswordViewed ? "password" : "text"}
+                labelPosition="right"
                 name="userConfirmPassword"
                 error={
                   signUpForm.userPassword === signUpForm.userConfirmPassword
@@ -676,7 +711,7 @@ const ModalCreateUser = React.memo(() => {
               setModalHandle({ typeModal: "" });
             }}
           >
-            Disagree
+            Cancel
           </Button>
           <Button
             positive
@@ -684,7 +719,7 @@ const ModalCreateUser = React.memo(() => {
               createUserHandler();
             }}
           >
-            Agree
+            Create
           </Button>
         </Modal.Actions>
       </Modal>

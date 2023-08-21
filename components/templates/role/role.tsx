@@ -5,9 +5,9 @@ import makeAnimated from "react-select/animated";
 
 import swal from "sweetalert";
 import { decode } from "../../../middleware/auth";
-import { Label } from "flowbite-react";
 import Pagination from "../../panigation";
 import ExportRoleToCsv from "./ExportRoleToCsv";
+import { Image, Popup } from "semantic-ui-react";
 
 const animatedComponents = makeAnimated();
 const RolePermOption = [
@@ -138,10 +138,9 @@ function Role() {
       };
     }
   });
-  let scopeByUser = scope;
 
   const [currentPage, setCurrentPage] = React.useState(1);
-  const rolePerPage = 5;
+  const [rolePerPage, setRolePerPage] = React.useState(5);
   const lastIndex = currentPage * rolePerPage;
   const firstIndex = lastIndex - rolePerPage;
   const rolePagi = role.slice(firstIndex, lastIndex);
@@ -200,7 +199,7 @@ function Role() {
           <div className="material-main ">
             <div>
               <div className="btn-create relative d-inline-block">
-                <span>All ({role.length}) </span>
+                <span>All ({rolePerPage}) </span>
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#createRoleModal"
@@ -454,9 +453,55 @@ function Role() {
                           {role.roleDescription}
                         </td>
                         <td style={{ whiteSpace: "nowrap" }}>
-                          {role.rolePermission}
+                          {role.rolePermission.split(",").map((item: any) => {
+                            const content = RolePermOption.map((value) => {
+                              if (value.value === item) {
+                                return value.label;
+                              }
+                            });
+                            return (
+                              <Popup
+                                content={content}
+                                key={item}
+                                trigger={
+                                  <Image
+                                    as={"img"}
+                                    src="/user-login-icon.svg"
+                                    avatar
+                                    className="image-trigger"
+                                    bordered
+                                    verticalAlign="middle"
+                                  />
+                                }
+                              />
+                            );
+                          })}
                         </td>
-                        <td style={{ textAlign: "left" }}>{role.roleScopes}</td>
+                        <td style={{ textAlign: "left" }}>
+                          {role.roleScopes.split(",").map((item: any) => {
+                            const content = roleScopesOption.map((value) => {
+                              if (value.value === item) {
+                                return value.label;
+                              }
+                            });
+                            return (
+                              <Popup
+                                content={content}
+                                key={item}
+                                trigger={
+                                  <Image
+                                    as={"img"}
+                                    src="/user-login-icon.svg"
+                                    avatar
+                                    className="image-trigger"
+                                    bordered
+                                    verticalAlign="middle"
+                                  />
+                                }
+                              />
+                            );
+                          })}
+                        </td>
                         <td className="d-flex">
                           <div>
                             <button
@@ -567,7 +612,14 @@ function Role() {
           <div className="material-footer">
             <div className="n-item-pagination">
               <label htmlFor="pagi-item-material">Showing </label>
-              <select name="pagi-item-material" id="pagi-item-material">
+              <select
+                name="pagi-item-material"
+                id="pagi-item-material"
+                onChange={(e) => {
+                  setRolePerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+              >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>

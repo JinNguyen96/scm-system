@@ -65,6 +65,12 @@ export class CategoryService extends BaseServices {
       .then((result) => result)
       .catch((err) => err);
   };
+
+  getTMURs = async () => {
+    return await this.get("/api/tmurApi/get-tmur")
+      .then((result) => result)
+      .catch((err) => err);
+  };
 }
 
 export const categoryService = new CategoryService();

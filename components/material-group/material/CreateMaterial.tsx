@@ -1,6 +1,6 @@
 import Router from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Form, Input } from "semantic-ui-react";
+import { Button, Form, FormSelect, Input } from "semantic-ui-react";
 import { materialService } from "../../../recoil/services/materialService";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -31,7 +31,10 @@ const ErrorLog = {
   MATERIAL_STATUS: "status",
   MATERIAL_NOTE: "note",
 };
-
+const statusOption = [
+  { key: "av", value: "available", text: "Available" },
+  { key: "di", value: "disable", text: "Disable" },
+];
 // const isFullFill = (data) => {};
 
 const CreateMaterial = React.memo(() => {
@@ -64,7 +67,7 @@ const CreateMaterial = React.memo(() => {
   const handleCreateMaterial = useCallback(async (data: object) => {
     const result = await materialService.createMaterial(data);
     console.log(result);
-    
+
     if (result) Router.push("/material/material");
   }, []);
 
@@ -151,7 +154,7 @@ const CreateMaterial = React.memo(() => {
                 // }
                 inline
                 type="text"
-                placeholder="Fill in Material name "
+                placeholder="Fill in name "
                 id="name"
                 name="name"
                 required
@@ -160,7 +163,7 @@ const CreateMaterial = React.memo(() => {
                 onChange={handleOnChange}
                 width={8}
                 type="text"
-                placeholder="Fill in Material name "
+                placeholder="Fill in quantity "
                 id="quantity"
                 name="quantity"
                 control={Input}
@@ -170,22 +173,28 @@ const CreateMaterial = React.memo(() => {
             </Form.Group>
 
             <Form.Group>
-              <Form.Field
-                onChange={handleOnChange}
+              <FormSelect
+                onChange={(e: any) => {
+                  setMaterialForm({
+                    ...materialForm,
+                    status: e.target.innerText,
+                  });
+                }}
                 width={8}
-                type="text"
-                placeholder="Fill in Material name "
+                // type="text"
+                placeholder="Drop status "
                 id="status"
                 name="status"
-                control={Input}
+                control={Form.Select}
                 inline
                 label="Status"
+                options={statusOption}
               />
               <Form.Field
                 onChange={handleOnChange}
                 width={8}
                 type="text"
-                placeholder="Fill in Material name "
+                placeholder="Fill in subtotal "
                 id="subtotal"
                 name="subtotal"
                 control={Input}
@@ -200,7 +209,7 @@ const CreateMaterial = React.memo(() => {
                 width={8}
                 control={Input}
                 type="number"
-                placeholder="Fill in Material price "
+                placeholder="Fill in price "
                 id="price"
                 name="price"
                 inline
@@ -213,7 +222,7 @@ const CreateMaterial = React.memo(() => {
                 inline
                 label="No"
                 type="number"
-                placeholder="Fill in Material name "
+                placeholder="Fill in no "
                 id="no"
                 name="no"
               />
@@ -226,7 +235,7 @@ const CreateMaterial = React.memo(() => {
                 width={8}
                 label="Group"
                 type="text"
-                placeholder="Fill in Material name "
+                placeholder="Fill in group "
                 id="group"
                 name="group"
                 inline
@@ -236,7 +245,7 @@ const CreateMaterial = React.memo(() => {
                 width={8}
                 label="Note"
                 type="text"
-                placeholder="Fill in Material name "
+                placeholder="Fill in note "
                 id="note"
                 name="note"
                 inline
@@ -250,7 +259,7 @@ const CreateMaterial = React.memo(() => {
                 width={8}
                 control={Input}
                 type="number"
-                placeholder="Fill in Material price "
+                placeholder="Fill in safe quantity "
                 id="safe_quantity"
                 name="safe_quantity"
                 inline
@@ -340,7 +349,7 @@ const CreateMaterial = React.memo(() => {
                       inline
                       label={statById.name}
                       type="text"
-                      placeholder="Fill in Material name "
+                      placeholder={`Fill in Material ${statById.name}`}
                       id={statById.name}
                       name={statById.name}
                       onChange={(e: any) => {

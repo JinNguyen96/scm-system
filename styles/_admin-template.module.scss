@@ -186,7 +186,7 @@ label {
     border: none;
     padding: 7px 14px;
     font-style: normal;
-    font-family: "Rubik";
+    font-family: "Roboto";
     font-weight: 300;
     font-size: 14px;
     background: none;
@@ -221,5 +221,11 @@ label {
       padding: 7px 14px;
       color: white;
     }
+  }
+}
+
+.modal-create-user {
+  ::-webkit-scrollbar {
+    display: none;
   }
 }

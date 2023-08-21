@@ -6,6 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { setCurrentModalState } from "../../../recoil/Modal/modalState";
 import { ModalType } from "../../../constain/ModalType";
 import { setEditcategoryState } from "../../../recoil/material/categoryRecoil";
+import moment from "moment";
 function Category() {
   const [listData, setListData] = useState([
     {
@@ -20,6 +21,7 @@ function Category() {
     const result = await categoryService.getAllCategory();
     setListData(result);
   }, []);
+  const [tmurList, setTmurList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryPerPage, setCategoryPerPage] = useState(5);
   const lastIndex = currentPage * categoryPerPage;
@@ -48,9 +50,15 @@ function Category() {
     }
   };
 
+  const getListTMUR = useCallback(async () => {
+    const result = await categoryService.getTMURs();
+    setTmurList(result);
+  }, []);
+  console.log(tmurList);
   useEffect(() => {
     getListCategory();
-  }, [categoryPerPage]);
+    getListTMUR();
+  }, []);
   return (
     <>
       <div className="material category">
@@ -128,11 +136,11 @@ function Category() {
                           <span>{item.name}</span>
                         </td>
                         <td className="category-material">
-                          <span>{item.description} </span>
+                          <span>{/* {tmurList.map(item=> item)} */}</span>
                         </td>
 
                         <td className="date-material">
-                          <span>{item.updatedAt.slice(0, 9)}</span>
+                          <span>{item.updatedAt.slice(0, 10)}</span>
                         </td>
                         <td className="option-material">
                           <div
@@ -187,54 +195,6 @@ function Category() {
                               />
                             </svg>
                           </div>
-                          {/* <div
-                            className="more-option-material hidden"
-                            id={`option${index}`}
-                          >
-                            <svg
-                              className="dropdown-toggle"
-                              href="#"
-                              role="button"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                              width="28"
-                              height="9"
-                              viewBox="0 0 28 9"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M3.88889 1.55241C5.06098 1.55241 6.27778 2.66371 6.27778 4.38155C6.27778 6.0994 5.06098 7.21069 3.88889 7.21069C2.7168 7.21069 1.5 6.0994 1.5 4.38155C1.5 2.66371 2.7168 1.55241 3.88889 1.55241ZM14 1.55241C15.1721 1.55241 16.3889 2.66371 16.3889 4.38155C16.3889 6.0994 15.1721 7.21069 14 7.21069C12.8279 7.21069 11.6111 6.0994 11.6111 4.38155C11.6111 2.66371 12.8279 1.55241 14 1.55241ZM24.1111 1.55241C25.2832 1.55241 26.5 2.66371 26.5 4.38155C26.5 6.0994 25.2832 7.21069 24.1111 7.21069C22.939 7.21069 21.7222 6.0994 21.7222 4.38155C21.7222 2.66371 22.939 1.55241 24.1111 1.55241Z"
-                                stroke="#191414"
-                                strokeWidth="3"
-                              />
-                            </svg>
-                            <div className="dropdown">
-                              <ul className="dropdown-menu">
-                                <li>
-                                  <a className="dropdown-item" href="#">
-                                    Delete
-                                  </a>
-                                </li>
-                                <li>
-                                  <Link
-                                    href="create-category"
-                                    className="dropdown-item"
-                                  >
-                                    Edit
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    href="create-category"
-                                    className="dropdown-item"
-                                  >
-                                    View Detail
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          </div> */}
                         </td>
                       </tr>
                     </>
