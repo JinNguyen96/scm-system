@@ -1,10 +1,15 @@
+import { encodeToken } from "./middleware/auth";
 import { verifyAuth } from "./lib/auth";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function middleware(req: NextRequest) {
+import { NextApiResponse } from "next";
+import * as jose from "jose";
+export async function middleware(req: NextRequest, res: NextApiResponse) {
   const token = req.cookies.get("USER_LOGIN")?.value;
 
-  const verifiedToken = token && (await verifyAuth(token.replace('"', "")).catch((err: any) => { }));
+  // const verifiedToken =
+  //   token && (await verifyAuth(token.replace('"', "")).catch((err: any) => {}));
+  const verifiedToken = token && jose.decodeJwt(token);
+
   if (req.nextUrl.pathname.startsWith("/login") && !verifiedToken) {
     return NextResponse.next();
   }
@@ -23,9 +28,12 @@ export const config = {
     "/dashboard",
     "/login",
     "/create-user",
-    "/admin-template",
+    "/user-management/:path*",
     "/role",
     "/type",
     "/account-info",
+    "/material/:path*",
+    "/get-info/:path*",
+    "/category/:path*",
   ],
 };

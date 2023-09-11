@@ -16,8 +16,8 @@ export default async function handler(
 ) {
   try {
     if (req.method === "PUT") {
-      let { userEmail} = req.body;
-      console.log(userEmail)
+      let { userEmail } = req.body;
+
       let checkUser = await model.Users.findOne({
         where: {
           userEmail,
@@ -36,10 +36,10 @@ export default async function handler(
         await sgMail
           .send(msg)
           .then((result) => {
-            console.log(result);
+
           })
           .catch((err) => {
-            console.log(err);
+
           });
         return res.json(successCode(res, userEmail, "Send Email thành công"));
       } else {

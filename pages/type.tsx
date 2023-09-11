@@ -1,10 +1,8 @@
-import React from 'react'
-import Type from '../components/templates/type/type'
+import React from "react";
+import Type from "../components/templates/type/type";
 
 function type() {
-  return (
-    <div><Type/></div>
-  )
+  return <Type />;
 }
 
-export default type
+export default type;

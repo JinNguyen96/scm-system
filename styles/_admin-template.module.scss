@@ -1,5 +1,5 @@
 .admin {
-  width:100%;
+  width: 100%;
   &-header {
     width: 85%;
     background-color: $main-color;
@@ -35,25 +35,6 @@
       align-items: center;
       vertical-align: middle;
       padding: 10px;
-      .search-bar {
-        display: flex;
-        width: 50%;
-        position: relative;
-        input {
-          width: 100%;
-          padding: 5px;
-          border-bottom: 1px solid #808080;
-          &:focus {
-            border-color: $main-color;
-          }
-        }
-        img {
-          position: absolute;
-          right: 10px;
-          bottom: 10px;
-          z-index: 2;
-        }
-      }
     }
     .middle-menu {
       display: flex;
@@ -61,17 +42,7 @@
       align-items: center;
       vertical-align: middle;
       padding: 10px;
-      button {
-        padding: 11px;
-        color: #ffffff;
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 700;
-        font-size: 20px;
-        line-height: 22px;
-        background-color: $main-color;
-        border-radius: 4px;
-      }
+
       .modal-table {
         position: fixed;
         height: 100vh;
@@ -89,61 +60,20 @@
   table {
     width: 100%;
     margin: auto;
-    thead {
-      background-color: #d9d9d9;
-      tr {
-        padding: 0 20px;
-        th {
-          font-family: "Inter";
-          font-style: normal;
-          padding: 9px 0;
-          font-weight: 400;
-          font-size: 20px;
-          line-height: 22px;
-          color: #000000;
-          &:nth-child(2) {
-            text-align: start;
+    td:last-child {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      line-height: 1;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        button {
+          &:hover {
+            background-color: wheat;
+            transition: all 0.3s ease-in-out;
           }
-        }
-      }
-    }
-    tbody {
-      tr {
-        text-align: center;
-        &:nth-child(even) {
-          background-color: #d9d9d9;
-        }
-        &:nth-child(odd) {
-          background-color: #ffffff;
-        }
-        td {
-          text-align: left;
-          font-family: "Inter";
-          font-style: normal;
-          font-weight: 200;
-          font-size: 17px;
-          line-height: 22px;
-          color: #000000;
-          padding: 9px 0;
-          &:nth-child(2) {
-            text-align: left;
-          }
-          &:nth-child(8) {
-            display: flex;
-            justify-content: space-around;
-          }
-          button {
-            font-size: 15px;
-            font-weight: 400;
-            color: white;
-          }
-          .del-btn,
-          .edit-btn,
-          .view-btn {
-            &:hover {
-              background: none;
-            }
-          }
+          border-radius: 6px;
+          transition: all 0.3s ease-in-out;
         }
       }
     }
@@ -231,31 +161,71 @@ label {
 
 //! USER DETAIL
 
-
-#block-drop .block{
-  inset: -24px auto auto -13px!important;
+#block-drop .block {
+  inset: -24px auto auto -13px !important;
 }
-.css-1fdsijx-ValueContainer{
-    font-size: 12px;
-    option{
-      font-size: 13px;
-    }
-  
-  }
- .css-1nmdiq5-menu{
+.css-1fdsijx-ValueContainer {
+  font-size: 12px;
+  option {
     font-size: 13px;
   }
+}
+.css-1nmdiq5-menu {
+  font-size: 13px;
+}
 
-  //PAGINATION
+//PAGINATION
 
-  .pagination{
-    span{
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  span {
+    color: black;
+    font-size: 12px;
+    border: none;
+    padding: 7px 14px;
+    font-style: normal;
+    font-family: "Roboto";
+    font-weight: 300;
+    font-size: 14px;
+    background: none;
+    &:hover {
+      border-radius: 2px;
       color: black;
-      font-size: 12px;
-    }
-    .active{
-      span{
-        background-color: $main-color;
-      }
     }
   }
+  li:first-child,
+  li:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 11px 13px;
+    background: #dfdfdf;
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
+    span {
+      padding: 0;
+    }
+  }
+  li {
+    margin: 0 5px;
+  }
+  .active {
+    height: fit-content;
+    span {
+      background: #20a89e;
+      box-shadow: 0px 10px 9px rgba(0, 119, 255, 0.19);
+      border-radius: 2px;
+      border: none;
+      padding: 7px 14px;
+      color: white;
+    }
+  }
+}
+
+.modal-create-user {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -16,12 +16,14 @@ export default async function getAllRole(
 ) {
   try {
     if (req.method == "PUT") {
-        let {roleDescription, roleName,rolePermission,roleScopes,id} = req.body;
-        let updateInfo = {roleDescription, roleName,rolePermission,roleScopes}
-         let data = await model.Roles.update(updateInfo,{where:{
-            id
-         }})
-        successCode(res,updateInfo,"Update success")
+      let { roleDescription, roleName, rolePermission, roleScopes, id } = req.body;
+      let updateInfo = { roleDescription, roleName, rolePermission, roleScopes }
+      await model.Roles.update(updateInfo, {
+        where: {
+          id
+        }
+      })
+      successCode(res, updateInfo, "Update success")
     } else {
       failCode(res, req, "Error method");
     }

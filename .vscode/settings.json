@@ -1,0 +1,11 @@
+{
+  "cSpell.words": ["trpc"],
+  "files.exclude": {
+    "**/.js": true,
+    "**/.jsx": true,
+    "**/.ts": true,
+    "**/.tsx": true
+  },
+  "search.useParentIgnoreFiles": false,
+  "search.useGlobalIgnoreFiles": false
+}

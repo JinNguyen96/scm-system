@@ -33,12 +33,9 @@ const CreateUser: React.FC = (props) => {
         .catch((err) => {
           alert(`${err.response.data.message}`);
         });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
-  
   return (
     <>
       <div>
@@ -93,7 +90,7 @@ const CreateUser: React.FC = (props) => {
                                 ...userInfo,
                                 userFirstName: e.target.value,
                               };
-                              console.log(formSignup, userInfo);
+
                               setFormSignUp({
                                 ...formSignup,
                                 userName: e.target.value,
@@ -116,7 +113,6 @@ const CreateUser: React.FC = (props) => {
                                 ...userInfo,
                                 userLastName: e.target.value,
                               };
-                              console.log(formSignup);
                             }}
                             type="text"
                             autoComplete="current-password"
@@ -165,7 +161,6 @@ const CreateUser: React.FC = (props) => {
                                 ...formSignup,
                                 userEmail: e.target.value,
                               });
-                              console.log(formSignup);
                             }}
                             type="email"
                             autoComplete="email"
@@ -294,8 +289,6 @@ const CreateUser: React.FC = (props) => {
                                 ...formSignup,
                                 userRole: e.target.value,
                               });
-
-                              console.log(formSignup);
                             }}
                             required
                             className="block w-40 border placeholder-gray-300 border-gray-300 px-5 py-2 text-gray-900  focus:z-10 focus:outline-none sm:text-sm shadow-sm"
@@ -306,9 +299,7 @@ const CreateUser: React.FC = (props) => {
                             <option value="QuanLi">Quản Lí</option>
                             <option value="Nhanvien">Nhân Viên</option>
                           </select>
-                          <div>
-                           
-                          </div>
+                          <div></div>
                         </div>
                       </div>
                       <button
