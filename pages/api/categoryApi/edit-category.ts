@@ -40,6 +40,6 @@ export default async function editCategory(
             }
         }
     } catch (error: any) {
-        return errorCode(error, "Update unsuccess");
+        return errorCode(error,error, "Update unsuccess");
     }
 }

@@ -23,6 +23,6 @@ export default async function deleteTMUR(
         });
         successCode(res, id, "Delete tmur success");
     } catch (error: any) {
-        return errorCode(error, "Delete unsuccess");
+        return errorCode(error,error, "Delete unsuccess");
     }
 }

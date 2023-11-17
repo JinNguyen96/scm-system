@@ -31,6 +31,6 @@ export default async function getAllRole(
       failCode(res, req, "Error method");
     }
   } catch (error: any) {
-    return errorCode(error, "Update unsuccess");
+    return errorCode(error,error, "Update unsuccess");
   }
 }

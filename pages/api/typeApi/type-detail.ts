@@ -42,6 +42,6 @@ export default async function getTypeDetail(
       failCode(res, req, "Error method");
     }
   } catch (error: any) {
-    return errorCode(error, "Error 500");
+    return errorCode(error,error, "Error 500");
   }
 }

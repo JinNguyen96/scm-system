@@ -48,6 +48,6 @@ export default async function handler(
     }
     return failCode(res, "", "sai method");
   } catch (error: any) {
-    return errorCode(error, "lỗi 500");
+    return errorCode(error,error, "lỗi 500");
   }
 }

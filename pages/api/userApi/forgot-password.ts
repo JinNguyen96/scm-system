@@ -18,6 +18,6 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
     });
     return successCode(res, userPassword, "update password thành công");
   } catch (error: any) {
-    return errorCode(error, "lỗi 500");
+    return errorCode(error,error, "lỗi 500");
   }
 }

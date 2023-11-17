@@ -101,6 +101,6 @@ export default async function signup(
       return failCode(res, "", "sai method");
     }
   } catch (error: any) {
-    return errorCode(error, "Dang ky khong thanh cong");
+    return errorCode(error,error, "Dang ky khong thanh cong");
   }
 }

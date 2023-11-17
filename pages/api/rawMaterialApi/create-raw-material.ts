@@ -37,6 +37,6 @@ export default async function signup(
       failCode(res, req, "Error method");
     }
   } catch (error: any) {
-    return errorCode(error, "Dang ky khong thanh cong");
+    return errorCode(error,error,"Dang ky khong thanh cong");
   }
 }

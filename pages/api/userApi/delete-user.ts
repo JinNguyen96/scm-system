@@ -27,6 +27,6 @@ export default async function Example(
     }
 
   } catch (error: any) {
-    return errorCode(error, "lỗi 500");
+    return errorCode(error,error,"lỗi 500");
   }
 }

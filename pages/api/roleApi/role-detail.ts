@@ -87,6 +87,6 @@ export default async function getAllRole(
       failCode(res, req, "Error method");
     }
   } catch (error: any) {
-    return errorCode(error, "Delete unsuccess");
+    return errorCode(error,error, "Delete unsuccess");
   }
 }

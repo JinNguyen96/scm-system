@@ -43,6 +43,6 @@ export default async function getAllRole(
     }
 
   } catch (error: any) {
-    return errorCode(error, "Delete unsuccess");
+    return errorCode(error,error, "Delete unsuccess");
   }
 }

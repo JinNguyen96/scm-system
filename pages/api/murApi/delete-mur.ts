@@ -23,6 +23,6 @@ export default async function deleteMUR(
         });
         successCode(res, id, "Delete mur success");
     } catch (error: any) {
-        return errorCode(error, "Delete unsuccess");
+        return errorCode(error,error, "Delete unsuccess");
     }
 }

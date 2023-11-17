@@ -21,6 +21,6 @@ export default async function getAllStat(
             failCode(res, req, "Error method");
         }
     } catch (error: any) {
-        return errorCode(error, "Da co loi, khong thanh cong");
+        return errorCode(error,error, "Da co loi, khong thanh cong");
     }
 }
