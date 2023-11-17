@@ -168,7 +168,7 @@ const CreateCategory = memo(() => {
                   id={`caRequired${index}`}
                   name="isRequired"
                   onChange={(e: any) => {
-                    if (checkedRef.current.checked) {
+                    if (checkedRef.current?.checked) {
                       setFieldArray({ ...fieldArray, isRequired: true });
                     } else {
                       setFieldArray({ ...fieldArray, isRequired: false });

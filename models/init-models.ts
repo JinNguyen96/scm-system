@@ -2,14 +2,17 @@ import _Type from "./type";
 import { DataTypes } from "sequelize";
 import _Roles from "./roles";
 import _Users from "./users";
-import _Materials from './material';
-import _Stats from './stats'
-import _Categories from './categories';
-import _Measurments from './stats';
-import _MURs from './mur';
-import _RawMaterials from './rawMaterial';
-import _TMURs from './tmur';
-import _Units from './unit'
+import _Materials from "./material";
+import _Stats from "./stats";
+import _Categories from "./categories";
+import _Measurments from "./stats";
+import _MURs from "./mur";
+import _RawMaterials from "./rawMaterial";
+import _TMURs from "./tmur";
+import _Units from "./unit";
+import _Suppliers from "./supplier";
+import _Warehouse from "./warehouse"
+import _History from "./history"
 function initModels(sequelize: any) {
   const Type = _Type(sequelize, DataTypes);
   const Roles = _Roles(sequelize, DataTypes);
@@ -21,15 +24,16 @@ function initModels(sequelize: any) {
   const RawMaterials = _RawMaterials(sequelize, DataTypes);
   const TMURs = _TMURs(sequelize, DataTypes);
   const Units = _Units(sequelize, DataTypes);
-
+  const Suppliers = _Suppliers(sequelize, DataTypes);
+  const Warehouse = _Warehouse(sequelize, DataTypes)
+  const Histories = _History(sequelize, DataTypes)
   // const Category
 
-  Roles.belongsTo(Users, { as: 'Roles_id', foreignKey: "id" });
-  Type.belongsTo(Users, { as: 'user_type', foreignKey: "id" });
+  Roles.belongsTo(Users, { as: "Roles_id", foreignKey: "id" });
+  Type.belongsTo(Users, { as: "user_type", foreignKey: "id" });
 
   Users.hasMany(Roles, { as: "Users_userRole", foreignKey: "id" });
   Users.hasMany(Type, { as: "userType_Type", foreignKey: "id" });
-
 
   return {
     Type,
@@ -41,7 +45,10 @@ function initModels(sequelize: any) {
     MURs,
     RawMaterials,
     TMURs,
-    Units
+    Units,
+    Suppliers,
+    Warehouse,
+    Histories
   };
 }
 export default initModels;

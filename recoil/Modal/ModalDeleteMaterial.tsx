@@ -15,14 +15,13 @@ import {
 } from "./modalState";
 import { setTableDataState } from "./sortUserTable";
 import { setUserState } from "./userModal";
+import useMaterial from "../hook/useMaterial";
 
 const ModalDeleteMaterial = React.memo(() => {
   const setTypeModal = useSetRecoilState(setCurrentModalState);
   const materialId: any = useRecoilValue(setEditMaterialState);
-  console.log(materialId.data.id);
-  const handleDeleteMaterial = useCallback(async (id: any) => {
-    const result = await materialService.deleteMaterial(id);
-  }, []);
+  const { handleDeleteMaterial } = useMaterial();
+  console.log(materialId);
 
   // const tableData = useRecoilValue(getDataTableState);
   useEffect(() => {}, []);
@@ -47,8 +46,8 @@ const ModalDeleteMaterial = React.memo(() => {
           <Button
             positive
             onClick={async () => {
-              console.log(materialId.data.id);
-              handleDeleteMaterial({ id: materialId.data.id });
+              handleDeleteMaterial(materialId);
+              console.log(materialId);
               setTypeModal({ typeModal: "" });
             }}
           >

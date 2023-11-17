@@ -58,8 +58,29 @@ const createRawMaterial: any = Joi.object({
   id: Joi.string(),
 });
 
+const createSupplier: any = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  phoneNumber: Joi.number().required(),
+  address: Joi.string().required(),
+  status: Joi.string().required(),
+  taxNumber: Joi.number().required(),
+  profileMaterial: Joi.string().required(),
+});
+
+const createWarehouse : any = Joi.object({
+  name: Joi.string().required(),
+  address: Joi.string().required(),
+  personInCharge: Joi.string().required(),
+  code: Joi.array().required(),
+  material: Joi.array().required(),
+  quantity: Joi.array().required()
+})
+
 export const validateSignup = validator(signupSchema);
 export const validateSignin = validator(signinShema);
 export const validateCreateRole = validator(createRole);
 export const validateCreateMaterial = validator(createMaterial);
 export const validateCreateRawMaterial = validator(createRawMaterial);
+export const validateCreateSupplier = validator(createSupplier);
+export const validateCreateWarehouse = validator(createWarehouse);

@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [isLogin]);
   return (
     <RecoilRoot>
+      
       <div>
         <div className={isLogin ? "" : "d-none"}>
           <Sidebar />

@@ -6,7 +6,7 @@ import { setEditMaterialState } from "../../../recoil/material/materialRecoil";
 export default function EditMaterial() {
   const materialData = useRecoilValue(setEditMaterialState);
   const { data } = materialData;
-
+  console.log(data);
   const [buttonSwitch, setButtonSwitch] = useState(true);
   useEffect(() => {}, []);
   return (

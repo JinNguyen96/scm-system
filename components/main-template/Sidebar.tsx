@@ -327,7 +327,59 @@ export default function Sidebar() {
                     </span>
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/material/supplier"
+                    className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 my-1 dark:hover:bg-gray-700 ${
+                      presentRoute.path.match(RouteType.SUPPLIER)
+                        ? "isAcTivePath"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setPresentRoute({
+                        path: RouteType.SUPPLIER,
+                        status: RouteType.MATERIAL_MANAGEMENT,
+                      });
+                    }}
+                  >
+                    <span className="flex-1 ml-3 whitespace-nowrap">
+                      Supplier
+                    </span>
+                  </Link>
+                </li>
               </ul>
+            </li>
+            <li>
+              <Link
+                href="/warehouse/warehouse"
+                className={`flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  presentRoute.path.match(RouteType.WAREHOUSE) ? "isAcTive" : ""
+                }`}
+                onClick={() => {
+                  setPresentRoute({
+                    path: RouteType.WAREHOUSE,
+                    status: RouteType.WAREHOUSE,
+                  });
+                }}
+              >
+                <span className="flex-1 ml-3 whitespace-nowrap">Warehouse</span>
+                <svg
+                  width="7"
+                  height="10"
+                  viewBox="0 0 7 10"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1 1L5.15094 4.78082L1 8.56164"
+                    stroke="#1C1D22"
+                    strokeOpacity="0.5"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>
             </li>
             <li>
               <Link
@@ -355,6 +407,7 @@ export default function Sidebar() {
                 </svg>
               </Link>
             </li>
+           
             <li>
               <Link
                 href="#"

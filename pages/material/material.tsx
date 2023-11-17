@@ -13,6 +13,9 @@ function material() {
       {currentModal.typeModal === ModalType.DELETE_MATERIAL && (
         <ModalDeleteMaterial />
       )}
+      {/* {currentModal.typeModal === ModalType.VIEW_MATERIAL && (
+        // <ModalViewMaterial />
+      )} */}
     </>
   );
 }

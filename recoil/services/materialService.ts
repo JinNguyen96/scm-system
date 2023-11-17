@@ -59,6 +59,9 @@ export class MaterialService extends BaseServices {
       .then((result) => result)
       .catch((err) => err);
   };
+  getMaterialDetail = async (id: string) => {
+    return await this.post("/api/materialApi/get-all-material", {id} );
+  };
 }
 
 export const materialService = new MaterialService();

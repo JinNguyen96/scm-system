@@ -277,22 +277,6 @@ function AdminTemplate() {
   };
 
   const [sort, setSort] = useState("ASC");
-  const sorting = (col: any) => {
-    if (sort === "ASC") {
-      const sorted = [...users].sort((a: string, b: string) =>
-        a[col]?.toLowerCase() > b[col]?.toLowerCase() ? 1 : -1
-      );
-      setUsers(sorted);
-      setSort("DSC");
-    }
-    if (sort === "DSC") {
-      const sorted = [...users].sort((a: string, b: string) =>
-        a[col]?.toLowerCase() < b[col]?.toLowerCase() ? 1 : -1
-      );
-      setUsers(sorted);
-      setSort("ASC");
-    }
-  };
 
   const [userRoleDetail, setUserRoleDetail] = useState([]);
 

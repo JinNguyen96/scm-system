@@ -28,12 +28,13 @@ export const config = {
     "/dashboard",
     "/login",
     "/create-user",
-    "/user-management/:path*",
+    "/user-management",
     "/role",
     "/type",
     "/account-info",
     "/material/:path*",
-    "/get-info/:path*",
-    "/category/:path*",
+    "/get-info",
+    "/warehouse/:path*"
+
   ],
 };

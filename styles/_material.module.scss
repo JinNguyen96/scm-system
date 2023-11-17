@@ -57,21 +57,26 @@
       }
     }
   }
-  .status-disable {
+  .status-disable,
+  .status-available,
+  .status-inactive {
     padding: 2.5px 19px;
-    background-color: #dc3545;
     color: white;
     border-radius: 16px;
     width: 88px;
+    margin: auto;
+    // display: inline-block;
     font-size: 15px;
   }
   .status-available {
-    padding: 2.5px 13px;
-    width: 88px;
     background-color: $main-color;
-    color: white;
-    font-size: 15px;
-    border-radius: 16px;
+  }
+  .status-disable {
+    background-color: #dc3545;
+  }
+  .status-inactive {
+    background-color: #b5b5b5;
+    color: black;
   }
 }
 .checkbox-material {
@@ -456,6 +461,15 @@ input {
     transition: all 0.3s ease-in-out;
   }
 }
+.create-row-warehouse {
+  margin-left: 0;
+}
+.history-table {
+  border: 1px solid #cccccc;
+  overflow: hidden;
+  border-radius: 4px;
+  width: -webkit-fill-available
+}
 .title-category {
   font-family: "Roboto";
   font-style: normal;
@@ -514,5 +528,19 @@ input {
     overflow: hidden;
     max-width: 80px;
     text-overflow: ellipsis;
+  }
+}
+
+.warehouse-create-form {
+  box-shadow: 0px 4px 4px 0px #00000040;
+  height: fit-content;
+}
+.warehouse-create-button {
+  display: flex;
+  .button-material,
+  .button-history {
+    border: 1px solid #343a40;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    color: white;
   }
 }

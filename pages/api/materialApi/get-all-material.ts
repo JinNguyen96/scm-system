@@ -16,12 +16,16 @@ export default async function getAllMaterial(
   try {
     if (req.method === "GET") {
       let data = await model.Materials.findAll();
-      console.log(data)
-      successCode(res, data, " Get list of material success")
+      console.log(data);
+      successCode(res, data, " Get list of material success");
+    } else if (req.method === "POST") {
+      let { id } = req.body;
+      let materialDetail: any = await model.Materials.findByPk(id);
+      successCode(res, materialDetail, " Get list of material success");
     } else {
       failCode(res, req, "Error method");
     }
   } catch (error: any) {
-    return errorCode(error, "Da co loi, khong thanh cong");
+    return errorCode(error, error, "Da co loi, khong thanh cong");
   }
 }

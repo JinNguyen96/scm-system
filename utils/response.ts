@@ -23,8 +23,10 @@ const failCode = (res: NextApiResponse, data: object | string, message: string):
   })
 }
 
-const errorCode = (res: NextApiResponse, message: string): any => {
-
-  res.status(500).json(message)
+const errorCode = (res: NextApiResponse, data: object | string, message: string): any => {
+  res.status(444).json({
+    message,
+    content: data
+  })
 }
 export { successCode, failCode, errorCode }

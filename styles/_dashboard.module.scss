@@ -1,0 +1,90 @@
+.thumb-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 257px;
+  height: 165px;
+  top: 178px;
+  left: 377px;
+  border-radius: 12px;
+  padding: 27px 21px!important;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+.number-of-material {
+  background: linear-gradient(180deg, #ffc856 0%, rgba(255, 200, 86, 0) 100%);
+  color: #0a5f59;
+}
+.number-of-order-import {
+  color: #0a5f59;
+  background: linear-gradient(180deg, #10998f 0%, rgba(250, 255, 255, 0) 100%);
+}
+.number-of-order-export {
+  background: linear-gradient(180deg, #f68585 0%, rgba(250, 255, 255, 0) 100%);
+  color: #0a5f59;
+}
+
+.cap {
+  display: flex;
+  justify-content: space-between;
+
+  h3 {
+    display: inline-block;
+    width: 75%;
+  }
+  p {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 30px;
+    letter-spacing: -0.428571492433548px;
+    text-align: center;
+  }
+  .number {
+    width: 43px;
+    height: 41px;
+    top: 200px;
+    left: 577px;
+    border: 1px solid #ffffff;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    display: inline-block;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+  }
+}
+.status {
+  a {
+    font-size: 12px;
+    font-weight: 400;
+    color: #055346;
+  }
+}
+.list-material {
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px;
+  border: 1px solid;
+  display: inline-block;
+  border: linear-gradient(180deg, #0a5f59 0%, rgba(254, 255, 255, 0) 100%),
+    linear-gradient(0deg, #ffffff, #ffffff);
+  text-align: center;
+  vertical-align: middle;
+  float: right;
+  clear: both;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  box-shadow: 0px 4px 4px 0px #00000040 inset;
+  color: #0a5f59;
+  transition: all 0.4s ease-in-out;
+  &:hover {
+    color: #0a5f59;
+    box-shadow: 0px -7px 6px 0px rgba(0, 0, 0, 0.2509803922) inset;
+    transition: all 0.4s ease-in-out;
+  }
+}
